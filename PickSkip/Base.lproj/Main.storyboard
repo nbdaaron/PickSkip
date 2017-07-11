@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Camera View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="CameraViewController" customModule="PickSkip" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" userLabel="Camera View">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4xV-Sk-QNJ" userLabel="Camera View" customClass="CameraView" customModule="PickSkip" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Je-05-mJV" customClass="RecordButton" customModule="PickSkip" customModuleProvider="target">
+                                        <rect key="frame" x="172" y="586" width="70" height="70"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="70" id="8yv-aG-ZcJ"/>
+                                            <constraint firstAttribute="width" constant="70" id="UMY-4q-byE"/>
+                                        </constraints>
+                                        <state key="normal" title="Record Button">
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="4Je-05-mJV" firstAttribute="centerX" secondItem="4xV-Sk-QNJ" secondAttribute="centerX" id="feX-Pn-2K7"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EDz-d0-jHa" userLabel="Preview View">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p6j-2z-XAR" userLabel="Options View">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zHE-Xy-kmC">
+                                        <rect key="frame" x="8" y="8" width="30" height="42"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="X"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="zHE-Xy-kmC" firstAttribute="top" secondItem="p6j-2z-XAR" secondAttribute="top" constant="8" id="TDg-Ba-mzN"/>
+                                    <constraint firstItem="zHE-Xy-kmC" firstAttribute="leading" secondItem="p6j-2z-XAR" secondAttribute="leading" constant="8" id="Zsh-vm-PPg"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="EDz-d0-jHa" secondAttribute="bottom" id="Hha-6V-uVk"/>
+                            <constraint firstItem="EDz-d0-jHa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Hwa-am-kJu"/>
+                            <constraint firstAttribute="trailing" secondItem="4xV-Sk-QNJ" secondAttribute="trailing" id="NrF-Pp-EEk"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="4xV-Sk-QNJ" secondAttribute="bottom" id="WNF-u6-njI"/>
+                            <constraint firstItem="p6j-2z-XAR" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="WWA-n6-w5c"/>
+                            <constraint firstItem="p6j-2z-XAR" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="hWa-2P-i6V"/>
+                            <constraint firstItem="4xV-Sk-QNJ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="p7h-Cv-HsK"/>
+                            <constraint firstItem="EDz-d0-jHa" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="qSr-ua-Cns"/>
+                            <constraint firstItem="4xV-Sk-QNJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="r6c-yh-ypm"/>
+                            <constraint firstAttribute="trailing" secondItem="p6j-2z-XAR" secondAttribute="trailing" id="tfd-eT-1r3"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="p6j-2z-XAR" secondAttribute="bottom" id="uLz-bz-S15"/>
+                            <constraint firstItem="4Je-05-mJV" firstAttribute="bottom" secondItem="p6j-2z-XAR" secondAttribute="bottom" constant="-80" id="vYb-0N-3dt"/>
+                            <constraint firstAttribute="trailing" secondItem="EDz-d0-jHa" secondAttribute="trailing" id="zU8-7C-AzF"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cameraView" destination="4xV-Sk-QNJ" id="Ocb-VL-wgd"/>
+                        <outlet property="optionsView" destination="p6j-2z-XAR" id="aYa-li-Tlf"/>
+                        <outlet property="previewView" destination="EDz-d0-jHa" id="4n1-4o-PVb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="136.23188405797103" y="138.58695652173915"/>
+        </scene>
+    </scenes>
+</document>

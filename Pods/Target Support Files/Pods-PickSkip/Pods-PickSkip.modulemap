@@ -1,0 +1,6 @@
+framework module Pods_PickSkip {
+  umbrella header "Pods-PickSkip-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -20,6 +20,9 @@ class Constants {
     
     //The default camera loaded when the application is opened.
     static let defaultCamera: AVCaptureDevice = backCamera
+    
+    //The following storyboard IDs are used to create the Main Pages scroll view.
+    static let mainPagesViews = ["HistoryTableViewController", "CameraViewController"]
 
     
     //The constants above may be modified to modify application functionality. Please do not alter the constants below.

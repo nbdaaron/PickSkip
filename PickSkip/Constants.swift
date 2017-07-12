@@ -22,7 +22,10 @@ class Constants {
     static let defaultCamera: AVCaptureDevice = backCamera
     
     //The following storyboard IDs are used to create the Main Pages scroll view.
-    static let mainPagesViews = ["HistoryTableViewController", "CameraViewController"]
+    static let mainPagesViews: [String] = ["HistoryTableViewController", "CameraViewController"]
+    
+    //Temporary file name for recorded videos
+    static let videoFileName: String = "temp.mp4"
 
     
     //The constants above may be modified to modify application functionality. Please do not alter the constants below.

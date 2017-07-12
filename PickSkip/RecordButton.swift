@@ -15,6 +15,8 @@ public enum RecordButtonState : Int {
 
 class RecordButton: UIButton {
     
+    var timer: Timer?
+    
     var buttonColor: UIColor! = .white{
         didSet {
             circleBorder.borderColor = buttonColor.cgColor
@@ -35,12 +37,13 @@ class RecordButton: UIButton {
             case .idle:
                 self.alpha = 1.0
                 currentProgress = 0
+                timer?.invalidate()
                 setProgress(0)
                 setRecording(false)
             case .recording:
                 self.alpha = 1.0
                 setRecording(true)
-                Timer.scheduledTimer(timeInterval: Constants.updateInterval, target: self, selector: #selector(updateProgress), userInfo: nil, repeats: true)
+                timer = Timer.scheduledTimer(timeInterval: Constants.updateInterval, target: self, selector: #selector(updateProgress), userInfo: nil, repeats: true)
             case .hidden:
                 self.alpha = 0
             }
@@ -50,8 +53,8 @@ class RecordButton: UIButton {
     
     public func updateProgress(timer: Timer) {
         progressLayer.strokeEnd += CGFloat(Constants.updateInterval) / Constants.maxVideoDuration
-        if progressLayer.strokeEnd >= 1 {
-            timer.invalidate()
+        if progressLayer.strokeEnd >= 1 || buttonState != .recording {
+            self.buttonState = .idle
         }
     }
     
@@ -64,10 +67,7 @@ class RecordButton: UIButton {
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        
-        self.addTarget(self, action: #selector(RecordButton.didTouchDown), for: .touchDown)
-        self.addTarget(self, action: #selector(RecordButton.didTouchUp), for: .touchUpInside)
-        self.addTarget(self, action: #selector(RecordButton.didTouchUp), for: .touchUpOutside)
+
         
         
         self.drawButton()
@@ -75,10 +75,6 @@ class RecordButton: UIButton {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
-        self.addTarget(self, action: #selector(RecordButton.didTouchDown), for: .touchDown)
-        self.addTarget(self, action: #selector(RecordButton.didTouchUp), for: .touchUpInside)
-        self.addTarget(self, action: #selector(RecordButton.didTouchUp), for: .touchUpOutside)
         
         
         self.drawButton()

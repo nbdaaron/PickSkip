@@ -15,7 +15,7 @@
                 <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="SgT-EH-hbB" customClass="MainPagesViewController" customModule="PickSkip" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="koM-ud-mqa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-942" y="106"/>
+            <point key="canvasLocation" x="-907" y="150"/>
         </scene>
         <!--Table View Controller-->
         <scene sceneID="uql-fa-DiS">
@@ -76,10 +76,9 @@
                                     <constraint firstItem="4Je-05-mJV" firstAttribute="centerX" secondItem="4xV-Sk-QNJ" secondAttribute="centerX" id="feX-Pn-2K7"/>
                                 </constraints>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EDz-d0-jHa" userLabel="Preview View">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wyf-t5-sEi" customClass="PreviewView" customModule="PickSkip" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </view>
+                            </imageView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p6j-2z-XAR" userLabel="Options View">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
@@ -87,6 +86,9 @@
                                         <rect key="frame" x="8" y="8" width="30" height="42"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                         <state key="normal" title="X"/>
+                                        <connections>
+                                            <action selector="closePreview:" destination="BYZ-38-t0r" eventType="touchUpInside" id="B3R-qq-Gmq"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -98,30 +100,31 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="EDz-d0-jHa" secondAttribute="bottom" id="Hha-6V-uVk"/>
-                            <constraint firstItem="EDz-d0-jHa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Hwa-am-kJu"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="wyf-t5-sEi" secondAttribute="bottom" id="1hK-03-Wv6"/>
+                            <constraint firstAttribute="trailing" secondItem="wyf-t5-sEi" secondAttribute="trailing" id="Bma-7S-qvi"/>
                             <constraint firstAttribute="trailing" secondItem="4xV-Sk-QNJ" secondAttribute="trailing" id="NrF-Pp-EEk"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="4xV-Sk-QNJ" secondAttribute="bottom" id="WNF-u6-njI"/>
                             <constraint firstItem="p6j-2z-XAR" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="WWA-n6-w5c"/>
+                            <constraint firstItem="wyf-t5-sEi" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="cOz-IX-B9H"/>
                             <constraint firstItem="p6j-2z-XAR" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="hWa-2P-i6V"/>
+                            <constraint firstItem="wyf-t5-sEi" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ml1-PL-MC1"/>
                             <constraint firstItem="4xV-Sk-QNJ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="p7h-Cv-HsK"/>
-                            <constraint firstItem="EDz-d0-jHa" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="qSr-ua-Cns"/>
                             <constraint firstItem="4xV-Sk-QNJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="r6c-yh-ypm"/>
                             <constraint firstAttribute="trailing" secondItem="p6j-2z-XAR" secondAttribute="trailing" id="tfd-eT-1r3"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="p6j-2z-XAR" secondAttribute="bottom" id="uLz-bz-S15"/>
                             <constraint firstItem="4Je-05-mJV" firstAttribute="bottom" secondItem="p6j-2z-XAR" secondAttribute="bottom" constant="-80" id="vYb-0N-3dt"/>
-                            <constraint firstAttribute="trailing" secondItem="EDz-d0-jHa" secondAttribute="trailing" id="zU8-7C-AzF"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="cameraView" destination="4xV-Sk-QNJ" id="Ocb-VL-wgd"/>
                         <outlet property="optionsView" destination="p6j-2z-XAR" id="aYa-li-Tlf"/>
-                        <outlet property="previewView" destination="EDz-d0-jHa" id="4n1-4o-PVb"/>
+                        <outlet property="previewView" destination="wyf-t5-sEi" id="Ou7-1N-5to"/>
+                        <outlet property="recordButton" destination="4Je-05-mJV" id="uXc-fU-y0b"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-564" y="936"/>
+            <point key="canvasLocation" x="-565.21739130434787" y="935.86956521739137"/>
         </scene>
     </scenes>
 </document>

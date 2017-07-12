@@ -7,17 +7,21 @@
 //
 
 import UIKit
+import AVFoundation
 
 class CameraViewController: UIViewController {
     @IBOutlet weak var cameraView: CameraView!
-    @IBOutlet weak var previewView: UIView!
+    @IBOutlet weak var previewView: PreviewView!
     @IBOutlet weak var optionsView: UIView!
+    @IBOutlet weak var recordButton: RecordButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //Set up Camera View
-        cameraView.setupCameraView()
+        cameraView.delegate = self
+        cameraView.setupCameraView(recordButton)
+        
         // Do any additional setup after loading the view.
     }
 
@@ -26,15 +30,26 @@ class CameraViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func displayPreview() {
+        previewView.isHidden = false
+        optionsView.isHidden = false
     }
-    */
+    
+    @IBAction func closePreview(_ sender: Any) {
+        previewView.isHidden = true
+        optionsView.isHidden = true
+    }
 
+}
+
+extension CameraViewController: CameraViewDelegate {
+    func submit(image: UIImage) {
+        displayPreview()
+        previewView.displayImage(image)
+    }
+    
+    func submit(video: AVPlayer) {
+        displayPreview()
+        previewView.displayVideo(video)
+    }
 }

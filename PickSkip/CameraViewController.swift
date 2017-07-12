@@ -22,7 +22,6 @@ class CameraViewController: UIViewController {
         cameraView.delegate = self
         cameraView.setupCameraView(recordButton)
         
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,11 +29,13 @@ class CameraViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    //Display the preview layer - called after a photo/video submission is received.
     func displayPreview() {
         previewView.isHidden = false
         optionsView.isHidden = false
     }
     
+    //Hide the preview layer - called when the 'X' button is tapped from the options view.
     @IBAction func closePreview(_ sender: Any) {
         previewView.isHidden = true
         optionsView.isHidden = true
@@ -43,11 +44,14 @@ class CameraViewController: UIViewController {
 }
 
 extension CameraViewController: CameraViewDelegate {
+    
+    //Accepts an image, displays it on the CameraView.
     func submit(image: UIImage) {
         displayPreview()
         previewView.displayImage(image)
     }
     
+    //Accepts a video, displays it on the CameraView.
     func submit(video: AVPlayer) {
         displayPreview()
         previewView.displayVideo(video)

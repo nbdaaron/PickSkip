@@ -167,11 +167,12 @@ class RecordButton: UIButton {
         return gradientLayer
     }
     
+    //This method must be called by the View Controller using it.
     open func didTouchDown(){
         self.buttonState = .recording
     }
     
-    //Force didTouchUp when progress hits 1
+    //This method must be called by the View Controller using it.
     open func didTouchUp() {
         if(closeWhenFinished) {
             self.setProgress(1)

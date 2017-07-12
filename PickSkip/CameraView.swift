@@ -91,6 +91,7 @@ class CameraView: UIView {
         self.addGestureRecognizer(switchCameraRecognizer)
     }
     
+    //Prepares the record button with its corresponding gesture recognizers (tap to take photo, hold to record video)
     private func setupRecordButton() {
         let recordRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didHoldRecordButton))
         recordButton.addGestureRecognizer(recordRecognizer)
@@ -115,6 +116,7 @@ class CameraView: UIView {
 
     }
     
+    //This method is called when the record button is held down and released. The capture layer will start recording and the button will animate. When released, the recording will stop and the video will be sent to the Camera View Delegate
     public func didHoldRecordButton(gesture: UITapGestureRecognizer) {
         if gesture.state == .began {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -127,6 +129,7 @@ class CameraView: UIView {
         }
     }
     
+    //This method is called when the record button is briefly tapped. The capture layer will take a photo and send it to the Camera View Delegate
     public func didTapRecordButton(gesture: UITapGestureRecognizer) {
         let settings = AVCapturePhotoSettings()
         photoOutput.capturePhoto(with: settings, delegate: self)
@@ -134,7 +137,10 @@ class CameraView: UIView {
 
 }
 
+//This class implements AVCapturePhotoCaptureDelegate so it can handle the photos that are taken.
 extension CameraView: AVCapturePhotoCaptureDelegate {
+    
+    //Upon photo capture, this method will render the image in a UIImageView and submit it to the Camera View Delegate.
     func capture(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?, previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
         
         let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer!, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
@@ -148,7 +154,10 @@ extension CameraView: AVCapturePhotoCaptureDelegate {
     }
 }
 
+//This class implements AVCaptureFileOutputRecordingDelegate so it can handle the videos that are recorded.
 extension CameraView: AVCaptureFileOutputRecordingDelegate {
+    
+    //Upon recording video, this method will render the video in an AVPlayer and submit it to the Camera View Delegate.
     public func capture(_ captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAt outputFileURL: URL!, fromConnections connections: [Any]!, error: Error!) {
         if error != nil {
             print("Error Recording from CameraView:AVCaptureFileOutputRecordingDelegate#capture: \(error.localizedDescription)")

@@ -33,6 +33,7 @@ class MainPagesViewController: UIPageViewController {
 
 }
 
+//This class implements the UIPageViewController's Data Source so it can determine which View Controllers to display.
 extension MainPagesViewController: UIPageViewControllerDataSource {
     
     //This function determines what view controller to display next

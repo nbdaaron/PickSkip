@@ -75,6 +75,9 @@
 		27C7D9971F14805800A5737F /* PickSkip */ = {
 			isa = PBXGroup;
 			children = (
+				27C7D9C01F15AC9E00A5737F /* UIElements */,
+				27C7D9BF1F15AC7B00A5737F /* Views */,
+				27C7D9BE1F15AC6100A5737F /* ViewControllers */,
 				27C7D9B51F1589FC00A5737F /* GoogleService-Info.plist */,
 				27C7D9981F14805800A5737F /* AppDelegate.swift */,
 				27C7D99C1F14805800A5737F /* Main.storyboard */,
@@ -82,14 +85,35 @@
 				27C7D9A41F14805800A5737F /* LaunchScreen.storyboard */,
 				27C7D9A71F14805800A5737F /* Info.plist */,
 				27C7D99F1F14805800A5737F /* PickSkip.xcdatamodeld */,
-				27C7D9AD1F14825A00A5737F /* CameraViewController.swift */,
-				27C7D9AF1F1482DE00A5737F /* CameraView.swift */,
 				27C7D9B11F14859C00A5737F /* Constants.swift */,
-				27C7D9B31F148C3200A5737F /* RecordButton.swift */,
-				27C7D9B71F158CFE00A5737F /* MainPagesViewController.swift */,
-				27C7D9B91F1596D200A5737F /* PreviewView.swift */,
 			);
 			path = PickSkip;
+			sourceTree = "<group>";
+		};
+		27C7D9BE1F15AC6100A5737F /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				27C7D9AD1F14825A00A5737F /* CameraViewController.swift */,
+				27C7D9B71F158CFE00A5737F /* MainPagesViewController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		27C7D9BF1F15AC7B00A5737F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				27C7D9B91F1596D200A5737F /* PreviewView.swift */,
+				27C7D9AF1F1482DE00A5737F /* CameraView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		27C7D9C01F15AC9E00A5737F /* UIElements */ = {
+			isa = PBXGroup;
+			children = (
+				27C7D9B31F148C3200A5737F /* RecordButton.swift */,
+			);
+			name = UIElements;
 			sourceTree = "<group>";
 		};
 		D86460FE774C56AD14B72DAF /* Frameworks */ = {

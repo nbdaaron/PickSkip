@@ -63,7 +63,7 @@ class CameraView: UIView {
             microphoneInput = try AVCaptureDeviceInput(device: Constants.microphone)
             if Constants.defaultCamera == Constants.frontCamera {
                 captureSession.addInput(frontCameraInput)
-            } else { //Assume the default camera is the back camera.
+            } else { //Assume otherwise the default camera is the back camera.
                 captureSession.addInput(backCameraInput)
             }
             captureSession.addInput(microphoneInput)
@@ -140,7 +140,7 @@ class CameraView: UIView {
 //This class implements AVCapturePhotoCaptureDelegate so it can handle the photos that are taken.
 extension CameraView: AVCapturePhotoCaptureDelegate {
     
-    //Upon photo capture, this method will render the image in a UIImageView and submit it to the Camera View Delegate.
+    //Upon photo capture, renders the image in a UIImageView and submit it to the Camera View Delegate.
     func capture(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?, previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
         
         let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer!, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
@@ -157,7 +157,7 @@ extension CameraView: AVCapturePhotoCaptureDelegate {
 //This class implements AVCaptureFileOutputRecordingDelegate so it can handle the videos that are recorded.
 extension CameraView: AVCaptureFileOutputRecordingDelegate {
     
-    //Upon recording video, this method will render the video in an AVPlayer and submit it to the Camera View Delegate.
+    //Upon recording video, renders the video in an AVPlayer and submit it to the Camera View Delegate.
     public func capture(_ captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAt outputFileURL: URL!, fromConnections connections: [Any]!, error: Error!) {
         if error != nil {
             print("Error Recording from CameraView:AVCaptureFileOutputRecordingDelegate#capture: \(error.localizedDescription)")

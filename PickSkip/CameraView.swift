@@ -76,7 +76,7 @@ class CameraView: UIView {
     private func preparePreviewLayer() {
         if let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession) {
             //Resize Aspect Fill: Scale Video to edges of screen but do not distort image.
-            previewLayer.videoGravity = AVLayerVideoGravityResize
+            previewLayer.videoGravity = Constants.videoGravity
             previewLayer.frame = self.frame
             
             //Index 0 is behind all other layers.
@@ -101,12 +101,12 @@ class CameraView: UIView {
     
     //This method is called when the double-tap gesture recognizer recognizes the action. It switches the capture session between front and back cameras.
     public func didDoubleTapScreen(gesture: UIGestureRecognizer) {
-        let inputs = captureSession.inputs as! [AVCaptureDeviceInput]
+        let input = getCameraType()
         self.captureSession.beginConfiguration()
-        if inputs.contains(backCameraInput) {
+        if input == backCameraInput {
             captureSession.removeInput(backCameraInput)
             captureSession.addInput(frontCameraInput)
-        } else if inputs.contains(frontCameraInput) {
+        } else if input == frontCameraInput {
             captureSession.removeInput(frontCameraInput)
             captureSession.addInput(backCameraInput)
         } else {
@@ -116,11 +116,28 @@ class CameraView: UIView {
 
     }
     
+    public func getCameraType() -> AVCaptureDeviceInput? {
+        let inputs = captureSession.inputs as! [AVCaptureDeviceInput]
+        if inputs.contains(backCameraInput) {
+            return backCameraInput
+        } else if inputs.contains(frontCameraInput) {
+            return frontCameraInput
+        } else {
+            return nil
+        }
+    }
+    
     //This method is called when the record button is held down and released. The capture layer will start recording and the button will animate. When released, the recording will stop and the video will be sent to the Camera View Delegate
     public func didHoldRecordButton(gesture: UITapGestureRecognizer) {
         if gesture.state == .began {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let filePath = documentsURL.appendingPathComponent(Constants.videoFileName)
+            
+            //Fix mirrored videos for front camera.
+            if getCameraType() == frontCameraInput {
+                videoOutput.connection(withMediaType: AVMediaTypeVideo).isVideoMirrored = true
+            }
+            
             videoOutput.startRecording(toOutputFileURL: filePath, recordingDelegate: self)
             recordButton.didTouchDown()
         } else if gesture.state == .ended {
@@ -148,9 +165,15 @@ extension CameraView: AVCapturePhotoCaptureDelegate {
         let dataProvider = CGDataProvider(data: imageData! as CFData)
         
         let cgImageRef = CGImage(jpegDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
-        let image = UIImage(cgImage: cgImageRef!, scale: 1.0, orientation: .right)
         
-        delegate.submit(image: image)
+        if getCameraType() == frontCameraInput {
+            //Fixed mirrored videos for back camera.
+            delegate.submit(image: UIImage(cgImage: cgImageRef!, scale: 1.0, orientation: .leftMirrored))
+        } else {
+            //Otherwise just submit regular image.
+            delegate.submit(image: UIImage(cgImage: cgImageRef!, scale: 1.0, orientation: .right))
+        }
+        
     }
 }
 
@@ -163,7 +186,6 @@ extension CameraView: AVCaptureFileOutputRecordingDelegate {
             print("Error Recording from CameraView:AVCaptureFileOutputRecordingDelegate#capture: \(error.localizedDescription)")
         } else {
             let player = AVPlayer(url: outputFileURL)
-            
             delegate.submit(video: player)
         }
     }

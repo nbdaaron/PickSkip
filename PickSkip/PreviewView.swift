@@ -20,7 +20,7 @@ class PreviewView: UIImageView {
         
         playerLayer = AVPlayerLayer(player: player)
         playerLayer!.frame = bounds
-        playerLayer!.videoGravity = AVLayerVideoGravityResize
+        playerLayer!.videoGravity = Constants.videoGravity
         layer.addSublayer(playerLayer!)
         
         playOnRepeat(player)

@@ -45,13 +45,13 @@ class CameraViewController: UIViewController {
 
 extension CameraViewController: CameraViewDelegate {
     
-    //Accepts an image, displays it on the CameraView.
+    //Accepts an image, displays it on the PreviewView.
     func submit(image: UIImage) {
         displayPreview()
         previewView.displayImage(image)
     }
     
-    //Accepts a video, displays it on the CameraView.
+    //Accepts a video, displays it on the PreviewView.
     func submit(video: AVPlayer) {
         displayPreview()
         previewView.displayVideo(video)

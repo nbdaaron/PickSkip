@@ -27,6 +27,8 @@ class Constants {
     //Temporary file name for recorded videos
     static let videoFileName: String = "temp.mp4"
 
+    //Default video gravity (determines how to stretch/distort images to fit in screen)
+    static let videoGravity: String = AVLayerVideoGravityResize
     
     //The constants above may be modified to modify application functionality. Please do not alter the constants below.
     

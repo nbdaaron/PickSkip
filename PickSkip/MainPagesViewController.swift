@@ -36,7 +36,7 @@ class MainPagesViewController: UIPageViewController {
 //This class implements the UIPageViewController's Data Source so it can determine which View Controllers to display.
 extension MainPagesViewController: UIPageViewControllerDataSource {
     
-    //This function determines what view controller to display next
+    ///This function determines what view controller to display next
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         let index = pages.index(of: viewController)
         if index == nil || index! + 1 == pages.count {
@@ -46,7 +46,7 @@ extension MainPagesViewController: UIPageViewControllerDataSource {
         }
     }
     
-    //This function determines what view controller to display previously
+    ///This function determines what view controller to display previously
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         let index = pages.index(of: viewController)
         if index == nil || index! == 0 {

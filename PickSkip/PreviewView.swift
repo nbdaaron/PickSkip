@@ -14,7 +14,7 @@ class PreviewView: UIImageView {
     var playerLayer: AVPlayerLayer?
     var repeatObserver: NSObjectProtocol?
     
-    //Accepts a video and play it on repeat.
+    ///Accepts a video and play it on repeat.
     func displayVideo(_ player: AVPlayer) {
         removeExistingContent()
         
@@ -26,14 +26,14 @@ class PreviewView: UIImageView {
         playOnRepeat(player)
     }
     
-    //Accepts an image and display it.
+    ///Accepts an image and display it.
     func displayImage(_ image: UIImage) {
         removeExistingContent()
         
         self.image = image
     }
     
-    //Plays the video and set up a notification that will play the video again when completed.
+    ///Plays the video and set up a notification that will play the video again when completed.
     private func playOnRepeat(_ player: AVPlayer) {
         player.play()
         
@@ -45,7 +45,7 @@ class PreviewView: UIImageView {
         })
     }
     
-    //This function is called when displaying a new photo or image. Clears any existing content being displayed.
+    ///This function is called when displaying a new photo or image. Clears any existing content being displayed.
     func removeExistingContent() {
         image = nil
         playerLayer?.player?.pause()

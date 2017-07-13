@@ -12,25 +12,25 @@ import AVFoundation
 
 class Constants {
 
-    //Maximum allowed recorded video duration in seconds
+    ///Maximum allowed recorded video duration in seconds
     static let maxVideoDuration: CGFloat = 5
     
-    //Seconds per frame for recording button animation
+    ///Seconds per frame for recording button animation
     static let updateInterval: Double = 0.05
     
-    //The default camera loaded when the application is opened.
+    ///The default camera loaded when the application is opened.
     static let defaultCamera: AVCaptureDevice = backCamera
     
-    //The following storyboard IDs are used to create the Main Pages scroll view.
+    ///The following storyboard IDs are used to create the Main Pages scroll view.
     static let mainPagesViews: [String] = ["HistoryTableViewController", "CameraViewController"]
     
-    //Temporary file name for recorded videos
+    ///Temporary file name for recorded videos
     static let videoFileName: String = "temp.mp4"
 
-    //Default video gravity (determines how to stretch/distort images to fit in screen)
+    ///Default video gravity (determines how to stretch/distort images to fit in screen)
     static let videoGravity: String = AVLayerVideoGravityResize
     
-    //The constants above may be modified to modify application functionality. Please do not alter the constants below.
+    ///The constants above may be modified to modify application functionality. Please do not alter the constants below.
     
     static let backCamera: AVCaptureDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .back)
 

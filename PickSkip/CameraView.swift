@@ -30,7 +30,7 @@ class CameraView: UIView {
     
     var recordButton: RecordButton!
     
-    //This method is called when the Camera View Controller is created.
+    ///This method is called when the Camera View Controller is created.
     public func setupCameraView(_ recordButton: RecordButton) {
         //Add Camera Button
         self.recordButton = recordButton
@@ -44,7 +44,7 @@ class CameraView: UIView {
     }
     
     
-    //Creates the Capture Session, connecting the camera and the microphone as the input, and linking the output to AVCapturePhotoOutput and AVCaptureMovieFileOutput instances
+    ///Creates the Capture Session, connecting the camera and the microphone as the input, and linking the output to AVCapturePhotoOutput and AVCaptureMovieFileOutput instances
     private func createCaptureSession() {
         captureSession = AVCaptureSession()
         
@@ -72,7 +72,7 @@ class CameraView: UIView {
         }
     }
     
-    //Prepares and adds the Preview Layer so the camera display is visible while recording.
+    ///Prepares and adds the Preview Layer so the camera display is visible while recording.
     private func preparePreviewLayer() {
         if let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession) {
             //Resize Aspect Fill: Scale Video to edges of screen but do not distort image.
@@ -84,14 +84,14 @@ class CameraView: UIView {
         }
     }
     
-    //Adds the gesture recognizer (recognizing double taps on the camera view) which switches between front and back camera
+    ///Adds the gesture recognizer (recognizing double taps on the camera view) which switches between front and back camera
     private func addSwitchCameraGestureRecognizer() {
         let switchCameraRecognizer = UITapGestureRecognizer(target: self, action: #selector(didDoubleTapScreen))
         switchCameraRecognizer.numberOfTapsRequired = 2
         self.addGestureRecognizer(switchCameraRecognizer)
     }
     
-    //Prepares the record button with its corresponding gesture recognizers (tap to take photo, hold to record video). Also links the button to this instance as delegate to be notified when the record button has reached max progress.
+    ///Prepares the record button with its corresponding gesture recognizers (tap to take photo, hold to record video). Also links the button to this instance as delegate to be notified when the record button has reached max progress.
     private func setupRecordButton() {
         recordButton.delegate = self
         
@@ -101,7 +101,7 @@ class CameraView: UIView {
         recordButton.addGestureRecognizer(photoRecognizer)
     }
     
-    //This method is called when the double-tap gesture recognizer recognizes the action. It switches the capture session between front and back cameras.
+    ///This method is called when the double-tap gesture recognizer recognizes the action. It switches the capture session between front and back cameras.
     public func didDoubleTapScreen(gesture: UIGestureRecognizer) {
         let input = getCameraType()
         self.captureSession.beginConfiguration()
@@ -118,6 +118,7 @@ class CameraView: UIView {
 
     }
     
+    ///Returns the current camera type associated with the Capture Session
     public func getCameraType() -> AVCaptureDeviceInput? {
         let inputs = captureSession.inputs as! [AVCaptureDeviceInput]
         if inputs.contains(backCameraInput) {
@@ -129,7 +130,7 @@ class CameraView: UIView {
         }
     }
     
-    //This method is called when the record button is held down and released. The capture layer will start recording and the button will animate. When released, the recording will stop and the video will be sent to the Camera View Delegate
+    ///This method is called when the record button is held down and released. The capture layer will start recording and the button will animate. When released, the recording will stop and the video will be sent to the Camera View Delegate
     public func didHoldRecordButton(gesture: UITapGestureRecognizer) {
         if gesture.state == .began {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -148,7 +149,7 @@ class CameraView: UIView {
         }
     }
     
-    //This method is called when the record button is briefly tapped. The capture layer will take a photo and send it to the Camera View Delegate
+    ///This method is called when the record button is briefly tapped. The capture layer will take a photo and send it to the Camera View Delegate
     public func didTapRecordButton(gesture: UITapGestureRecognizer) {
         let settings = AVCapturePhotoSettings()
         photoOutput.capturePhoto(with: settings, delegate: self)
@@ -156,10 +157,10 @@ class CameraView: UIView {
 
 }
 
-//This class implements AVCapturePhotoCaptureDelegate so it can handle the photos that are taken.
+///This class implements AVCapturePhotoCaptureDelegate so it can handle the photos that are taken.
 extension CameraView: AVCapturePhotoCaptureDelegate {
     
-    //Upon photo capture, renders the image in a UIImageView and submit it to the Camera View Delegate.
+    ///Upon photo capture, renders the image in a UIImageView and submit it to the Camera View Delegate.
     func capture(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?, previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
         
         let imageData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer!, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
@@ -182,7 +183,7 @@ extension CameraView: AVCapturePhotoCaptureDelegate {
 //This class implements AVCaptureFileOutputRecordingDelegate so it can handle the videos that are recorded.
 extension CameraView: AVCaptureFileOutputRecordingDelegate {
     
-    //Upon recording video, renders the video in an AVPlayer and submit it to the Camera View Delegate.
+    ///Upon recording video, renders the video in an AVPlayer and submit it to the Camera View Delegate.
     public func capture(_ captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAt outputFileURL: URL!, fromConnections connections: [Any]!, error: Error!) {
         if error != nil {
             print("Error Recording from CameraView:AVCaptureFileOutputRecordingDelegate#capture: \(error.localizedDescription)")

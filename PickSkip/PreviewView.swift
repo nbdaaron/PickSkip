@@ -46,8 +46,9 @@ class PreviewView: UIImageView {
     }
     
     //This function is called when displaying a new photo or image. Clears any existing content being displayed.
-    private func removeExistingContent() {
+    func removeExistingContent() {
         image = nil
+        playerLayer?.player?.pause()
         playerLayer?.removeFromSuperlayer()
         NotificationCenter.default.removeObserver(repeatObserver as Any)
     }

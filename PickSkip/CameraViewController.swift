@@ -37,6 +37,7 @@ class CameraViewController: UIViewController {
     
     //Hide the preview layer - called when the 'X' button is tapped from the options view.
     @IBAction func closePreview(_ sender: Any) {
+        previewView.removeExistingContent()
         previewView.isHidden = true
         optionsView.isHidden = true
     }

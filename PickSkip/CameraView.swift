@@ -91,8 +91,10 @@ class CameraView: UIView {
         self.addGestureRecognizer(switchCameraRecognizer)
     }
     
-    //Prepares the record button with its corresponding gesture recognizers (tap to take photo, hold to record video)
+    //Prepares the record button with its corresponding gesture recognizers (tap to take photo, hold to record video). Also links the button to this instance as delegate to be notified when the record button has reached max progress.
     private func setupRecordButton() {
+        recordButton.delegate = self
+        
         let recordRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didHoldRecordButton))
         recordButton.addGestureRecognizer(recordRecognizer)
         let photoRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapRecordButton))
@@ -188,5 +190,12 @@ extension CameraView: AVCaptureFileOutputRecordingDelegate {
             let player = AVPlayer(url: outputFileURL)
             delegate.submit(video: player)
         }
+    }
+}
+
+//This class implements RecordDelegate so it is notified when the Record Button reaches its max progress
+extension CameraView: RecordDelegate {
+    func maxRecordProgressReached() {
+        videoOutput.stopRecording()
     }
 }

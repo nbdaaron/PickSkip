@@ -13,8 +13,13 @@ public enum RecordButtonState : Int {
     case recording, idle, hidden;
 }
 
+protocol RecordDelegate {
+    func maxRecordProgressReached()
+}
+
 class RecordButton: UIButton {
     
+    var delegate: RecordDelegate!
     var timer: Timer?
     
     var buttonColor: UIColor! = .white{
@@ -52,10 +57,11 @@ class RecordButton: UIButton {
     }
     
     public func updateProgress(timer: Timer) {
-        progressLayer.strokeEnd += CGFloat(Constants.updateInterval) / Constants.maxVideoDuration
         if progressLayer.strokeEnd >= 1 || buttonState != .recording {
             self.buttonState = .idle
+            delegate.maxRecordProgressReached()
         }
+        progressLayer.strokeEnd += CGFloat(Constants.updateInterval) / Constants.maxVideoDuration
     }
     
     fileprivate var circleLayer: CALayer!

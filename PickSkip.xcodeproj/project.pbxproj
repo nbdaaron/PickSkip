@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1AD269131F18433D003C438B /* ComposeMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269121F18433D003C438B /* ComposeMessageViewController.swift */; };
+		1AD269151F184349003C438B /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269141F184349003C438B /* ContactCell.swift */; };
+		1AD269171F184358003C438B /* HeaderButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269161F184358003C438B /* HeaderButtonsView.swift */; };
+		1AD269191F184360003C438B /* CounterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269181F184360003C438B /* CounterButton.swift */; };
+		1AD2691E1F184633003C438B /* Raleway-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AD2691D1F18462E003C438B /* Raleway-Light.ttf */; };
 		27C7D9991F14805800A5737F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C7D9981F14805800A5737F /* AppDelegate.swift */; };
 		27C7D99E1F14805800A5737F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27C7D99C1F14805800A5737F /* Main.storyboard */; };
 		27C7D9A11F14805800A5737F /* PickSkip.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27C7D99F1F14805800A5737F /* PickSkip.xcdatamodeld */; };
@@ -23,6 +28,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1AD269121F18433D003C438B /* ComposeMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeMessageViewController.swift; sourceTree = "<group>"; };
+		1AD269141F184349003C438B /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
+		1AD269161F184358003C438B /* HeaderButtonsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderButtonsView.swift; sourceTree = "<group>"; };
+		1AD269181F184360003C438B /* CounterButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CounterButton.swift; sourceTree = "<group>"; };
+		1AD2691D1F18462E003C438B /* Raleway-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Light.ttf"; sourceTree = "<group>"; };
 		27C7D9951F14805800A5737F /* PickSkip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PickSkip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27C7D9981F14805800A5737F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		27C7D99D1F14805800A5737F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -75,6 +85,7 @@
 		27C7D9971F14805800A5737F /* PickSkip */ = {
 			isa = PBXGroup;
 			children = (
+				1AD2691D1F18462E003C438B /* Raleway-Light.ttf */,
 				27C7D9C01F15AC9E00A5737F /* UIElements */,
 				27C7D9BF1F15AC7B00A5737F /* Views */,
 				27C7D9BE1F15AC6100A5737F /* ViewControllers */,
@@ -95,6 +106,7 @@
 			children = (
 				27C7D9AD1F14825A00A5737F /* CameraViewController.swift */,
 				27C7D9B71F158CFE00A5737F /* MainPagesViewController.swift */,
+				1AD269121F18433D003C438B /* ComposeMessageViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -104,6 +116,8 @@
 			children = (
 				27C7D9B91F1596D200A5737F /* PreviewView.swift */,
 				27C7D9AF1F1482DE00A5737F /* CameraView.swift */,
+				1AD269161F184358003C438B /* HeaderButtonsView.swift */,
+				1AD269141F184349003C438B /* ContactCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -112,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				27C7D9B31F148C3200A5737F /* RecordButton.swift */,
+				1AD269181F184360003C438B /* CounterButton.swift */,
 			);
 			name = UIElements;
 			sourceTree = "<group>";
@@ -168,7 +183,7 @@
 				TargetAttributes = {
 					27C7D9941F14805800A5737F = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = K2XB9K6AET;
+						DevelopmentTeam = JZZ4Q5EUJ9;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -196,6 +211,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AD2691E1F184633003C438B /* Raleway-Light.ttf in Resources */,
 				27C7D9A61F14805800A5737F /* LaunchScreen.storyboard in Resources */,
 				27C7D9B61F1589FC00A5737F /* GoogleService-Info.plist in Resources */,
 				27C7D9A31F14805800A5737F /* Assets.xcassets in Resources */,
@@ -258,13 +274,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AD269151F184349003C438B /* ContactCell.swift in Sources */,
 				27C7D9B21F14859C00A5737F /* Constants.swift in Sources */,
 				27C7D9BA1F1596D200A5737F /* PreviewView.swift in Sources */,
 				27C7D9991F14805800A5737F /* AppDelegate.swift in Sources */,
 				27C7D9B41F148C3200A5737F /* RecordButton.swift in Sources */,
 				27C7D9A11F14805800A5737F /* PickSkip.xcdatamodeld in Sources */,
+				1AD269131F18433D003C438B /* ComposeMessageViewController.swift in Sources */,
 				27C7D9B81F158CFE00A5737F /* MainPagesViewController.swift in Sources */,
 				27C7D9AE1F14825A00A5737F /* CameraViewController.swift in Sources */,
+				1AD269171F184358003C438B /* HeaderButtonsView.swift in Sources */,
+				1AD269191F184360003C438B /* CounterButton.swift in Sources */,
 				27C7D9B01F1482DE00A5737F /* CameraView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -389,7 +409,7 @@
 			baseConfigurationReference = DC6D90F42C90859AD365FFB1 /* Pods-PickSkip.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = K2XB9K6AET;
+				DEVELOPMENT_TEAM = JZZ4Q5EUJ9;
 				INFOPLIST_FILE = PickSkip/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -404,7 +424,7 @@
 			baseConfigurationReference = DB23FB6301C676C7310726D0 /* Pods-PickSkip.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = K2XB9K6AET;
+				DEVELOPMENT_TEAM = JZZ4Q5EUJ9;
 				INFOPLIST_FILE = PickSkip/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

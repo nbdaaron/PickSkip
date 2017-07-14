@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSContactsUsageDescription</key>
+	<string>PickSkip needs to use your contacts</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Pickskip needs the camera to record your clips.</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -32,6 +34,10 @@
 	</array>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Pickskip needs the microphone to record your clips.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Raleway-Light.ttf</string>
+	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

@@ -37,6 +37,12 @@ class ComposeMessageViewController: UIViewController {
     var dateComponents : DateComponents!
     
     
+    var trailing: NSLayoutConstraint!
+    var leading: NSLayoutConstraint!
+    var centerX: NSLayoutConstraint!
+    var centerY: NSLayoutConstraint!
+    var height: NSLayoutConstraint!
+    
     
     var contacts : [CNContact] = {
         let store = CNContactStore()
@@ -222,14 +228,28 @@ class ComposeMessageViewController: UIViewController {
     
     func setUpContactView() {
         
-        contactView = UIView()
-        contactView.translatesAutoresizingMaskIntoConstraints = false
+        contactView = UIView(frame: CGRect(x: 0, y: 316.5, width: self.view.frame.width, height: self.view.frame.height))
+        contactView.translatesAutoresizingMaskIntoConstraints = true
         view.addSubview(contactView)
         
         contactView.backgroundColor = UIColor(colorLiteralRed: 255.0/255.0, green: 65.0/255.0, blue: 98.0/255.0, alpha: 1)
         contactView.layer.cornerRadius = 10
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(sender:)))
         contactView.addGestureRecognizer(panGesture)
+        
+//         trailing = NSLayoutConstraint(item: contactView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0)
+//
+//         leading = NSLayoutConstraint(item: contactView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0)
+//        
+//         height = NSLayoutConstraint(item: contactView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 700)
+//        
+//        centerX = NSLayoutConstraint(item: contactView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0)
+//        centerY = NSLayoutConstraint(item: contactView, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: 225)
+//        
+//
+//        let constraints: [NSLayoutConstraint] = [trailing,leading,height, centerY, centerY]
+//
+//        
         
         let constraints:[NSLayoutConstraint] = [
             contactView.topAnchor.constraint(equalTo: buttonsView.bottomAnchor, constant: -15),
@@ -240,30 +260,50 @@ class ComposeMessageViewController: UIViewController {
         NSLayoutConstraint.activate(constraints)
     }
     
+    var tracker: CGFloat = 0.0
+    
     func handlePan(sender: UIPanGestureRecognizer) {
+        var center = sender.view?.center
+        let translation = sender.translation(in: sender.view)
+        
         if (sender.state == UIGestureRecognizerState.changed) {
-            var center = sender.view?.center
-            let translation = sender.translation(in: sender.view)
-            if (center?.y)! <= CGFloat(655.0) && (center?.y)! >= CGFloat(435.0) {
-                center = CGPoint(x: (sender.view?.frame.midX)!, y: center!.y + translation.y)
+           
+            if (center?.y)! >= CGFloat(655.0) || (center?.y)! <= CGFloat(435.0) {
+                center = CGPoint(x: (sender.view?.frame.midX)!, y: center!.y + translation.y / 2)
                 sender.view?.center = center!
                 sender.setTranslation(CGPoint(), in: sender.view)
-            }
-            if (center?.y)! <= CGFloat(435.0) && translation.y > 0.0 {
-                center = CGPoint(x: (sender.view?.frame.midX)!, y: center!.y + translation.y)
-                sender.view?.center = center!
-                sender.setTranslation(CGPoint(), in: sender.view)
+//                if abs(tracker-translation.y) > 0 {
+//                    centerY.constant = translation.y
+//                }
                 listOfContactsTable.isScrollEnabled = false
+            } else {
+                center = CGPoint(x: (sender.view?.frame.midX)!, y: center!.y + translation.y)
+                sender.view?.center = center!
+                sender.setTranslation(CGPoint(), in: sender.view)
+                
             }
-            if (center?.y)! <= CGFloat(435.0) && translation.y < 0.0 {
+            tracker = translation.y
+
+        }
+        if (sender.state == UIGestureRecognizerState.ended) {
+            if (center?.y)! >= CGFloat(655.0) {
+                UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
+                    center = CGPoint(x: (sender.view?.frame.midX)!, y: 650)
+                    sender.view?.center = center!
+                    sender.setTranslation(CGPoint(), in: sender.view)
+                })
+            } else if (center?.y)! <= CGFloat(435.0){
+                UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
+                    center = CGPoint(x: (sender.view?.frame.midX)!, y: 415)
+                    sender.view?.center = center!
+                    sender.setTranslation(CGPoint(), in: sender.view)
+                    
+                })
                 listOfContactsTable.isScrollEnabled = true
             }
-            if (center?.y)! >= CGFloat(655.0) && translation.y < 0.0 {
-                center = CGPoint(x: (sender.view?.frame.midX)!, y: 650)
-                sender.view?.center = center!
-                sender.setTranslation(CGPoint(), in: sender.view)
-            }
+            print(contactView.frame.minY)
         }
+        
     }
     
     func setupTableView() {
@@ -279,6 +319,7 @@ class ComposeMessageViewController: UIViewController {
         listOfContactsTable.isEditing = false
         listOfContactsTable.allowsSelection = true
         listOfContactsTable.allowsMultipleSelection = true
+        
         
         
         listOfContactsTable.backgroundColor = .white
@@ -355,13 +396,6 @@ class ComposeMessageViewController: UIViewController {
         searchBar.endEditing(true)
     }
     
-
-//    func animateHeader(height: Int) {
-//        self.headerHeightConstraint.constant = CGFloat(height)
-//        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
-//        self.view.layoutIfNeeded()
-//        }, completion: nil)
-//    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

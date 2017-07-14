@@ -154,6 +154,38 @@ class CameraView: UIView {
         let settings = AVCapturePhotoSettings()
         photoOutput.capturePhoto(with: settings, delegate: self)
     }
+    
+    //Automatically focuses camera at point where tapped.
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let screenSize = bounds.size
+        if let touchPoint = touches.first {
+            let x = touchPoint.location(in: self).y / screenSize.height
+            let y = 1.0 - touchPoint.location(in: self).x / screenSize.width
+            let focusPoint = CGPoint(x: x, y: y)
+            
+            if let device = getCameraType()?.device {
+                do {
+                    try device.lockForConfiguration()
+                    if device.isFocusModeSupported(Constants.focusMode){
+                        device.focusMode = Constants.focusMode
+                    }
+                    if device.isExposureModeSupported(Constants.exposureMode) {
+                        device.exposureMode = Constants.exposureMode
+                    }
+                    if device.isFocusPointOfInterestSupported {
+                        device.focusPointOfInterest = focusPoint
+                    }
+                    if device.isExposurePointOfInterestSupported {
+                        device.exposurePointOfInterest = focusPoint
+                    }
+                    device.unlockForConfiguration()
+                }
+                catch {
+                    print("Error focusing camera on CameraView#touchesBegan: \(error)")
+                }
+            }
+        }
+    }
 
 }
 

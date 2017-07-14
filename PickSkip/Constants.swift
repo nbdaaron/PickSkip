@@ -30,6 +30,12 @@ class Constants {
     ///Default video gravity (determines how to stretch/distort images to fit in screen)
     static let videoGravity: String = AVLayerVideoGravityResize
     
+    //Default camera focusing mode
+    static let focusMode: AVCaptureFocusMode = .autoFocus
+    
+    //Default camera exposure mode
+    static let exposureMode: AVCaptureExposureMode = .continuousAutoExposure
+    
     ///The constants above may be modified to modify application functionality. Please do not alter the constants below.
     
     static let backCamera: AVCaptureDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .back)

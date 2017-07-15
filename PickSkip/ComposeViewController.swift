@@ -11,13 +11,27 @@ import UIKit
 class ComposeViewController: UIViewController {
 
     @IBOutlet weak var contactView: UIView!
-    
     @IBOutlet weak var searchBar: UISearchBar!
-    
+    @IBOutlet weak var buttonsView: UIView!
     @IBOutlet weak var listOfContactsTable: UITableView!
+    @IBOutlet weak var headerView: UIView!
     
+    
+    @IBOutlet weak var yearButton: CounterButton!
 
-    var centerY : NSLayoutConstraint!
+    @IBOutlet weak var monthButton: CounterButton!
+    
+    @IBOutlet weak var weekButton: CounterButton!
+    @IBOutlet weak var dayButton: CounterButton!
+    @IBOutlet weak var hourButton: CounterButton!
+    @IBOutlet weak var minButton: CounterButton!
+    
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel!
+    
+    @IBOutlet weak var backButton: UIButton!
+    
+    var top : NSLayoutConstraint!
     var tracker: CGFloat = 0.0
     var lowerPanLimit: CGFloat = 0.0
     var upperPanLimit: CGFloat = 0.0
@@ -25,6 +39,9 @@ class ComposeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        setupButtons()
+        self.view.bringSubview(toFront: contactView)
+        contactView.layer.cornerRadius = contactView.frame.width / 50
         // Do any additional setup after loading the view.
     }
 
@@ -33,57 +50,113 @@ class ComposeViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewDidLayoutSubviews() {
+        
+        
+    }
+    
+    func setupButtons(){
+        yearButton.type = "year"
+        monthButton.type = "month"
+        weekButton.type = "week"
+        dayButton.type = "day"
+        hourButton.type = "hour"
+        minButton.type = "min"
+        yearButton.addTarget(self, action: #selector(didPress(sender:)), for: .touchUpInside)
+        
+        monthButton.addTarget(self, action: #selector(didPress(sender:)), for: .touchUpInside)
+        weekButton.addTarget(self, action: #selector(didPress(sender:)), for: .touchUpInside)
+        dayButton.addTarget(self, action: #selector(didPress(sender:)), for: .touchUpInside)
+        hourButton.addTarget(self, action: #selector(didPress(sender:)), for: .touchUpInside)
+        minButton.addTarget(self, action: #selector(didPress(sender:)), for: .touchUpInside)
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print("frambefore: \(contactView.frame.minY)")
+        upperPanLimit = -(contactView.frame.minY - headerView.frame.height)
+        print("upperpanlimi: \(upperPanLimit)")
+    }
+    
     
     func setup() {
-        centerY = NSLayoutConstraint(item: contactView, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.8, constant: 0)
-        centerY.isActive = true
-        
+        top = NSLayoutConstraint(item: contactView, attribute: .top, relatedBy: .equal, toItem: buttonsView, attribute: .bottom, multiplier: 1.0, constant: 0 )
+        top.isActive = true
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(sender:)))
         contactView.addGestureRecognizer(panGesture)
         
-        upperPanLimit = -(self.view.frame.height / 3.3)
+        
+        
         
         listOfContactsTable.isScrollEnabled = false
         
     }
     
     func handlePan(sender: UIPanGestureRecognizer) {
-        var center = sender.view?.center
         let translation = sender.translation(in: sender.view)
-        print("Upperpanlimit: \(self.upperPanLimit)")
-        
         if (sender.state == UIGestureRecognizerState.changed) {
             
-            if (centerY.constant < 0 ){
-                centerY.constant += (translation.y - tracker)
+            if (top.constant > 0 ){
+                top.constant += (translation.y - tracker) / 2
             } else {
-                centerY.constant += (translation.y - tracker) / 2
+                top.constant += (translation.y - tracker)
             }
             
         }
-        print("Y: \(centerY.constant)")
+        print("Y: \(top.constant)")
         tracker = translation.y
         
         if (sender.state == UIGestureRecognizerState.ended){
-            if (centerY.constant > 0 ){
+            if (top.constant > 0 ){
                 UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations:{
-                    self.centerY.constant = 0
+                    self.top.constant = 0
+                    self.view.layoutIfNeeded()
                 })
-            } else if (centerY.constant < self.upperPanLimit){
+            } else if (contactView.frame.minY < self.headerView.frame.maxY){
                 UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations:{
-                    self.centerY.constant = self.upperPanLimit
+                    self.top.constant = self.upperPanLimit
+                    self.view.layoutIfNeeded()
                 })
             }
         }
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    
+    func didPress(sender: CounterButton) {
+        sender.count += 1
+        if sender.type == "min" {
+            sender.setTitle(String(sender.count) + "\n" + sender.type, for: .normal)
+        }else {
+            sender.setTitle(String(sender.count) + " " + sender.type, for: .normal)
+        }
+        
+//        switch sender.type {
+//        case "year":
+//            dateComponents.year = sender.count
+//        case "month":
+//            dateComponents.month = sender.count
+//        case "week":
+//            dateComponents.day = sender.count * 7
+//        case "day":
+//            dateComponents.day = sender.count
+//        case "hour":
+//            dateComponents.hour = sender.count
+//        case "min":
+//            dateComponents.minute = sender.count
+//        default:
+//            print("timebutton didn't fire")
+//        }
+//        
+//        let futureDate = Calendar.current.date(byAdding: dateComponents, to: date)
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateStyle = DateFormatter.Style.long
+//        nowDate = dateFormatter.string(from: futureDate!)
+//        dateMonthYearLabel.text = nowDate
+//        
+//        let timeformatter = DateFormatter()
+//        timeformatter.timeStyle = DateFormatter.Style.short
+//        nowTime = timeformatter.string(from: futureDate!)
+//        timeLabel.text = nowTime
+        
     }
-    */
 
 }

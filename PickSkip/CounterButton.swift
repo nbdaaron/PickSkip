@@ -40,9 +40,11 @@ class CounterButton : UIButton {
     
     func setupButton() {
         self.backgroundColor = UIColor(colorLiteralRed: 22.0/255.0, green: 222.0/255.0, blue: 238.0/255.0, alpha: 1)
-        layer.cornerRadius = self.frame.height / 4
+        layer.cornerRadius = self.frame.height / 5
         layer.borderWidth = 0
         translatesAutoresizingMaskIntoConstraints = false
+        titleLabel?.adjustsFontSizeToFitWidth = true
+        titleLabel?.minimumScaleFactor = 0.5
         titleLabel?.lineBreakMode = .byWordWrapping
         titleLabel?.textAlignment = .center
         setTitleColor(.white, for: .normal)

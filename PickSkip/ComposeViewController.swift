@@ -31,7 +31,7 @@ class ComposeViewController: UIViewController {
     
     @IBOutlet weak var backButton: UIButton!
     
-    var top : NSLayoutConstraint!
+    @IBOutlet weak var contactViewTop: NSLayoutConstraint!
     var tracker: CGFloat = 0.0
     var lowerPanLimit: CGFloat = 0.0
     var upperPanLimit: CGFloat = 0.0
@@ -80,13 +80,11 @@ class ComposeViewController: UIViewController {
     
     
     func setup() {
-        top = NSLayoutConstraint(item: contactView, attribute: .top, relatedBy: .equal, toItem: buttonsView, attribute: .bottom, multiplier: 1.0, constant: 0 )
-        top.isActive = true
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(sender:)))
         contactView.addGestureRecognizer(panGesture)
         
         
-        
+        print(contactViewTop.constant)
         
         listOfContactsTable.isScrollEnabled = false
         
@@ -96,25 +94,25 @@ class ComposeViewController: UIViewController {
         let translation = sender.translation(in: sender.view)
         if (sender.state == UIGestureRecognizerState.changed) {
             
-            if (top.constant > 0 ){
-                top.constant += (translation.y - tracker) / 2
+            if (contactViewTop.constant > 0 ){
+                contactViewTop.constant += (translation.y - tracker) / 2
             } else {
-                top.constant += (translation.y - tracker)
+                contactViewTop.constant += (translation.y - tracker)
             }
             
         }
-        print("Y: \(top.constant)")
+        print("Y: \(contactViewTop.constant)")
         tracker = translation.y
         
         if (sender.state == UIGestureRecognizerState.ended){
-            if (top.constant > 0 ){
+            if (contactViewTop.constant > 0 ){
                 UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations:{
-                    self.top.constant = 0
+                    self.contactViewTop.constant = 0
                     self.view.layoutIfNeeded()
                 })
             } else if (contactView.frame.minY < self.headerView.frame.maxY){
                 UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations:{
-                    self.top.constant = self.upperPanLimit
+                    self.contactViewTop.constant = self.upperPanLimit
                     self.view.layoutIfNeeded()
                 })
             }

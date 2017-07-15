@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1AA1D97D1F19932700DAEFE5 /* ComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1D97C1F19932700DAEFE5 /* ComposeViewController.swift */; };
-		1AD269131F18433D003C438B /* ComposeMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269121F18433D003C438B /* ComposeMessageViewController.swift */; };
 		1AD269151F184349003C438B /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269141F184349003C438B /* ContactCell.swift */; };
 		1AD269171F184358003C438B /* HeaderButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269161F184358003C438B /* HeaderButtonsView.swift */; };
 		1AD269191F184360003C438B /* CounterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269181F184360003C438B /* CounterButton.swift */; };
@@ -30,7 +29,6 @@
 
 /* Begin PBXFileReference section */
 		1AA1D97C1F19932700DAEFE5 /* ComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
-		1AD269121F18433D003C438B /* ComposeMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeMessageViewController.swift; sourceTree = "<group>"; };
 		1AD269141F184349003C438B /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
 		1AD269161F184358003C438B /* HeaderButtonsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderButtonsView.swift; sourceTree = "<group>"; };
 		1AD269181F184360003C438B /* CounterButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CounterButton.swift; sourceTree = "<group>"; };
@@ -108,7 +106,6 @@
 			children = (
 				27C7D9AD1F14825A00A5737F /* CameraViewController.swift */,
 				27C7D9B71F158CFE00A5737F /* MainPagesViewController.swift */,
-				1AD269121F18433D003C438B /* ComposeMessageViewController.swift */,
 				1AA1D97C1F19932700DAEFE5 /* ComposeViewController.swift */,
 			);
 			name = ViewControllers;
@@ -284,7 +281,6 @@
 				27C7D9B41F148C3200A5737F /* RecordButton.swift in Sources */,
 				1AA1D97D1F19932700DAEFE5 /* ComposeViewController.swift in Sources */,
 				27C7D9A11F14805800A5737F /* PickSkip.xcdatamodeld in Sources */,
-				1AD269131F18433D003C438B /* ComposeMessageViewController.swift in Sources */,
 				27C7D9B81F158CFE00A5737F /* MainPagesViewController.swift in Sources */,
 				27C7D9AE1F14825A00A5737F /* CameraViewController.swift in Sources */,
 				1AD269171F184358003C438B /* HeaderButtonsView.swift in Sources */,

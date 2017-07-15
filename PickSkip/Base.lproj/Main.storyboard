@@ -162,14 +162,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3k2-c1-kEO">
-                                <rect key="frame" x="0.0" y="357" width="414" height="736"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3k2-c1-kEO">
+                                <rect key="frame" x="0.0" y="294.33333333333326" width="414" height="736"/>
                                 <subviews>
-                                    <searchBar contentMode="redraw" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kfj-Rd-vlA">
+                                    <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="Kfj-Rd-vlA">
                                         <rect key="frame" x="15" y="15" width="384" height="44"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </searchBar>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bbW-t9-crj">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bbW-t9-crj">
                                         <rect key="frame" x="15" y="74" width="384" height="662"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </tableView>
@@ -306,12 +306,14 @@
                             <constraint firstItem="oXQ-DL-nLB" firstAttribute="top" secondItem="lqO-GK-9k1" secondAttribute="bottom" id="mgr-Xl-vs5"/>
                             <constraint firstAttribute="trailing" secondItem="oXQ-DL-nLB" secondAttribute="trailing" id="u6g-9G-LgS"/>
                             <constraint firstItem="oXQ-DL-nLB" firstAttribute="leading" secondItem="Fwg-k4-LGt" secondAttribute="leading" id="vTZ-HI-cy0"/>
+                            <constraint firstItem="3k2-c1-kEO" firstAttribute="top" secondItem="oXQ-DL-nLB" secondAttribute="bottom" id="w88-Xt-PJA"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="backButton" destination="Rie-c4-aIK" id="l5c-QE-XTd"/>
                         <outlet property="buttonsView" destination="oXQ-DL-nLB" id="AS5-KJ-YoA"/>
                         <outlet property="contactView" destination="3k2-c1-kEO" id="b91-g2-Rt1"/>
+                        <outlet property="contactViewTop" destination="w88-Xt-PJA" id="4s7-iN-Nbs"/>
                         <outlet property="dateLabel" destination="gvp-uY-rlq" id="Qgd-8c-vUL"/>
                         <outlet property="dayButton" destination="Z4L-55-RNb" id="0i9-Fg-HH8"/>
                         <outlet property="headerView" destination="lqO-GK-9k1" id="0kA-i2-Zsm"/>

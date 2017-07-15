@@ -155,7 +155,7 @@ class CameraView: UIView {
         photoOutput.capturePhoto(with: settings, delegate: self)
     }
     
-    //Automatically focuses camera at point where tapped.
+    ///Automatically focuses camera at point where tapped.
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let screenSize = bounds.size
         if let touchPoint = touches.first {

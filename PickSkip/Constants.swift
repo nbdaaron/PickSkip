@@ -27,13 +27,13 @@ class Constants {
     ///Temporary file name for recorded videos
     static let videoFileName: String = "temp.mp4"
 
-    ///Default video gravity (determines how to stretch/distort images to fit in screen)
+    ///Default camera/playback video gravity (determines how to stretch/distort images to fit in screen)
     static let videoGravity: String = AVLayerVideoGravityResize
     
-    //Default camera focusing mode
+    ///Default camera focusing mode
     static let focusMode: AVCaptureFocusMode = .autoFocus
     
-    //Default camera exposure mode
+    ///Default camera exposure mode
     static let exposureMode: AVCaptureExposureMode = .continuousAutoExposure
     
     ///The constants above may be modified to modify application functionality. Please do not alter the constants below.

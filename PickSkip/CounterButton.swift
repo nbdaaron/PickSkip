@@ -34,27 +34,22 @@ class CounterButton : UIButton {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError()
+        super.init(coder: aDecoder)
+        setupButton()
     }
     
     func setupButton() {
         self.backgroundColor = UIColor(colorLiteralRed: 22.0/255.0, green: 222.0/255.0, blue: 238.0/255.0, alpha: 1)
-        layer.cornerRadius = 15
+        layer.cornerRadius = self.frame.height / 4
         layer.borderWidth = 0
         translatesAutoresizingMaskIntoConstraints = false
         titleLabel?.lineBreakMode = .byWordWrapping
         titleLabel?.textAlignment = .center
         setTitleColor(.white, for: .normal)
-        
-        if type == "min" {
-            setTitle("0" + "\n" + type, for: .normal)
-            titleLabel?.font = UIFont(name: "Raleway-Light", size: 20)
-        }else {
-            setTitle("0" + " " + type, for: .normal)
-            titleLabel?.font = UIFont(name: "Raleway-Light", size: 25)
-        }
+        titleLabel?.font = UIFont(name: "Raleway-Light", size: 20)
         
     }
+    
     
 
     

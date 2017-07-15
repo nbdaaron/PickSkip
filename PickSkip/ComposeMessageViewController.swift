@@ -157,7 +157,7 @@ class ComposeMessageViewController: UIViewController {
         buttonsView.addSubview(backButton)
         
         let constraints:[NSLayoutConstraint] = [
-            buttonsView.heightAnchor.constraint(equalToConstant: 320),
+            buttonsView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.3, constant: 0),
             buttonsView.topAnchor.constraint(equalTo: view.topAnchor),
             buttonsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             buttonsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -228,8 +228,8 @@ class ComposeMessageViewController: UIViewController {
     
     func setUpContactView() {
         
-        contactView = UIView(frame: CGRect(x: 0, y: 316.5, width: self.view.frame.width, height: self.view.frame.height))
-        contactView.translatesAutoresizingMaskIntoConstraints = true
+        contactView = UIView()
+        contactView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(contactView)
         
         contactView.backgroundColor = UIColor(colorLiteralRed: 255.0/255.0, green: 65.0/255.0, blue: 98.0/255.0, alpha: 1)
@@ -237,26 +237,26 @@ class ComposeMessageViewController: UIViewController {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(sender:)))
         contactView.addGestureRecognizer(panGesture)
         
-//         trailing = NSLayoutConstraint(item: contactView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0)
-//
-//         leading = NSLayoutConstraint(item: contactView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0)
-//        
-//         height = NSLayoutConstraint(item: contactView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 700)
-//        
-//        centerX = NSLayoutConstraint(item: contactView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0)
-//        centerY = NSLayoutConstraint(item: contactView, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: 225)
-//        
-//
-//        let constraints: [NSLayoutConstraint] = [trailing,leading,height, centerY, centerY]
-//
-//        
+         trailing = NSLayoutConstraint(item: contactView, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0)
+
+         leading = NSLayoutConstraint(item: contactView, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0)
         
-        let constraints:[NSLayoutConstraint] = [
-            contactView.topAnchor.constraint(equalTo: buttonsView.bottomAnchor, constant: -15),
-            contactView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contactView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            contactView.heightAnchor.constraint(equalToConstant: 700)
-        ]
+         height = NSLayoutConstraint(item: contactView, attribute: .height, relatedBy: .equal, toItem: view, attribute: .height, multiplier: 1.0, constant: 0)
+        
+        centerX = NSLayoutConstraint(item: contactView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0)
+        centerY = NSLayoutConstraint(item: contactView, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.9, constant: 0)
+        
+
+        let constraints: [NSLayoutConstraint] = [trailing,leading,height, centerY, centerY]
+
+        
+        
+//        let constraints:[NSLayoutConstraint] = [
+//            contactView.topAnchor.constraint(equalTo: buttonsView.bottomAnchor, constant: -15),
+//            contactView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+//            contactView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+//            contactView.heightAnchor.constraint(equalToConstant: 700)
+//        ]
         NSLayoutConstraint.activate(constraints)
     }
     
@@ -266,43 +266,65 @@ class ComposeMessageViewController: UIViewController {
         var center = sender.view?.center
         let translation = sender.translation(in: sender.view)
         
+        
         if (sender.state == UIGestureRecognizerState.changed) {
-           
-            if (center?.y)! >= CGFloat(655.0) || (center?.y)! <= CGFloat(435.0) {
-                center = CGPoint(x: (sender.view?.frame.midX)!, y: center!.y + translation.y / 2)
-                sender.view?.center = center!
-                sender.setTranslation(CGPoint(), in: sender.view)
+            
+            if (centerY.constant < 0 ){
+                centerY.constant += (translation.y - tracker)
+            } else {
+                centerY.constant += (translation.y - tracker) / 2
+            }
+            
+        }
+        print("Y: \(centerY.constant)")
+        tracker = translation.y
+        
+        if (sender.state == UIGestureRecognizerState.ended){
+            if (centerY.constant > 0 ){
+                UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations:{
+                    self.centerY.constant = 0
+                })
+            }
+        }
+        
+        
+//        if (sender.state == UIGestureRecognizerState.changed) {
+//           
+//            if (center?.y)! >= CGFloat(655.0) || (center?.y)! <= CGFloat(435.0) {
+//                center = CGPoint(x: (sender.view?.frame.midX)!, y: center!.y + translation.y / 2)
+//                sender.view?.center = center!
+//                sender.setTranslation(CGPoint(), in: sender.view)
 //                if abs(tracker-translation.y) > 0 {
 //                    centerY.constant = translation.y
 //                }
-                listOfContactsTable.isScrollEnabled = false
-            } else {
-                center = CGPoint(x: (sender.view?.frame.midX)!, y: center!.y + translation.y)
-                sender.view?.center = center!
-                sender.setTranslation(CGPoint(), in: sender.view)
-                
-            }
-            tracker = translation.y
-
-        }
-        if (sender.state == UIGestureRecognizerState.ended) {
-            if (center?.y)! >= CGFloat(655.0) {
-                UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
-                    center = CGPoint(x: (sender.view?.frame.midX)!, y: 650)
-                    sender.view?.center = center!
-                    sender.setTranslation(CGPoint(), in: sender.view)
-                })
-            } else if (center?.y)! <= CGFloat(435.0){
-                UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
-                    center = CGPoint(x: (sender.view?.frame.midX)!, y: 415)
-                    sender.view?.center = center!
-                    sender.setTranslation(CGPoint(), in: sender.view)
-                    
-                })
-                listOfContactsTable.isScrollEnabled = true
-            }
-            print(contactView.frame.minY)
-        }
+//                listOfContactsTable.isScrollEnabled = false
+//            } else {
+//                center = CGPoint(x: (sender.view?.frame.midX)!, y: center!.y + translation.y)
+//                sender.view?.center = center!
+//                sender.setTranslation(CGPoint(), in: sender.view)
+//                
+//            }
+//            tracker = translation.y
+//
+//        }
+//        if (sender.state == UIGestureRecognizerState.ended) {
+//            if (center?.y)! >= CGFloat(655.0) {
+//                UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
+//                    center = CGPoint(x: (sender.view?.frame.midX)!, y: 650)
+//                    sender.view?.center = center!
+//                    sender.setTranslation(CGPoint(), in: sender.view)
+//                })
+//            } else if (center?.y)! <= CGFloat(435.0){
+//                UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations: {
+//                    center = CGPoint(x: (sender.view?.frame.midX)!, y: 415)
+//                    sender.view?.center = center!
+//                    sender.setTranslation(CGPoint(), in: sender.view)
+//                    
+//                })
+//                listOfContactsTable.isScrollEnabled = true
+//            }
+//            print(contactView.frame.minY)
+//        }
         
     }
     

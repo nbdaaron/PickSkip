@@ -12,7 +12,6 @@ import Firebase
 class MainPagesViewController: UIPageViewController {
 
     var pages = [UIViewController]()
-    var loginStateListener: AuthStateDidChangeListenerHandle!
     
     override func viewDidLoad() {
         super.viewDidLoad()

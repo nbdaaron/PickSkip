@@ -163,14 +163,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3k2-c1-kEO">
-                                <rect key="frame" x="0.0" y="294.33333333333326" width="414" height="1472"/>
+                                <rect key="frame" x="0.0" y="294.33333333333337" width="414" height="662.33333333333326"/>
                                 <subviews>
                                     <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="Kfj-Rd-vlA">
                                         <rect key="frame" x="15" y="15" width="384" height="44"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </searchBar>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bbW-t9-crj">
-                                        <rect key="frame" x="15" y="74" width="384" height="1398"/>
+                                        <rect key="frame" x="15" y="74" width="384" height="573.33333333333326"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="SC3-9U-BLa">
@@ -192,7 +192,7 @@
                                     <constraint firstItem="Kfj-Rd-vlA" firstAttribute="leading" secondItem="3k2-c1-kEO" secondAttribute="leading" constant="15" id="OWc-sE-q2n"/>
                                     <constraint firstItem="Kfj-Rd-vlA" firstAttribute="top" secondItem="3k2-c1-kEO" secondAttribute="top" constant="15" id="kzY-5M-NqQ"/>
                                     <constraint firstAttribute="trailing" secondItem="bbW-t9-crj" secondAttribute="trailing" constant="15" id="o9s-9x-8dr"/>
-                                    <constraint firstAttribute="bottom" secondItem="bbW-t9-crj" secondAttribute="bottom" id="zOS-35-96r"/>
+                                    <constraint firstAttribute="bottom" secondItem="bbW-t9-crj" secondAttribute="bottom" constant="15" id="zOS-35-96r"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lqO-GK-9k1">
@@ -267,6 +267,9 @@
                                     <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WNq-1w-7Ln" userLabel="undo">
                                         <rect key="frame" x="15" y="152.33333333333331" width="51" height="53.333333333333314"/>
                                         <state key="normal" image="undoButton1"/>
+                                        <connections>
+                                            <action selector="resetCounters:" destination="JLf-O4-IKa" eventType="touchUpInside" id="bKd-hq-swf"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.11131126433610916" green="0.6823495626449585" blue="0.69708293676376343" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -305,7 +308,7 @@
                         <color key="backgroundColor" red="0.062745098039215685" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="3k2-c1-kEO" firstAttribute="leading" secondItem="Fwg-k4-LGt" secondAttribute="leading" id="GJZ-LA-Hj3"/>
-                            <constraint firstItem="3k2-c1-kEO" firstAttribute="height" secondItem="Fwg-k4-LGt" secondAttribute="height" multiplier="2" id="KLa-wu-DSR"/>
+                            <constraint firstItem="3k2-c1-kEO" firstAttribute="height" secondItem="Fwg-k4-LGt" secondAttribute="height" multiplier="0.9" id="KLa-wu-DSR"/>
                             <constraint firstItem="lqO-GK-9k1" firstAttribute="leading" secondItem="Fwg-k4-LGt" secondAttribute="leading" id="NAo-ay-hKZ"/>
                             <constraint firstItem="lqO-GK-9k1" firstAttribute="top" secondItem="Fwg-k4-LGt" secondAttribute="top" id="Oad-y9-ohj"/>
                             <constraint firstAttribute="trailing" secondItem="lqO-GK-9k1" secondAttribute="trailing" id="YjM-Kn-l5D"/>
@@ -330,6 +333,7 @@
                         <outlet property="listOfContactsTable" destination="bbW-t9-crj" id="JmO-tY-sDB"/>
                         <outlet property="minButton" destination="8Hm-bH-nzx" id="JLp-Nt-Zc0"/>
                         <outlet property="monthButton" destination="hPI-wg-8wU" id="EIq-8m-eYx"/>
+                        <outlet property="resetButton" destination="WNq-1w-7Ln" id="366-XL-Ert"/>
                         <outlet property="searchBar" destination="Kfj-Rd-vlA" id="amK-fi-16M"/>
                         <outlet property="timeLabel" destination="PZH-Am-pHi" id="BS2-F5-efI"/>
                         <outlet property="weekButton" destination="xCy-7Q-Udi" id="clY-uo-teu"/>

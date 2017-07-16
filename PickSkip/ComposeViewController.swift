@@ -8,6 +8,7 @@
 
 import UIKit
 import Contacts
+import NotificationCenter
 
 class ComposeViewController: UIViewController {
 
@@ -24,24 +25,35 @@ class ComposeViewController: UIViewController {
     @IBOutlet weak var dayButton: CounterButton!
     @IBOutlet weak var hourButton: CounterButton!
     @IBOutlet weak var minButton: CounterButton!
+    @IBOutlet weak var resetButton: UIButton!
     
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var contactViewTop: NSLayoutConstraint!
     
+    
+    var sendBarView: UIView!
+    var selectedContactsText: UILabel!
+    var sendButton: UIButton!
+    
+    
+    var filtered : [String] = []
+    var searchActive = false
+    
     var nowDate = ""
     var nowTime = ""
     
     var dateComponents : DateComponents!
     var date : Date!
+    var futureDate: Date!
     
     var tracker: CGFloat = 0.0
     var lowerPanLimit: CGFloat = 0.0
     var upperPanLimit: CGFloat = 0.0
     
     var contactsToDisplayArray: [String] = []
-    var selectedPaths: [IndexPath] = []
+    var selectedNames: [String] = []
     
     var contacts : [CNContact] = {
         let store = CNContactStore()
@@ -95,10 +107,13 @@ class ComposeViewController: UIViewController {
         
         listOfContactsTable.dataSource = self
         listOfContactsTable.delegate = self
-        listOfContactsTable.register(ContactCell.self, forCellReuseIdentifier: "cell")
+        listOfContactsTable.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         listOfContactsTable.backgroundColor = UIColor(colorLiteralRed: 255.0/255.0, green: 65.0/255.0, blue: 98.0/255.0, alpha: 1)
         listOfContactsTable.tableFooterView = UIView()
         listOfContactsTable.allowsMultipleSelection = true
+        listOfContactsTable.isScrollEnabled = true
+        
+        
         
         contactsToDisplayArray = {
             var array: [String] = []
@@ -109,13 +124,45 @@ class ComposeViewController: UIViewController {
         }()
         
         
-        setup()
         setupButtons()
         self.view.bringSubview(toFront: contactView)
         contactView.layer.cornerRadius = contactView.frame.width / 50
-        // Do any additional setup after loading the view.
+        setup()
+        setupKeyboardObserver()
+    
     }
 
+    func setupKeyboardObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    func handleKeyboardWillShow(notification: NSNotification) {
+        
+        let keyboardAnimationDuration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as! Double
+        let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        sendBarBottomAnchorConstraint?.constant = -(keyboardSize?.height)!
+        UIView.animate(withDuration: keyboardAnimationDuration, animations: {
+            self.view.layoutIfNeeded()
+        })
+        
+//
+//        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+//            let keyboardHeight = keyboardSize.height
+//            sendBarBottomAnchorConstraint?.constant = -keyboardHeight
+//            
+//        }
+    }
+    
+    func handleKeyboardWillHide(notification: NSNotification) {
+        let keyboardAnimationDuration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as! Double
+        sendBarBottomAnchorConstraint?.constant = 0
+        UIView.animate(withDuration: keyboardAnimationDuration, animations: {
+            self.view.layoutIfNeeded()
+        })
+
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -177,25 +224,78 @@ class ComposeViewController: UIViewController {
         print("upperpanlimi: \(upperPanLimit)")
     }
     
+    var sendBarBottomAnchorConstraint: NSLayoutConstraint?
     
     func setup() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(sender:)))
-        contactView.addGestureRecognizer(panGesture)
-        print(contactViewTop.constant)
-        
-        listOfContactsTable.isScrollEnabled = true
         
         let headerTap = UITapGestureRecognizer(target: self, action: #selector(headerTap(sender:)))
         headerView.addGestureRecognizer(headerTap)
         
+        searchBar.delegate = self
+        searchBar.backgroundImage = UIImage()
+        
+        sendBarView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        sendBarView.backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 237.0/255.0, blue: 143.0/255.0, alpha: 1)
+        sendBarView.translatesAutoresizingMaskIntoConstraints = false
+        sendBarView.isHidden = true
+        self.view.addSubview(sendBarView)
+        
+        selectedContactsText = UILabel()
+        selectedContactsText.translatesAutoresizingMaskIntoConstraints = false
+        
+        selectedContactsText.textColor = .black
+        selectedContactsText.text = "hello"
+        selectedContactsText.font = UIFont(name: "Raleway-Light", size: 20)
+        
+        sendBarView.addSubview(selectedContactsText)
+        
+        
+        sendButton = UIButton()
+        sendButton.setImage(#imageLiteral(resourceName: "RewindButton"), for: .normal)
+        sendButton.translatesAutoresizingMaskIntoConstraints = false
+        sendButton.imageView?.contentMode = UIViewContentMode.scaleAspectFit
+        sendBarView.addSubview(sendButton)
+        
+        
+        
+        let constraints:[NSLayoutConstraint] = [
+            
+            sendBarView.heightAnchor.constraint(equalToConstant: 70),
+            sendBarView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            sendBarView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            
+            selectedContactsText.leadingAnchor.constraint(equalTo: sendBarView.leadingAnchor, constant: 15),
+            selectedContactsText.widthAnchor.constraint(equalTo: sendBarView.widthAnchor, multiplier: 0.8),
+            selectedContactsText.heightAnchor.constraint(equalTo: sendBarView.heightAnchor, multiplier: 0.8),
+            selectedContactsText.centerYAnchor.constraint(equalTo: sendBarView.centerYAnchor),
+            
+            sendButton.trailingAnchor.constraint(equalTo: sendBarView.trailingAnchor, constant: -10),
+            sendButton.centerYAnchor.constraint(equalTo: sendBarView.centerYAnchor),
+            sendButton.leadingAnchor.constraint(equalTo: selectedContactsText.trailingAnchor, constant: 10),
+            
+            ]
+        
+        sendBarBottomAnchorConstraint = NSLayoutConstraint(item: sendBarView, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: 0)
+        sendBarBottomAnchorConstraint?.isActive = true
+        NSLayoutConstraint.activate(constraints)
+        
+        self.view.bringSubview(toFront: sendBarView)
+        
     }
     
     func headerTap(sender: UITapGestureRecognizer) {
-        listOfContactsTable.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+        searchActive = false
+        searchBar.endEditing(true)
+        UIView.animate(withDuration: 0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations:{
+            self.contactViewTop.constant = 0
+            self.view.layoutIfNeeded()
+            
+        })
+        
     }
     
-    func handlePan(sender: UIPanGestureRecognizer) {
-        let translation = sender.translation(in: sender.view)
+//    func handlePan(sender: UIPanGestureRecognizer) {
+//        let translation = sender.translation(in: sender.view)
 //        if (sender.state == UIGestureRecognizerState.changed) {
 //            print(upperPanLimit)
 //            if (contactView.frame.minY <= self.headerView.frame.maxY) {
@@ -234,10 +334,10 @@ class ComposeViewController: UIViewController {
 //                
 //            }
 //        }
-        
-
-        
-    }
+//
+//
+//        
+//    }
     
     
     func tapGesture(gesture: UITapGestureRecognizer) {
@@ -248,7 +348,7 @@ class ComposeViewController: UIViewController {
         } else {
             button.setTitle(String(button.count) + " " + button.type, for: .normal)
         }
-        changeDate(sender: button)
+        changeDate()
     }
     
     func longTapGesture(gesture: UILongPressGestureRecognizer){
@@ -259,19 +359,36 @@ class ComposeViewController: UIViewController {
         } else {
             button.setTitle(String(button.count) + " " + button.type, for: .normal)
         }
-        changeDate(sender: button)
+        changeDate()
     }
 
 
+    @IBAction func resetCounters(_ sender: Any) {
+        yearButton.count = 0
+        monthButton.count = 0
+        weekButton.count = 0
+        dayButton.count = 0
+        hourButton.count = 0
+        minButton.count = 0
+        
+        yearButton.setTitle(String(yearButton.count) + " " + yearButton.type, for: .normal)
+        monthButton.setTitle(String(monthButton.count) + " " + monthButton.type, for: .normal)
+        weekButton.setTitle(String(weekButton.count) + " " + weekButton.type, for: .normal)
+        dayButton.setTitle(String(dayButton.count) + " " + dayButton.type, for: .normal)
+        hourButton.setTitle(String(hourButton.count) + " " + hourButton.type, for: .normal)
+        minButton.setTitle(String(minButton.count) + "\n" + minButton.type, for: .normal)
+        changeDate()
+    }
+
     
-    func changeDate(sender: CounterButton) {
+    func changeDate() {
         dateComponents.year = yearButton.count
         dateComponents.month = monthButton.count
         dateComponents.day = weekButton.count * 7 + dayButton.count
         dateComponents.hour = hourButton.count
         dateComponents.minute = minButton.count
         
-        let futureDate = Calendar.current.date(byAdding: dateComponents, to: date)
+        futureDate = Calendar.current.date(byAdding: dateComponents, to: date)
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = DateFormatter.Style.long
         nowDate = dateFormatter.string(from: futureDate!)
@@ -281,6 +398,21 @@ class ComposeViewController: UIViewController {
         timeformatter.timeStyle = DateFormatter.Style.short
         nowTime = timeformatter.string(from: futureDate!)
         timeLabel.text = nowTime
+    }
+    
+    func updateSendBar(listOfNames: [String]){
+        var tempList: [String] = []
+        for name in listOfNames {
+            let trimmedString = name.trimmingCharacters(in: .whitespacesAndNewlines)
+            tempList.append(trimmedString)
+        }
+        selectedContactsText.text = tempList.joined(separator: ", ")
+        
+        if listOfNames.count == 0 {
+            sendBarView.isHidden = true
+        } else {
+            sendBarView.isHidden = false
+        }
     }
 
 }
@@ -292,50 +424,97 @@ extension ComposeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if(searchActive){
-//            return filtered.count
-//        } else {
+        if(searchActive){
+            return filtered.count
+        } else {
             return contactsToDisplayArray.count
-//        }
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ContactCell
-        cell.backgroundColor = .red
-        //cell.textLabel?.font = UIFont(name: "Raleway-Light", size: 25)
-        //cell.textLabel?.isUserInteractionEnabled = false
-        //cell.textLabel?.backgroundColor = .clear
-        //cell.backgroundColor = UIColor(colorLiteralRed: 255.0/255.0, green: 65.0/255.0, blue: 98.0/255.0, alpha: 1)
-        //cell.textLabel?.textColor = .white
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.font = UIFont(name: "Raleway-Light", size: 20)
+        cell.textLabel?.isUserInteractionEnabled = false
+        cell.backgroundColor = UIColor(colorLiteralRed: 255.0/255.0, green: 65.0/255.0, blue: 98.0/255.0, alpha: 1)
+        cell.textLabel?.textColor = .white
+        cell.selectionStyle = UITableViewCellSelectionStyle.none
+       
         
-        if (selectedPaths as NSArray).index(of: indexPath) != NSNotFound {
-            cell.textLabel?.text = contactsToDisplayArray[indexPath.row]
-            print(cell.state)
+        
+        
+        
+        if searchActive {
+            if selectedNames.contains(filtered[indexPath.row]) {
+                let view = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+                view.backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 237.0/255.0, blue: 143.0/255.0, alpha: 1)
+                view.layer.cornerRadius = 10
+                cell.accessoryView = view
+                cell.isSelected = true
+            } else {
+                cell.accessoryView = UIView()
+            }
+            cell.textLabel?.text = filtered[indexPath.row]
             return cell
-        }
-        else {
+        } else {
+            if selectedNames.contains(contactsToDisplayArray[indexPath.row]) {
+                let view = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+                view.backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 237.0/255.0, blue: 143.0/255.0, alpha: 1)
+                view.layer.cornerRadius = 10
+                cell.accessoryView = view
+                cell.isSelected = true
+            } else {
+                cell.accessoryView = UIView()
+            }
             cell.textLabel?.text = contactsToDisplayArray[indexPath.row]
             return cell
         }
     }
+    
+
 }
 
 extension ComposeViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (selectedPaths as NSArray).index(of: indexPath) != NSNotFound {
-            selectedPaths.remove(at: selectedPaths.index(of: indexPath)!)
+        
+        if let cell = tableView.cellForRow(at: indexPath) {
+            let view = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+            view.backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 237.0/255.0, blue: 143.0/255.0, alpha: 1)
+            view.layer.cornerRadius = 10
+            cell.accessoryView = view
+        
+            if selectedNames.contains((cell.textLabel?.text)!){
+                
+                selectedNames.append((cell.textLabel?.text)!)
+                selectedNames = selectedNames.filter({$0 != tableView.cellForRow(at: indexPath)?.textLabel?.text})
+                cell.isSelected = false
+                cell.accessoryView = UIView()
+                updateSendBar(listOfNames: selectedNames)
+                return
+            }else {
+                selectedNames.append((cell.textLabel?.text)!)
+                updateSendBar(listOfNames: selectedNames)
+            }
         }
-        else {
-            selectedPaths.append(indexPath)
-        }
-        print(selectedPaths)
+        
+        print(selectedNames)
     }
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        tableView.cellForRow(at: indexPath)?.accessoryView = UIView()
+        selectedNames = selectedNames.filter({$0 != tableView.cellForRow(at: indexPath)?.textLabel?.text})
+        updateSendBar(listOfNames: selectedNames)
+        print(selectedNames)
+    }
+    
+    
 }
 
 extension ComposeViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        searchBar.endEditing(true)
         if contactViewTop.constant == 0 {
-        UIView.animate(withDuration: 1, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations:{
+        UIView.animate(withDuration: 1, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: [.curveEaseInOut, .allowUserInteraction], animations:{
             self.contactViewTop.constant = self.upperPanLimit
             self.view.layoutIfNeeded()})
         } else if scrollView.contentOffset.y == 0 {
@@ -345,4 +524,44 @@ extension ComposeViewController: UIScrollViewDelegate {
             
         }
     }
+}
+
+extension ComposeViewController: UISearchBarDelegate {
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true
+        UIView.animate(withDuration: 1, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations:{
+            self.contactViewTop.constant = self.upperPanLimit
+            self.view.layoutIfNeeded()})
+        
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false
+        searchBar.endEditing(true)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.endEditing(true)
+        searchActive = false
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.characters.count == 0 {
+            filtered.removeAll()
+            filtered = contactsToDisplayArray
+        }
+        else {
+            filtered.removeAll()
+            for string: String in contactsToDisplayArray {
+                let nameRange: NSRange = (string as NSString).range(of: searchBar.text!, options: ([.caseInsensitive, .diacriticInsensitive]))
+                if nameRange.location != NSNotFound {
+                    filtered.append(string)
+                }
+            }
+        }
+        listOfContactsTable.reloadData()
+    }
+    
+    
 }

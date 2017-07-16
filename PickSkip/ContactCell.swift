@@ -11,10 +11,10 @@ import UIKit
 
 class ContactCell: UITableViewCell {
     
-    var selectedIndicator: UIView = {
-        var view = UIView()
-        return view
-    }()
+    var selectedIndicator = UIView()
+    
+    var state = false
+    
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -26,9 +26,9 @@ class ContactCell: UITableViewCell {
         textLabel?.textColor = .white
         
         let dotSize = self.frame.height / 2
-        let selectedIndicator = UIView()
-        selectedIndicator.frame = CGRect (x: 300, y: self.frame.height / 2 - dotSize / 2, width: dotSize, height: dotSize)
-        selectedIndicator.backgroundColor = .white
+        selectedIndicator.frame = CGRect (x: self.frame.width - dotSize * 2, y: self.frame.height / 2 - dotSize / 2, width: dotSize, height: dotSize)
+            selectedIndicator.backgroundColor = .white
+        
         selectedIndicator.layer.cornerRadius = dotSize / 2
         selectedIndicator.isUserInteractionEnabled = false
         self.contentView.addSubview(selectedIndicator)
@@ -42,8 +42,7 @@ class ContactCell: UITableViewCell {
         //NSLayoutConstraint.activate(contraints)
         
     }
-    
-    
+
     
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?){
@@ -55,17 +54,25 @@ class ContactCell: UITableViewCell {
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
-        let dotSize = self.frame.height / 2
-            let selectedIndicator = UIView()
-            selectedIndicator.frame = CGRect (x: 300, y: self.frame.height / 2 - dotSize / 2, width: dotSize, height: dotSize)
+//        let dotSize = self.frame.height / 2
+//            let selectedIndicator = UIView()
+//            selectedIndicator.frame = CGRect (x: self.frame.width - dotSize * 2, y: self.frame.height / 2 - dotSize / 2, width: dotSize, height: dotSize)
+//            selectedIndicator.backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 237.0/255.0, blue: 143.0/255.0, alpha: 1)
+//            selectedIndicator.layer.cornerRadius = dotSize / 2
+//        self.contentView.addSubview(selectedIndicator)
+        if !(state) {
             selectedIndicator.backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 237.0/255.0, blue: 143.0/255.0, alpha: 1)
-            selectedIndicator.layer.cornerRadius = dotSize / 2
-        self.contentView.addSubview(selectedIndicator)
+        } else {
+            selectedIndicator.backgroundColor = .white
+        }
+        state = state ? false : true
     }
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         
     }
+    
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

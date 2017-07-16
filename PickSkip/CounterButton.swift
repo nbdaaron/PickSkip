@@ -43,14 +43,31 @@ class CounterButton : UIButton {
         layer.cornerRadius = self.frame.height / 5
         layer.borderWidth = 0
         translatesAutoresizingMaskIntoConstraints = false
+        
         titleLabel?.adjustsFontSizeToFitWidth = true
         titleLabel?.minimumScaleFactor = 0.5
         titleLabel?.lineBreakMode = .byWordWrapping
         titleLabel?.textAlignment = .center
         setTitleColor(.white, for: .normal)
-        titleLabel?.font = UIFont(name: "Raleway-Light", size: 20)
+        titleLabel?.font = UIFont(name: "Raleway-Light", size: self.frame.height / 3)
+        
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
+//        let longTapGesture = UILongPressGestureRecognizer(target: self, action: #selector(longTapGesture(gesture:)))
+//        self.addGestureRecognizer(tapGesture)
+//        self.addGestureRecognizer(longTapGesture)
         
     }
+//    
+//    func tapGesture(gesture: UITapGestureRecognizer) {
+//        self.count += 1
+//        self.setTitle(String(self.count) + "\n" + self.type, for: .normal)
+//    }
+//    
+//    func longTapGesture(gesture: UILongPressGestureRecognizer){
+//        self.count = 0
+//        self.setTitle(String(self.count) + "\n" + self.type, for: .normal)
+//    }
+  
     
     
 

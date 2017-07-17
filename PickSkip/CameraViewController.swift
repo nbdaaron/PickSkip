@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import Firebase
 
 class CameraViewController: UIViewController {
     @IBOutlet weak var cameraView: CameraView!
@@ -19,6 +20,7 @@ class CameraViewController: UIViewController {
         super.viewDidLoad()
         
         //Set up Camera View
+        
         cameraView.delegate = self
         cameraView.setupCameraView(recordButton)
         

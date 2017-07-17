@@ -12,6 +12,10 @@
 		1AD269171F184358003C438B /* HeaderButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269161F184358003C438B /* HeaderButtonsView.swift */; };
 		1AD269191F184360003C438B /* CounterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269181F184360003C438B /* CounterButton.swift */; };
 		1AD2691E1F184633003C438B /* Raleway-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AD2691D1F18462E003C438B /* Raleway-Light.ttf */; };
+		278180731F1999EA00E63CB3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 278180721F1999EA00E63CB3 /* GoogleService-Info.plist */; };
+		278180761F19A14600E63CB3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278180751F19A14600E63CB3 /* LoginViewController.swift */; };
+		278180781F19A1F500E63CB3 /* PhoneNumberVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278180771F19A1F500E63CB3 /* PhoneNumberVerificationViewController.swift */; };
+		2781807A1F1A971700E63CB3 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278180791F1A971700E63CB3 /* HistoryTableViewController.swift */; };
 		27C7D9991F14805800A5737F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C7D9981F14805800A5737F /* AppDelegate.swift */; };
 		27C7D99E1F14805800A5737F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27C7D99C1F14805800A5737F /* Main.storyboard */; };
 		27C7D9A11F14805800A5737F /* PickSkip.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27C7D99F1F14805800A5737F /* PickSkip.xcdatamodeld */; };
@@ -21,7 +25,6 @@
 		27C7D9B01F1482DE00A5737F /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C7D9AF1F1482DE00A5737F /* CameraView.swift */; };
 		27C7D9B21F14859C00A5737F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C7D9B11F14859C00A5737F /* Constants.swift */; };
 		27C7D9B41F148C3200A5737F /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C7D9B31F148C3200A5737F /* RecordButton.swift */; };
-		27C7D9B61F1589FC00A5737F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 27C7D9B51F1589FC00A5737F /* GoogleService-Info.plist */; };
 		27C7D9B81F158CFE00A5737F /* MainPagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C7D9B71F158CFE00A5737F /* MainPagesViewController.swift */; };
 		27C7D9BA1F1596D200A5737F /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C7D9B91F1596D200A5737F /* PreviewView.swift */; };
 		B5E4CAE28826422624621697 /* Pods_PickSkip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4457F76BBDBD47ADE88818AC /* Pods_PickSkip.framework */; };
@@ -31,66 +34,71 @@
 		1AA1D97C1F19932700DAEFE5 /* ComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
 		1AD269141F184349003C438B /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
 		1AD269161F184358003C438B /* HeaderButtonsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderButtonsView.swift; sourceTree = "<group>"; };
-		1AD269181F184360003C438B /* CounterButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CounterButton.swift; sourceTree = "<group>"; };
-		1AD2691D1F18462E003C438B /* Raleway-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Light.ttf"; sourceTree = "<group>"; };
-		27C7D9951F14805800A5737F /* PickSkip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PickSkip.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		27C7D9981F14805800A5737F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		27C7D99D1F14805800A5737F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		27C7D9A01F14805800A5737F /* PickSkip.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PickSkip.xcdatamodel; sourceTree = "<group>"; };
-		27C7D9A21F14805800A5737F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		27C7D9A51F14805800A5737F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		27C7D9A71F14805800A5737F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		27C7D9AD1F14825A00A5737F /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
-		27C7D9AF1F1482DE00A5737F /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
-		27C7D9B11F14859C00A5737F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		27C7D9B31F148C3200A5737F /* RecordButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
-		27C7D9B51F1589FC00A5737F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		27C7D9B71F158CFE00A5737F /* MainPagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainPagesViewController.swift; sourceTree = "<group>"; };
-		27C7D9B91F1596D200A5737F /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
-		4457F76BBDBD47ADE88818AC /* Pods_PickSkip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PickSkip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB23FB6301C676C7310726D0 /* Pods-PickSkip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PickSkip.release.xcconfig"; path = "Pods/Target Support Files/Pods-PickSkip/Pods-PickSkip.release.xcconfig"; sourceTree = "<group>"; };
-		DC6D90F42C90859AD365FFB1 /* Pods-PickSkip.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PickSkip.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PickSkip/Pods-PickSkip.debug.xcconfig"; sourceTree = "<group>"; };
+    1AD269181F184360003C438B /* CounterButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CounterButton.swift; sourceTree = "<group>"; };
+    1AD2691D1F18462E003C438B /* Raleway-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Light.ttf"; sourceTree = "<group>"; };
+    278180721F1999EA00E63CB3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+    278180741F199E3A00E63CB3 /* PickSkip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PickSkip.entitlements; sourceTree = "<group>"; };
+    278180751F19A14600E63CB3 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+    278180771F19A1F500E63CB3 /* PhoneNumberVerificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberVerificationViewController.swift; sourceTree = "<group>"; };
+    278180791F1A971700E63CB3 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
+    27C7D9951F14805800A5737F /* PickSkip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PickSkip.app; sourceTree = BUILT_PRODUCTS_DIR; };
+    27C7D9981F14805800A5737F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+    27C7D99D1F14805800A5737F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+    27C7D9A01F14805800A5737F /* PickSkip.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PickSkip.xcdatamodel; sourceTree = "<group>"; };
+    27C7D9A21F14805800A5737F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+    27C7D9A51F14805800A5737F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+    27C7D9A71F14805800A5737F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+    27C7D9AD1F14825A00A5737F /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+    27C7D9AF1F1482DE00A5737F /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+    27C7D9B11F14859C00A5737F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+    27C7D9B31F148C3200A5737F /* RecordButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
+    27C7D9B71F158CFE00A5737F /* MainPagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainPagesViewController.swift; sourceTree = "<group>"; };
+    27C7D9B91F1596D200A5737F /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+    4457F76BBDBD47ADE88818AC /* Pods_PickSkip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PickSkip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+    DB23FB6301C676C7310726D0 /* Pods-PickSkip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PickSkip.release.xcconfig"; path = "Pods/Target Support Files/Pods-PickSkip/Pods-PickSkip.release.xcconfig"; sourceTree = "<group>"; };
+    DC6D90F42C90859AD365FFB1 /* Pods-PickSkip.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PickSkip.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PickSkip/Pods-PickSkip.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		27C7D9921F14805800A5737F /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B5E4CAE28826422624621697 /* Pods_PickSkip.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
+    27C7D9921F14805800A5737F /* Frameworks */ = {
+        isa = PBXFrameworksBuildPhase;
+        buildActionMask = 2147483647;
+        files = (
+            B5E4CAE28826422624621697 /* Pods_PickSkip.framework in Frameworks */,
+        );
+        runOnlyForDeploymentPostprocessing = 0;
+    };
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		27C7D98C1F14805800A5737F = {
-			isa = PBXGroup;
-			children = (
-				27C7D9971F14805800A5737F /* PickSkip */,
-				27C7D9961F14805800A5737F /* Products */,
-				F8B07C1542777B1454749778 /* Pods */,
-				D86460FE774C56AD14B72DAF /* Frameworks */,
-			);
-			sourceTree = "<group>";
-		};
-		27C7D9961F14805800A5737F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				27C7D9951F14805800A5737F /* PickSkip.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		27C7D9971F14805800A5737F /* PickSkip */ = {
-			isa = PBXGroup;
-			children = (
+    27C7D98C1F14805800A5737F = {
+        isa = PBXGroup;
+        children = (
+            27C7D9971F14805800A5737F /* PickSkip */,
+            27C7D9961F14805800A5737F /* Products */,
+            F8B07C1542777B1454749778 /* Pods */,
+            D86460FE774C56AD14B72DAF /* Frameworks */,
+        );
+        sourceTree = "<group>";
+    };
+    27C7D9961F14805800A5737F /* Products */ = {
+        isa = PBXGroup;
+        children = (
+            27C7D9951F14805800A5737F /* PickSkip.app */,
+        );
+        name = Products;
+        sourceTree = "<group>";
+    };
+    27C7D9971F14805800A5737F /* PickSkip */ = {
+        isa = PBXGroup;
+        children = (
 				1AD2691D1F18462E003C438B /* Raleway-Light.ttf */,
+				278180741F199E3A00E63CB3 /* PickSkip.entitlements */,
 				27C7D9C01F15AC9E00A5737F /* UIElements */,
 				27C7D9BF1F15AC7B00A5737F /* Views */,
 				27C7D9BE1F15AC6100A5737F /* ViewControllers */,
-				27C7D9B51F1589FC00A5737F /* GoogleService-Info.plist */,
 				27C7D9981F14805800A5737F /* AppDelegate.swift */,
+				278180721F1999EA00E63CB3 /* GoogleService-Info.plist */,
 				27C7D99C1F14805800A5737F /* Main.storyboard */,
 				27C7D9A21F14805800A5737F /* Assets.xcassets */,
 				27C7D9A41F14805800A5737F /* LaunchScreen.storyboard */,
@@ -107,6 +115,9 @@
 				27C7D9AD1F14825A00A5737F /* CameraViewController.swift */,
 				27C7D9B71F158CFE00A5737F /* MainPagesViewController.swift */,
 				1AA1D97C1F19932700DAEFE5 /* ComposeViewController.swift */,
+				278180751F19A14600E63CB3 /* LoginViewController.swift */,
+				278180771F19A1F500E63CB3 /* PhoneNumberVerificationViewController.swift */,
+				278180791F1A971700E63CB3 /* HistoryTableViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -185,6 +196,11 @@
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = JZZ4Q5EUJ9;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -213,7 +229,7 @@
 			files = (
 				1AD2691E1F184633003C438B /* Raleway-Light.ttf in Resources */,
 				27C7D9A61F14805800A5737F /* LaunchScreen.storyboard in Resources */,
-				27C7D9B61F1589FC00A5737F /* GoogleService-Info.plist in Resources */,
+				278180731F1999EA00E63CB3 /* GoogleService-Info.plist in Resources */,
 				27C7D9A31F14805800A5737F /* Assets.xcassets in Resources */,
 				27C7D99E1F14805800A5737F /* Main.storyboard in Resources */,
 			);
@@ -275,13 +291,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AD269151F184349003C438B /* ContactCell.swift in Sources */,
+				278180761F19A14600E63CB3 /* LoginViewController.swift in Sources */,
 				27C7D9B21F14859C00A5737F /* Constants.swift in Sources */,
 				27C7D9BA1F1596D200A5737F /* PreviewView.swift in Sources */,
 				27C7D9991F14805800A5737F /* AppDelegate.swift in Sources */,
 				27C7D9B41F148C3200A5737F /* RecordButton.swift in Sources */,
 				1AA1D97D1F19932700DAEFE5 /* ComposeViewController.swift in Sources */,
+				278180781F19A1F500E63CB3 /* PhoneNumberVerificationViewController.swift in Sources */,
 				27C7D9A11F14805800A5737F /* PickSkip.xcdatamodeld in Sources */,
 				27C7D9B81F158CFE00A5737F /* MainPagesViewController.swift in Sources */,
+				2781807A1F1A971700E63CB3 /* HistoryTableViewController.swift in Sources */,
 				27C7D9AE1F14825A00A5737F /* CameraViewController.swift in Sources */,
 				1AD269171F184358003C438B /* HeaderButtonsView.swift in Sources */,
 				1AD269191F184360003C438B /* CounterButton.swift in Sources */,
@@ -409,11 +428,12 @@
 			baseConfigurationReference = DC6D90F42C90859AD365FFB1 /* Pods-PickSkip.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PickSkip/PickSkip.entitlements;
 				DEVELOPMENT_TEAM = JZZ4Q5EUJ9;
 				INFOPLIST_FILE = PickSkip/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.pickskip.PickSkip;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pickskip.pickskip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -424,11 +444,12 @@
 			baseConfigurationReference = DB23FB6301C676C7310726D0 /* Pods-PickSkip.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PickSkip/PickSkip.entitlements;
 				DEVELOPMENT_TEAM = JZZ4Q5EUJ9;
 				INFOPLIST_FILE = PickSkip/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.pickskip.PickSkip;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pickskip.pickskip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};

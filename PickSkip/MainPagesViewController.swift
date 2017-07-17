@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class MainPagesViewController: UIPageViewController {
 
@@ -29,6 +30,17 @@ class MainPagesViewController: UIPageViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    ///Adds login listener to automatically send users to the login screen if not logged in.
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Constants.addLoginCheckListener(self)
+    }
+    
+    ///Removes login listener when the view disappears.
+    override func viewWillDisappear(_ animated: Bool) {
+        Constants.removeCurrentLoginCheckListener()
     }
 
 }

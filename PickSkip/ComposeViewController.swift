@@ -37,7 +37,6 @@ class ComposeViewController: UIViewController {
     var selectedContactsText: UILabel!
     var sendButton: UIButton!
     
-    
     var filtered : [String] = []
     var searchActive = false
     
@@ -49,11 +48,12 @@ class ComposeViewController: UIViewController {
     var futureDate: Date!
     
     var tracker: CGFloat = 0.0
-    var lowerPanLimit: CGFloat = 0.0
     var upperPanLimit: CGFloat = 0.0
     
     var contactsToDisplayArray: [String] = []
     var selectedNames: [String] = []
+    
+    var sendBarBottomAnchorConstraint: NSLayoutConstraint?
     
     var contacts : [CNContact] = {
         let store = CNContactStore()
@@ -82,6 +82,8 @@ class ComposeViewController: UIViewController {
         return results
     }()
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -99,10 +101,12 @@ class ComposeViewController: UIViewController {
         dateformatter.dateStyle = DateFormatter.Style.long
         
         nowDate = dateformatter.string(from: date)
+        dateLabel.text = nowDate
         
         let timeformatter = DateFormatter()
         timeformatter.timeStyle = DateFormatter.Style.short
         nowTime = timeformatter.string(from: date)
+        timeLabel.text = nowTime
         
         
         listOfContactsTable.dataSource = self
@@ -131,6 +135,17 @@ class ComposeViewController: UIViewController {
         setupKeyboardObserver()
     
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print("frambefore: \(contactView.frame.minY)")
+        upperPanLimit = -(contactView.frame.minY - headerView.frame.height)
+        print("upperpanlimi: \(upperPanLimit)")
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
 
     func setupKeyboardObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -145,13 +160,6 @@ class ComposeViewController: UIViewController {
         UIView.animate(withDuration: keyboardAnimationDuration, animations: {
             self.view.layoutIfNeeded()
         })
-        
-//
-//        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-//            let keyboardHeight = keyboardSize.height
-//            sendBarBottomAnchorConstraint?.constant = -keyboardHeight
-//            
-//        }
     }
     
     func handleKeyboardWillHide(notification: NSNotification) {
@@ -163,15 +171,6 @@ class ComposeViewController: UIViewController {
 
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    override func viewDidLayoutSubviews() {
-        
-        
-    }
     
     func setupButtons(){
         yearButton.type = "year"
@@ -180,14 +179,6 @@ class ComposeViewController: UIViewController {
         dayButton.type = "day"
         hourButton.type = "hour"
         minButton.type = "min"
-        
-//        yearButton.addTarget(self, action: #selector(changeDate(sender:)), for: .touchUpInside)
-//        
-//        monthButton.addTarget(self, action: #selector(changeDate(sender:)), for: .touchUpInside)
-//        weekButton.addTarget(self, action: #selector(changeDate(sender:)), for: .touchUpInside)
-//        dayButton.addTarget(self, action: #selector(changeDate(sender:)), for: .touchUpInside)
-//        hourButton.addTarget(self, action: #selector(changeDate(sender:)), for: .touchUpInside)
-//        minButton.addTarget(self, action: #selector(changeDate(sender:)), for: .touchUpInside)
         
         let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
         let tapGesture2 = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
@@ -215,16 +206,7 @@ class ComposeViewController: UIViewController {
         dayButton.addGestureRecognizer(longTap5)
         hourButton.addGestureRecognizer(longTap6)
         
-
-        
     }
-    override func viewDidAppear(_ animated: Bool) {
-        print("frambefore: \(contactView.frame.minY)")
-        upperPanLimit = -(contactView.frame.minY - headerView.frame.height)
-        print("upperpanlimi: \(upperPanLimit)")
-    }
-    
-    var sendBarBottomAnchorConstraint: NSLayoutConstraint?
     
     func setup() {
         
@@ -294,52 +276,6 @@ class ComposeViewController: UIViewController {
         
     }
     
-//    func handlePan(sender: UIPanGestureRecognizer) {
-//        let translation = sender.translation(in: sender.view)
-//        if (sender.state == UIGestureRecognizerState.changed) {
-//            print(upperPanLimit)
-//            if (contactView.frame.minY <= self.headerView.frame.maxY) {
-//                contactViewTop.constant = self.upperPanLimit + 1
-//                listOfContactsTable.isScrollEnabled = true
-//                if (translation.y - tracker) < 0 {
-//                listOfContactsTable.contentOffset.y = -(translation.y - upperPanLimit)
-//                }
-//            } else if (contactViewTop.constant > 0)  {
-//                contactViewTop.constant += (translation.y - tracker) / 2
-//                listOfContactsTable.isScrollEnabled = false
-//            }
-//            else if (listOfContactsTable.contentOffset.y == 0){
-//                contactViewTop.constant += (translation.y - tracker)
-//                listOfContactsTable.isScrollEnabled = false
-//            } else {
-//                contactViewTop.constant += (translation.y - tracker)
-//                listOfContactsTable.isScrollEnabled = false
-//            }
-//            
-//        }
-//        print("Y: \(translation)")
-//        tracker = translation.y
-//        
-//        if (sender.state == UIGestureRecognizerState.ended){
-//            if (contactViewTop.constant > 0 ){
-//                UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations:{
-//                    self.contactViewTop.constant = 0
-//                    self.view.layoutIfNeeded()
-//                })
-//            } else if (contactView.frame.minY < self.headerView.frame.maxY){
-//                UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations:{
-//                    self.contactViewTop.constant = self.upperPanLimit
-//                    self.view.layoutIfNeeded()
-//                })
-//                
-//            }
-//        }
-//
-//
-//        
-//    }
-    
-    
     func tapGesture(gesture: UITapGestureRecognizer) {
         guard let button = gesture.view as? CounterButton else {return}
         button.count += 1
@@ -380,6 +316,9 @@ class ComposeViewController: UIViewController {
         changeDate()
     }
 
+    @IBAction func backButtonPressed(_ sender: Any) {
+        dismiss(animated: false, completion: nil)
+    }
     
     func changeDate() {
         dateComponents.year = yearButton.count
@@ -438,10 +377,6 @@ extension ComposeViewController: UITableViewDataSource {
         cell.backgroundColor = UIColor(colorLiteralRed: 255.0/255.0, green: 65.0/255.0, blue: 98.0/255.0, alpha: 1)
         cell.textLabel?.textColor = .white
         cell.selectionStyle = UITableViewCellSelectionStyle.none
-       
-        
-        
-        
         
         if searchActive {
             if selectedNames.contains(filtered[indexPath.row]) {

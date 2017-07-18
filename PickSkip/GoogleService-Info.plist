@@ -7,9 +7,9 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>321863558635-6faqntjq228m8io2hmfj1kpvousc5mko.apps.googleusercontent.com</string>
+	<string>321863558635-49rapcg6rnrormn4l473pdfbfc68bm1f.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.321863558635-6faqntjq228m8io2hmfj1kpvousc5mko</string>
+	<string>com.googleusercontent.apps.321863558635-49rapcg6rnrormn4l473pdfbfc68bm1f</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBaA5Pid1pTIx036uoJePQI2TE7kfMOuFs</string>
 	<key>GCM_SENDER_ID</key>
@@ -17,7 +17,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.pickskip.PickSkip</string>
+	<string>com.pickskip.pickskip</string>
 	<key>PROJECT_ID</key>
 	<string>pickskip-12241</string>
 	<key>STORAGE_BUCKET</key>
@@ -27,13 +27,13 @@
 	<key>IS_ANALYTICS_ENABLED</key>
 	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false/>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
 	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:321863558635:ios:90f0e8f7b8940094</string>
+	<string>1:321863558635:ios:c6b4dc9e26440d5c</string>
 	<key>DATABASE_URL</key>
 	<string>https://pickskip-12241.firebaseio.com</string>
 </dict>

@@ -15,11 +15,23 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var activityIndicatorSpinner: UIActivityIndicatorView!
     @IBOutlet weak var phoneNumberTextField: PhoneNumberTextField!
     @IBOutlet weak var errorMessage: UILabel!
+    @IBOutlet weak var promptLabel: UILabel!
+    @IBOutlet weak var loginButton: UIButton!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        loginButton.layer.cornerRadius = 20
+        
+        promptLabel.minimumScaleFactor = 0.2
+        promptLabel.adjustsFontSizeToFitWidth = true
         activityIndicatorSpinner.hidesWhenStopped = true
+        
+        
         // Do any additional setup after loading the view.
     }
+    
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -66,6 +78,12 @@ class LoginViewController: UIViewController {
     ///Attempt to authenticate before asking for phone number.
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        for  subView in phoneNumberTextField.subviews {
+            if let label = subView as? UILabel {
+                label.minimumScaleFactor = 0.1
+                label.adjustsFontSizeToFitWidth = true
+            }
+        }
         if Auth.auth().currentUser != nil {
             dismiss(animated: true, completion: nil)
         }

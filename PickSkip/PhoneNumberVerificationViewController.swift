@@ -13,9 +13,14 @@ class PhoneNumberVerificationViewController: UIViewController {
     @IBOutlet weak var activityIndicatorSpinner: UIActivityIndicatorView!
     @IBOutlet weak var verificationCodeTextField: UITextField!
     @IBOutlet weak var errorMessage: UILabel!
+    @IBOutlet weak var verifyButton: UIButton!
+    @IBOutlet weak var verifyPrompt: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        verifyButton.layer.cornerRadius = 20
+        verifyPrompt.minimumScaleFactor = 0.2
+        verifyPrompt.adjustsFontSizeToFitWidth = true
         activityIndicatorSpinner.hidesWhenStopped = true
         // Do any additional setup after loading the view.
     }

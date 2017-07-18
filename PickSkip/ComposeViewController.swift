@@ -12,13 +12,17 @@ import NotificationCenter
 
 class ComposeViewController: UIViewController {
 
+    ///Encloses the contacts table and search bar
     @IBOutlet weak var contactView: UIView!
+    
+    ///Contents of the Contacts View
     @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var buttonsView: UIView!
     @IBOutlet weak var listOfContactsTable: UITableView!
-    @IBOutlet weak var headerView: UIView!
     
+    ///Contains the buttons to increment/decrement delay
+    @IBOutlet weak var buttonsView: UIView!
     
+    ///Contents of the Buttons View
     @IBOutlet weak var yearButton: CounterButton!
     @IBOutlet weak var monthButton: CounterButton!
     @IBOutlet weak var weekButton: CounterButton!
@@ -27,13 +31,19 @@ class ComposeViewController: UIViewController {
     @IBOutlet weak var minButton: CounterButton!
     @IBOutlet weak var resetButton: UIButton!
     
+    ///Contains the date/time to send.
+    @IBOutlet weak var headerView: UIView!
+    
+    ///Contents of the Header View
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var contactViewTop: NSLayoutConstraint!
     
-    
+    ///Floating Send Bar
     var sendBarView: UIView!
+    
+    ///Contents of Floating Send Bar
     var selectedContactsText: UILabel!
     var sendButton: UIButton!
     
@@ -46,8 +56,7 @@ class ComposeViewController: UIViewController {
     var dateComponents : DateComponents!
     var date : Date!
     var futureDate: Date!
-    
-    var tracker: CGFloat = 0.0
+
     var upperPanLimit: CGFloat = 0.0
     
     var contactsToDisplayArray: [String] = []
@@ -55,37 +64,14 @@ class ComposeViewController: UIViewController {
     
     var sendBarBottomAnchorConstraint: NSLayoutConstraint?
     
-    var contacts : [CNContact] = {
-        let store = CNContactStore()
-        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey]
-        
-        var allContainers : [CNContainer] = []
-        do {
-            allContainers = try store.containers(matching: nil)
-        } catch {
-            print("Error fetching containers")
-        }
-        
-        var results : [CNContact] = []
-        
-        for container in allContainers {
-            let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
-            
-            do {
-                let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
-                results.append(contentsOf: containerResults)
-            } catch {
-                print("Error fetching results for container")
-            }
-        }
-        
-        return results
-    }()
+    var contacts : [CNContact]!
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        loadContacts()
         
         date = Date()
         
@@ -111,7 +97,6 @@ class ComposeViewController: UIViewController {
         
         listOfContactsTable.dataSource = self
         listOfContactsTable.delegate = self
-        listOfContactsTable.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         listOfContactsTable.backgroundColor = UIColor(colorLiteralRed: 255.0/255.0, green: 65.0/255.0, blue: 98.0/255.0, alpha: 1)
         listOfContactsTable.tableFooterView = UIView()
         listOfContactsTable.allowsMultipleSelection = true
@@ -131,27 +116,56 @@ class ComposeViewController: UIViewController {
         setupButtons()
         self.view.bringSubview(toFront: contactView)
         contactView.layer.cornerRadius = contactView.frame.width / 50
-        setup()
+        setupMisc()
         setupKeyboardObserver()
     
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        print("frambefore: \(contactView.frame.minY)")
         upperPanLimit = -(contactView.frame.minY - headerView.frame.height)
-        print("upperpanlimi: \(upperPanLimit)")
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    ///Load Contacts into the contacts array
+    private func loadContacts() {
+        let store = CNContactStore()
+        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey]
+        
+        var allContainers : [CNContainer] = []
+        do {
+            allContainers = try store.containers(matching: nil)
+        } catch {
+            print("Error fetching containers from ComposeViewController#loadContacts: \(error)")
+        }
+        
+        var results : [CNContact] = []
+        
+        for container in allContainers {
+            let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
+            
+            do {
+                let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
+                results.append(contentsOf: containerResults)
+            } catch {
+                print("Error fetching results for container from ComposeViewController#loadContacts: \(error)")
+            }
+        }
+        
+        contacts = results
 
+    }
+
+    ///Add listeners when keyboard opens/closes.
     func setupKeyboardObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    ///Called when keyboard will be shown.
     func handleKeyboardWillShow(notification: NSNotification) {
         
         let keyboardAnimationDuration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as! Double
@@ -162,6 +176,7 @@ class ComposeViewController: UIViewController {
         })
     }
     
+    ///Called when keyboard will be hidden.
     func handleKeyboardWillHide(notification: NSNotification) {
         let keyboardAnimationDuration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as! Double
         sendBarBottomAnchorConstraint?.constant = 0
@@ -171,8 +186,8 @@ class ComposeViewController: UIViewController {
 
     }
     
-    
-    func setupButtons(){
+    ///Sets up the delay buttons.
+    private func setupButtons(){
         yearButton.type = "year"
         monthButton.type = "month"
         weekButton.type = "week"
@@ -193,6 +208,7 @@ class ComposeViewController: UIViewController {
         let longTap4 = UILongPressGestureRecognizer(target: self, action: #selector(longTapGesture(gesture:)))
         let longTap5 = UILongPressGestureRecognizer(target: self, action: #selector(longTapGesture(gesture:)))
         let longTap6 = UILongPressGestureRecognizer(target: self, action: #selector(longTapGesture(gesture:)))
+        
         yearButton.addGestureRecognizer(tapGesture1)
         monthButton.addGestureRecognizer(tapGesture2)
         weekButton.addGestureRecognizer(tapGesture3)
@@ -208,7 +224,8 @@ class ComposeViewController: UIViewController {
         
     }
     
-    func setup() {
+    ///Sets up Header, Search Bar, Footer/Send bar,
+    private func setupMisc() {
         
         let headerTap = UITapGestureRecognizer(target: self, action: #selector(headerTap(sender:)))
         headerView.addGestureRecognizer(headerTap)
@@ -265,6 +282,7 @@ class ComposeViewController: UIViewController {
         
     }
     
+    ///Called when the header of the screen is tapped.
     func headerTap(sender: UITapGestureRecognizer) {
         searchActive = false
         searchBar.endEditing(true)
@@ -276,17 +294,20 @@ class ComposeViewController: UIViewController {
         
     }
     
+    ///Called when a delay button is tapped. Increments delay.
     func tapGesture(gesture: UITapGestureRecognizer) {
         guard let button = gesture.view as? CounterButton else {return}
-        button.count += 1
         if button.type == "min" {
+            button.count += 5
             button.setTitle(String(button.count) + "\n" + button.type, for: .normal)
         } else {
+            button.count += 1
             button.setTitle(String(button.count) + " " + button.type, for: .normal)
         }
         changeDate()
     }
     
+    ///Called when a delay button is tapped. Resets delays from that button.
     func longTapGesture(gesture: UILongPressGestureRecognizer){
         guard let button = gesture.view as? CounterButton else {return}
         button.count = 0
@@ -299,6 +320,7 @@ class ComposeViewController: UIViewController {
     }
 
 
+    ///Called when the reset button is hit. Resets delays from all buttons.
     @IBAction func resetCounters(_ sender: Any) {
         yearButton.count = 0
         monthButton.count = 0
@@ -316,10 +338,12 @@ class ComposeViewController: UIViewController {
         changeDate()
     }
 
+    ///Called when back is pressed. Exits the view.
     @IBAction func backButtonPressed(_ sender: Any) {
         dismiss(animated: false, completion: nil)
     }
     
+    ///Called when the date is changed. Updates the new delayed send time.
     func changeDate() {
         dateComponents.year = yearButton.count
         dateComponents.month = monthButton.count
@@ -339,6 +363,7 @@ class ComposeViewController: UIViewController {
         timeLabel.text = nowTime
     }
     
+    ///Called when contacts are selected/deselected from the table.
     func updateSendBar(listOfNames: [String]){
         var tempList: [String] = []
         for name in listOfNames {
@@ -431,15 +456,12 @@ extension ComposeViewController: UITableViewDelegate {
                 updateSendBar(listOfNames: selectedNames)
             }
         }
-        
-        print(selectedNames)
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         tableView.cellForRow(at: indexPath)?.accessoryView = UIView()
         selectedNames = selectedNames.filter({$0 != tableView.cellForRow(at: indexPath)?.textLabel?.text})
         updateSendBar(listOfNames: selectedNames)
-        print(selectedNames)
     }
     
     

@@ -53,6 +53,11 @@ class PhoneNumberVerificationViewController: UIViewController {
                 self.errorMessage.isHidden = false
                 return
             }
+            if let uid = user?.uid {
+                DataService.instance.saveUser(uid: uid)
+            }
+            
+            
             //Otherwise, return to login screen (where login listener will dismiss to Main View.)
             self.dismiss(animated: true, completion: nil)
 

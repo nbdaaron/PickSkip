@@ -9,6 +9,7 @@
 import UIKit
 import Contacts
 import NotificationCenter
+import FirebaseAuth
 
 class ComposeViewController: UIViewController {
 
@@ -66,7 +67,8 @@ class ComposeViewController: UIViewController {
     
     var contacts : [CNContact]!
     
-    
+    var image: Data?
+    var video: URL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -255,6 +257,8 @@ class ComposeViewController: UIViewController {
         sendButton.imageView?.contentMode = UIViewContentMode.scaleAspectFit
         sendBarView.addSubview(sendButton)
         
+        let pressGesture = UITapGestureRecognizer(target: self, action: #selector(sendMedia))
+        sendButton.addGestureRecognizer(pressGesture)
         
         
         let constraints:[NSLayoutConstraint] = [
@@ -280,6 +284,34 @@ class ComposeViewController: UIViewController {
         
         self.view.bringSubview(toFront: sendBarView)
         
+    }
+    
+    func sendMedia() {
+        if let videoURL = video {
+            let videoName = "\(NSUUID().uuidString)\(videoURL)"
+            let ref = DataService.instance.videosStorageRef.child(videoName)
+            _ = ref.putFile(from: videoURL, metadata: nil, completion: { (metadata, error) in
+                if let error = error {
+                    print("error: \(error.localizedDescription)")
+                } else {
+                    let downloadURL = metadata?.downloadURL()
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, sendingTo: self.selectedNames, mediaURL: downloadURL!)
+                    
+                }
+            })
+            self.dismiss(animated: true, completion: nil)
+        } else if let image = image {
+            let ref = DataService.instance.imagesStorageRef.child("\(NSUUID().uuidString).jpg")
+            _ = ref.putData(image, metadata: nil, completion: {(metadata, error) in
+                if let error  = error {
+                    print("error: \(error.localizedDescription))")
+                } else {
+                    let downloadURL = metadata?.downloadURL()
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, sendingTo: self.selectedNames, mediaURL: downloadURL!)
+                }
+            })
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     ///Called when the header of the screen is tapped.

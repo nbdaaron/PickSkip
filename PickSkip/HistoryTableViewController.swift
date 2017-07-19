@@ -11,9 +11,30 @@ import Firebase
 
 class HistoryTableViewController: UITableViewController {
 
+    var dataService = DataService.instance
+    var images: [UIImage] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        _ = dataService.usersRef.child(dataService.uid).child("media").observe(.value, with: { (snapshot) in
+            let valueDict = snapshot.value as! Dictionary<String, AnyObject>
+            for (key, _) in valueDict {
+                self.dataService.mainRef.child("media").child(key).child("mediaURL").observe(.value, with: {(snapshot) in
+                    let url = snapshot.value as! String
+                    let httpsReference = Storage.storage().reference(forURL: url)
+                    httpsReference.getData(maxSize: 1024 * 1024 * 1024, completion: {(data, error) in
+                        if let error = error {
+                            print("something is wrong: \(error.localizedDescription)")
+                        } else {
+                            let image = UIImage(data: data!)
+                            self.images.append(image!)
+                            print(self.images)
+                        }
+                    })
+                })
+            }
+        })
         //Set top inset to prevent status bar overlap.
         tableView.contentInset.top = 20
     }

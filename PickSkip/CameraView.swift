@@ -12,7 +12,7 @@ import AVFoundation
 
 protocol CameraViewDelegate {
     func submit(image: UIImage)
-    func submit(video: AVPlayer)
+    func submit(videoURL: URL)
 }
 
 class CameraView: UIView {
@@ -220,8 +220,8 @@ extension CameraView: AVCaptureFileOutputRecordingDelegate {
         if error != nil {
             print("Error Recording from CameraView:AVCaptureFileOutputRecordingDelegate#capture: \(error.localizedDescription)")
         } else {
-            let player = AVPlayer(url: outputFileURL)
-            delegate.submit(video: player)
+            
+            delegate.submit(videoURL: outputFileURL)
         }
     }
 }

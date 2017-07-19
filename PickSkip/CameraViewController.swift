@@ -10,11 +10,15 @@ import UIKit
 import AVFoundation
 import Firebase
 
+
 class CameraViewController: UIViewController {
     @IBOutlet weak var cameraView: CameraView!
     @IBOutlet weak var previewView: PreviewView!
     @IBOutlet weak var optionsView: UIView!
     @IBOutlet weak var recordButton: RecordButton!
+    
+    var image: Data?
+    var videoURL: URL?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +48,27 @@ class CameraViewController: UIViewController {
         optionsView.isHidden = true
     }
 
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showComposeView" {
+            let destination = segue.destination as? ComposeViewController
+            if let image = image {
+                destination?.image = image
+                previewView.removeExistingContent()
+                previewView.isHidden = true
+                optionsView.isHidden = true
+                print("sent pic")
+                self.image = nil
+            } else if let videoURL = videoURL {
+                destination?.video = videoURL
+                previewView.removeExistingContent()
+                previewView.isHidden = true
+                optionsView.isHidden = true
+                print("sent vid")
+                self.videoURL = nil
+            }
+        }
+    }
 }
 
 extension CameraViewController: CameraViewDelegate {
@@ -51,12 +76,15 @@ extension CameraViewController: CameraViewDelegate {
     ///Accepts an image, displays it on the PreviewView.
     func submit(image: UIImage) {
         displayPreview()
+        self.image = UIImageJPEGRepresentation(image, 1.0)
         previewView.displayImage(image)
     }
     
     ///Accepts a video, displays it on the PreviewView.
-    func submit(video: AVPlayer) {
+    func submit(videoURL: URL) {
         displayPreview()
-        previewView.displayVideo(video)
+        self.videoURL = videoURL
+        let player = AVPlayer(url: videoURL)
+        previewView.displayVideo(player)
     }
 }

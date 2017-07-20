@@ -287,6 +287,8 @@ class ComposeViewController: UIViewController {
     }
     
     func sendMedia() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy HH:mm"
         if let videoURL = video {
             let videoName = "\(NSUUID().uuidString)\(videoURL)"
             let ref = DataService.instance.videosStorageRef.child(videoName)
@@ -295,7 +297,7 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription)")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, sendingTo: self.selectedNames, mediaURL: downloadURL!)
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, sendingTo: self.selectedNames, mediaURL: downloadURL!, mediaType: "video", releaseDate: formatter.string(from: self.futureDate!))
                     
                 }
             })
@@ -307,7 +309,7 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription))")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, sendingTo: self.selectedNames, mediaURL: downloadURL!)
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, sendingTo: self.selectedNames, mediaURL: downloadURL!, mediaType: "image", releaseDate: formatter.string(from: self.futureDate!))
                 }
             })
             self.dismiss(animated: true, completion: nil)
@@ -393,6 +395,8 @@ class ComposeViewController: UIViewController {
         timeformatter.timeStyle = DateFormatter.Style.short
         nowTime = timeformatter.string(from: futureDate!)
         timeLabel.text = nowTime
+        
+        
     }
     
     ///Called when contacts are selected/deselected from the table.

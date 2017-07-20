@@ -47,8 +47,8 @@ class DataService {
         
     }
     
-    func sendMedia(senderUID: String, sendingTo: [String], mediaURL: URL) {
-        let pr: Dictionary<String, AnyObject> = ["mediaURL" : mediaURL.absoluteString as AnyObject, "senderID": senderUID as AnyObject, "recipients": sendingTo as AnyObject]
+    func sendMedia(senderUID: String, sendingTo: [String], mediaURL: URL, mediaType: String, releaseDate: String) {
+        let pr: Dictionary<String, AnyObject> = ["mediaType": mediaType as AnyObject, "mediaURL" : mediaURL.absoluteString as AnyObject,"releaseDate": releaseDate as AnyObject, "senderID": senderUID as AnyObject, "recipients": sendingTo as AnyObject]
         mainRef.child("media").childByAutoId().setValue(pr, withCompletionBlock: {(error, databaseReference) in
             self.mainRef.child("users").child("\(Auth.auth().currentUser!.uid)").child("media").updateChildValues([databaseReference.key: true])
         })

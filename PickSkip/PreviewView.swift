@@ -11,8 +11,8 @@ import AVFoundation
 
 class PreviewView: UIImageView {
 
-    var playerLayer: AVPlayerLayer?
-    var repeatObserver: NSObjectProtocol?
+    fileprivate var playerLayer: AVPlayerLayer?
+    fileprivate var repeatObserver: NSObjectProtocol?
     
     ///Accepts a video and play it on repeat.
     func displayVideo(_ player: AVPlayer) {
@@ -29,7 +29,6 @@ class PreviewView: UIImageView {
     ///Accepts an image and display it.
     func displayImage(_ image: UIImage) {
         removeExistingContent()
-        
         self.image = image
     }
     
@@ -52,5 +51,7 @@ class PreviewView: UIImageView {
         playerLayer?.removeFromSuperlayer()
         NotificationCenter.default.removeObserver(repeatObserver as Any)
     }
+    
+
 
 }

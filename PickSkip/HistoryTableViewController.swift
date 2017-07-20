@@ -9,105 +9,181 @@
 import UIKit
 import Firebase
 
-class HistoryTableViewController: UITableViewController {
+class HistoryTableViewController: UIViewController {
 
+    @IBOutlet weak var tableView: UITableView!
+    
+    @IBOutlet weak var mediaView: PreviewView!
+    
     var dataService = DataService.instance
-    var images: [UIImage] = []
+    var mediaArray: [Media] = []
+    var date: Date!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        prepareMediaView()
+        
+        date = Date()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+//        tableView.refreshControl = UIRefreshControl()
+//        tableView.refreshControl?.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: .valueChanged)
+        loadContent()
+        
+        //Set top inset to prevent status bar overlap.
+        tableView.contentInset.top = 20
+    }
+    
+//    func handleRefresh(refreshControl: UIRefreshControl) {
+//        loadContent()
+//        for media in mediaArray {
+//            print(media.image)
+//        }
+//        refreshControl.endRefreshing()
+//    }
+    
+    
+    func loadContent() {
+//        _ = dataService.usersRef.child(dataService.uid).child("media").observe(.value, with: { (snapshot) in
+//            let valueDict = snapshot.value as! Dictionary<String, AnyObject>
+//            for (key, _) in valueDict {
+//                
+//                self.dataService.mainRef.child("media").child(key).child("mediaURL").observe(.value, with: {(snapshot) in
+//                    let url = snapshot.value as! String
+//                    let httpsReference = Storage.storage().reference(forURL: url)
+//                    httpsReference.getData(maxSize: 1024 * 1024 * 1024, completion: {(data, error) in
+//                        if let error = error {
+//                            print("something is wrong: \(error.localizedDescription)")
+//                        } else {
+//                            let image = UIImage(data: data!)
+//                            let count = self.media.count
+//                            self.media["\(count)"] = image
+//                            print(self.media)
+//                            
+//                        }
+//                    })
+//                })
+//            }
+//        })
         
         _ = dataService.usersRef.child(dataService.uid).child("media").observe(.value, with: { (snapshot) in
-            let valueDict = snapshot.value as! Dictionary<String, AnyObject>
+            if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
+                self.mediaArray.removeAll()
             for (key, _) in valueDict {
-                self.dataService.mainRef.child("media").child(key).child("mediaURL").observe(.value, with: {(snapshot) in
-                    let url = snapshot.value as! String
+                
+                self.dataService.mainRef.child("media").child(key).observe(.value, with: {(snapshot) in
+                    let content = snapshot.value as! Dictionary<String, AnyObject>
+                    let url = content["mediaURL"] as! String
+                    let type = content["mediaType"] as! String
+                    let id = content["senderID"] as! String
+                    let date = content["releaseDate"] as! String
                     let httpsReference = Storage.storage().reference(forURL: url)
                     httpsReference.getData(maxSize: 1024 * 1024 * 1024, completion: {(data, error) in
                         if let error = error {
                             print("something is wrong: \(error.localizedDescription)")
+                        } else if type == "image" {
+                            
+                            let mediaInstance = Media(id: id, type: type, image: data, video: nil, dateString: date)
+                            self.mediaArray.append(mediaInstance)
+                             self.tableView.reloadData()
+                        } else if type == "video" {
+                            //implement video handling
+//                            let mediaInstance = Media(id: id, type: type, image: nil, video: data)
                         } else {
-                            let image = UIImage(data: data!)
-                            self.images.append(image!)
-                            print(self.images)
+                            print("Something went wrong during load")
                         }
                     })
                 })
             }
+            }
         })
-        //Set top inset to prevent status bar overlap.
-        tableView.contentInset.top = 20
+        
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func prepareMediaView() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideMedia))
+        tapGesture.numberOfTapsRequired = 1
+        mediaView.isUserInteractionEnabled = true
+        mediaView.addGestureRecognizer(tapGesture)
     }
+    
+    func hideMedia() {
+        mediaView.isHidden = true
+        mediaView.removeExistingContent()
+    }
+    
+    
 
+}
+
+extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource {
     // MARK: - Table view data source
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 1
+        return mediaArray.count
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        try! Auth.auth().signOut()
+        date = Date()
+        print("current time: \(date)")
+        if date < mediaArray[indexPath.row].date {
+            print("current time is less")
+        } else {
+            let image = UIImage(data: mediaArray[indexPath.row].image!)
+            mediaView.displayImage(image!)
+            mediaView.isHidden = false
+        }
+        
+//        let image = UIImage(data: mediaArray[indexPath.row].image!)
+//        mediaView.displayImage(image!)
+//        mediaView.isHidden = false
     }
-
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-
-        cell.textLabel!.text = "Log out."
-
+        
+        cell.textLabel!.text = "\(mediaArray[indexPath.row].date!)"
+        
         return cell
     }
-
+    
     /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
+     // Override to support conditional editing of the table view.
+     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+     // Return false if you do not want the specified item to be editable.
+     return true
+     }
+     */
+    
     /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
+     // Override to support editing the table view.
+     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+     if editingStyle == .delete {
+     // Delete the row from the data source
+     tableView.deleteRows(at: [indexPath], with: .fade)
+     } else if editingStyle == .insert {
+     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+     }
+     }
+     */
+    
     /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
+     // Override to support rearranging the table view.
+     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+     
+     }
+     */
+    
     /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // Override to support conditional rearranging of the table view.
+     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+     // Return false if you do not want the item to be re-orderable.
+     return true
+     }
+     */
 }

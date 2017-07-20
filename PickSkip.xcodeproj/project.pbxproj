@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A014DFE1F2100E600561BEE /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A014DFD1F2100E600561BEE /* Media.swift */; };
 		1A435C741F1ECFE1007E5478 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A435C731F1ECFE1007E5478 /* DataService.swift */; };
 		1AA1D97D1F19932700DAEFE5 /* ComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1D97C1F19932700DAEFE5 /* ComposeViewController.swift */; };
 		1AD269191F184360003C438B /* CounterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269181F184360003C438B /* CounterButton.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A014DFD1F2100E600561BEE /* Media.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		1A435C731F1ECFE1007E5478 /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		1AA1D97C1F19932700DAEFE5 /* ComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
 		1AD269181F184360003C438B /* CounterButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CounterButton.swift; sourceTree = "<group>"; };
@@ -69,6 +71,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A014DFC1F2100C000561BEE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1A014DFD1F2100E600561BEE /* Media.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		1A435C721F1ECFD3007E5478 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -98,6 +108,7 @@
 		27C7D9971F14805800A5737F /* PickSkip */ = {
 			isa = PBXGroup;
 			children = (
+				1A014DFC1F2100C000561BEE /* Model */,
 				1A435C721F1ECFD3007E5478 /* Services */,
 				1AD2691D1F18462E003C438B /* Raleway-Light.ttf */,
 				278180741F199E3A00E63CB3 /* PickSkip.entitlements */,
@@ -309,6 +320,7 @@
 				27C7D9AE1F14825A00A5737F /* CameraViewController.swift in Sources */,
 				1AD269191F184360003C438B /* CounterButton.swift in Sources */,
 				27C7D9B01F1482DE00A5737F /* CameraView.swift in Sources */,
+				1A014DFE1F2100E600561BEE /* Media.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

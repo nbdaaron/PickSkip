@@ -76,6 +76,7 @@ class ComposeViewController: UIViewController {
         loadContacts()
         
         date = Date()
+        futureDate = Date()
         
         dateComponents = DateComponents()
         dateComponents.year = 0
@@ -103,8 +104,6 @@ class ComposeViewController: UIViewController {
         listOfContactsTable.tableFooterView = UIView()
         listOfContactsTable.allowsMultipleSelection = true
         listOfContactsTable.isScrollEnabled = true
-        
-        
         
         contactsToDisplayArray = {
             var array: [String] = []
@@ -297,7 +296,7 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription)")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, sendingTo: self.selectedNames, mediaURL: downloadURL!, mediaType: "video", releaseDate: formatter.string(from: self.futureDate!))
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: self.selectedNames, mediaURL: downloadURL!, mediaType: "video", releaseDate: formatter.string(from: self.futureDate!))
                     
                 }
             })
@@ -309,7 +308,7 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription))")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, sendingTo: self.selectedNames, mediaURL: downloadURL!, mediaType: "image", releaseDate: formatter.string(from: self.futureDate!))
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: self.selectedNames, mediaURL: downloadURL!, mediaType: "image", releaseDate: formatter.string(from: self.futureDate!))
                 }
             })
             self.dismiss(animated: true, completion: nil)

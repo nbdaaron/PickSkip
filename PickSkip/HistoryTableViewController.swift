@@ -23,56 +23,23 @@ class HistoryTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         prepareMediaView()
-        
         date = Date()
-        
+        tableView.tableHeaderView = UIView()
         tableView.delegate = self
         tableView.dataSource = self
 //        tableView.refreshControl = UIRefreshControl()
 //        tableView.refreshControl?.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: .valueChanged)
         loadContent()
         
-        //Set top inset to prevent status bar overlap.
-        tableView.contentInset.top = 20
+
     }
     
-//    func handleRefresh(refreshControl: UIRefreshControl) {
-//        loadContent()
-//        for media in mediaArray {
-//            print(media.image)
-//        }
-//        refreshControl.endRefreshing()
-//    }
-    
-    
     func loadContent() {
-//        _ = dataService.usersRef.child(dataService.uid).child("media").observe(.value, with: { (snapshot) in
-//            let valueDict = snapshot.value as! Dictionary<String, AnyObject>
-//            for (key, _) in valueDict {
-//                
-//                self.dataService.mainRef.child("media").child(key).child("mediaURL").observe(.value, with: {(snapshot) in
-//                    let url = snapshot.value as! String
-//                    let httpsReference = Storage.storage().reference(forURL: url)
-//                    httpsReference.getData(maxSize: 1024 * 1024 * 1024, completion: {(data, error) in
-//                        if let error = error {
-//                            print("something is wrong: \(error.localizedDescription)")
-//                        } else {
-//                            let image = UIImage(data: data!)
-//                            let count = self.media.count
-//                            self.media["\(count)"] = image
-//                            print(self.media)
-//                            
-//                        }
-//                    })
-//                })
-//            }
-//        })
-        
+
         _ = dataService.usersRef.child(dataService.uid).child("media").observe(.value, with: { (snapshot) in
             if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
                 self.mediaArray.removeAll()
             for (key, _) in valueDict {
-                
                 self.dataService.mainRef.child("media").child(key).observe(.value, with: {(snapshot) in
                     let content = snapshot.value as! Dictionary<String, AnyObject>
                     let url = content["mediaURL"] as! String
@@ -84,7 +51,6 @@ class HistoryTableViewController: UIViewController {
                         if let error = error {
                             print("something is wrong: \(error.localizedDescription)")
                         } else if type == "image" {
-                            
                             let mediaInstance = Media(id: id, type: type, image: data, video: nil, dateString: date)
                             self.mediaArray.append(mediaInstance)
                              self.tableView.reloadData()
@@ -135,7 +101,9 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
         } else {
             let image = UIImage(data: mediaArray[indexPath.row].image!)
             mediaView.displayImage(image!)
+            view.bringSubview(toFront: mediaView)
             mediaView.isHidden = false
+            
         }
         
 //        let image = UIImage(data: mediaArray[indexPath.row].image!)

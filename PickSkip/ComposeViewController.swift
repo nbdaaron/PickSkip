@@ -300,7 +300,7 @@ class ComposeViewController: UIViewController {
             sendButton.trailingAnchor.constraint(equalTo: sendBarView.trailingAnchor, constant: -10),
             sendButton.centerYAnchor.constraint(equalTo: sendBarView.centerYAnchor),
             sendButton.leadingAnchor.constraint(equalTo: selectedContactsText.trailingAnchor, constant: 10),
-            
+        
             ]
         
         sendBarBottomAnchorConstraint = NSLayoutConstraint(item: sendBarView, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: 0)

@@ -10,6 +10,7 @@ import UIKit
 import Contacts
 import NotificationCenter
 import FirebaseAuth
+import PhoneNumberKit
 
 class ComposeViewController: UIViewController {
 
@@ -59,11 +60,12 @@ class ComposeViewController: UIViewController {
 
     var upperPanLimit: CGFloat = 0.0
     
-    var selectedNames: [String] = []
+    var selectedNames: [CNContact] = []
+    var contacts : [CNContact] = []
     
     var sendBarBottomAnchorConstraint: NSLayoutConstraint?
     
-    var contacts : [CNContact] = []
+    let phoneNumberKit = PhoneNumberKit()
     
     var image: Data?
     var video: URL?
@@ -267,6 +269,21 @@ class ComposeViewController: UIViewController {
     func sendMedia() {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy HH:mm"
+        var recipients: [String] = []
+        
+        for selectedContact in selectedNames {
+            do {
+                let phoneNumber = try phoneNumberKit.parse(selectedContact.phoneNumbers[0].value.stringValue)
+                let parsedNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
+                recipients.append(parsedNumber)
+            } catch {
+                print("error trying to parse phone number")
+            }
+            
+        }
+        
+        
+        
         if let videoURL = video {
             let videoName = "\(NSUUID().uuidString)\(videoURL)"
             let ref = DataService.instance.videosStorageRef.child(videoName)
@@ -275,7 +292,7 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription)")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: self.selectedNames, mediaURL: downloadURL!, mediaType: "video", releaseDate: formatter.string(from: self.futureDate!))
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: recipients, mediaURL: downloadURL!, mediaType: "video", releaseDate: formatter.string(from: self.futureDate!))
                     
                 }
             })
@@ -287,7 +304,7 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription))")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: self.selectedNames, mediaURL: downloadURL!, mediaType: "image", releaseDate: formatter.string(from: self.futureDate!))
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: formatter.string(from: self.futureDate!))
                 }
             })
             self.dismiss(animated: true, completion: nil)
@@ -382,15 +399,16 @@ class ComposeViewController: UIViewController {
     }
     
     ///Called when contacts are selected/deselected from the table.
-    func updateSendBar(listOfNames: [String]){
+    func updateSendBar(listOfContacts: [CNContact]){
         var tempList: [String] = []
-        for name in listOfNames {
-            let trimmedString = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        for contact in listOfContacts {
+            let text = contact.givenName + " " + contact.familyName
+            let trimmedString = text.trimmingCharacters(in: .whitespacesAndNewlines)
             tempList.append(trimmedString)
         }
         selectedContactsText.text = tempList.joined(separator: ", ")
         
-        if listOfNames.count == 0 {
+        if listOfContacts.count == 0 {
             sendBarView.isHidden = true
         } else {
             sendBarView.isHidden = false
@@ -422,7 +440,7 @@ extension ComposeViewController: UITableViewDataSource {
         cell.selectionStyle = UITableViewCellSelectionStyle.none
         
         if searchActive {
-            if selectedNames.contains(filtered[indexPath.row].givenName + " " + filtered[indexPath.row].familyName) {
+            if selectedNames.contains(filtered[indexPath.row]) {
                 
                 let view = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
                 view.backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 237.0/255.0, blue: 143.0/255.0, alpha: 1)
@@ -439,7 +457,7 @@ extension ComposeViewController: UITableViewDataSource {
             cell.textLabel?.text = filtered[indexPath.row].givenName + " " + filtered[indexPath.row].familyName
             return cell
         } else {
-            if selectedNames.contains(contacts[indexPath.row].givenName + " " + contacts[indexPath.row].familyName) {
+            if selectedNames.contains(contacts[indexPath.row]) {
                 
                 let view = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
                 view.backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 237.0/255.0, blue: 143.0/255.0, alpha: 1)
@@ -472,17 +490,17 @@ extension ComposeViewController: UITableViewDelegate {
             view.layer.cornerRadius = 10
             cell.accessoryView = view
 
-            if selectedNames.contains((cell.textLabel?.text)!){
+            if selectedNames.contains(cell.contact){
                 
-                selectedNames.append((cell.textLabel?.text)!)
-                selectedNames = selectedNames.filter({$0 != tableView.cellForRow(at: indexPath)?.textLabel?.text})
+                selectedNames.append(cell.contact)
+                selectedNames = selectedNames.filter({$0 != cell.contact})
                 cell.isSelected = false
                 cell.accessoryView = UIView()
-                updateSendBar(listOfNames: selectedNames)
+                updateSendBar(listOfContacts: selectedNames)
                 return
             }else {
-                selectedNames.append((cell.textLabel?.text)!)
-                updateSendBar(listOfNames: selectedNames)
+                selectedNames.append(cell.contact)
+                updateSendBar(listOfContacts: selectedNames)
             }
             
             print(cell.contact)
@@ -491,10 +509,11 @@ extension ComposeViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        
-        tableView.cellForRow(at: indexPath)?.accessoryView = UIView()
-        selectedNames = selectedNames.filter({$0 != tableView.cellForRow(at: indexPath)?.textLabel?.text})
-        updateSendBar(listOfNames: selectedNames)
+        if let cell = tableView.cellForRow(at: indexPath) as? ContactCell {
+            cell.accessoryView = UIView()
+            selectedNames = selectedNames.filter({$0 != cell.contact})
+            updateSendBar(listOfContacts: selectedNames)
+        }
 
     }
     

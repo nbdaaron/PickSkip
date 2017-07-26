@@ -51,6 +51,8 @@ class Constants {
             if user == nil {
                 let loginViewController = vc.storyboard!.instantiateViewController(withIdentifier: "LoginViewController")
                 vc.present(loginViewController, animated: true, completion: nil)
+            } else {
+                
             }
         }
     }

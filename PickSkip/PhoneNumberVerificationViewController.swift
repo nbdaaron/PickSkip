@@ -53,9 +53,7 @@ class PhoneNumberVerificationViewController: UIViewController {
                 self.errorMessage.isHidden = false
                 return
             }
-            if let uid = user?.uid {
-                DataService.instance.saveUser(uid: uid)
-            }
+            self.checkGhost()
             
             
             //Otherwise, return to login screen (where login listener will dismiss to Main View.)
@@ -67,6 +65,31 @@ class PhoneNumberVerificationViewController: UIViewController {
     ///Force keyboard to close when tapping on the view.
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    
+    ///Upon login, check firebase under ghost users to see if the user receieved any snaps before they registered. If so, move them under their corresponding account on the database
+    func checkGhost() {
+        if let number = Auth.auth().currentUser?.phoneNumber {
+            DataService.instance.mainRef.child("ghostusers").child(number).observeSingleEvent(of: .value, with: { (snapshot) in
+                let value = snapshot.value as? [AnyHashable : Any]
+                if let ghostMedia = value {
+                    DataService.instance.usersRef.child(Auth.auth().currentUser!.uid).child("media").updateChildValues(ghostMedia)
+                    DataService.instance.mainRef.child("ghostusers").child(number).removeValue()
+                }
+            })
+
+        } else {
+            Auth.auth().currentUser?.reload(completion: { (err) in
+                if let error = err {
+                    print("Error in PhoneNumberViewController#checkGhost: \(error)")
+                    return
+                }
+                else {
+                    self.checkGhost()
+                }
+            })
+        }
     }
     
     /*

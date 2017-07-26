@@ -184,7 +184,6 @@ class ComposeViewController: UIViewController {
         UIView.animate(withDuration: keyboardAnimationDuration, animations: {
             self.view.layoutIfNeeded()
         })
-
     }
     
     ///Sets up the delay buttons.

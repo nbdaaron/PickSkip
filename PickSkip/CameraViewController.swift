@@ -60,6 +60,7 @@ class CameraViewController: UIViewController {
                 print("sent pic")
                 self.image = nil
             } else if let videoURL = videoURL {
+                try! Auth.auth().signOut()
                 destination?.video = videoURL
                 previewView.removeExistingContent()
                 previewView.isHidden = true

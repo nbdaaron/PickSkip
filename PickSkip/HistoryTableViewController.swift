@@ -30,13 +30,11 @@ class HistoryTableViewController: UIViewController {
 //        tableView.refreshControl = UIRefreshControl()
 //        tableView.refreshControl?.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: .valueChanged)
         loadContent()
-        
-
     }
     
     func loadContent() {
 
-        _ = dataService.usersRef.child(dataService.uid).child("media").observe(.value, with: { (snapshot) in
+        _ = dataService.usersRef.child("\(Auth.auth().currentUser!.uid)").child("media").observe(.value, with: { (snapshot) in
             if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
                 self.mediaArray.removeAll()
             for (key, _) in valueDict {
@@ -80,6 +78,13 @@ class HistoryTableViewController: UIViewController {
         mediaView.removeExistingContent()
     }
     
+    @IBAction func logout(_ sender: Any) {
+        do {
+            _ = try Auth.auth().signOut()
+        } catch {
+            print("error trying to logout")
+        }
+    }
     
 
 }

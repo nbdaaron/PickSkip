@@ -10,6 +10,7 @@ import UIKit
 import Contacts
 import NotificationCenter
 import FirebaseAuth
+import PhoneNumberKit
 
 class ComposeViewController: UIViewController {
 
@@ -70,15 +71,18 @@ class ComposeViewController: UIViewController {
     var image: Data?
     var video: URL?
     
+    let phoneNumberKit = PhoneNumberKit()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         
         loadContacts()
         
         date = Date()
         futureDate = Date()
-        
         dateComponents = DateComponents()
+        
         dateComponents.year = 0
         dateComponents.month = 0
         dateComponents.day = 0
@@ -86,15 +90,12 @@ class ComposeViewController: UIViewController {
         dateComponents.minute = 0
         
         let dateformatter = DateFormatter()
-        
-        dateformatter.dateStyle = DateFormatter.Style.long
-        
-        nowDate = dateformatter.string(from: date)
-        dateLabel.text = nowDate
-        
         let timeformatter = DateFormatter()
+        dateformatter.dateStyle = DateFormatter.Style.long
         timeformatter.timeStyle = DateFormatter.Style.short
+        nowDate = dateformatter.string(from: date)
         nowTime = timeformatter.string(from: date)
+        dateLabel.text = nowDate
         timeLabel.text = nowTime
         
         
@@ -108,11 +109,16 @@ class ComposeViewController: UIViewController {
         contactsToDisplayArray = {
             var array: [String] = []
             for contact in contacts {
-                array.append("\(contact.givenName) \(contact.familyName)")
+                
+                if !(contact.phoneNumbers.isEmpty) {
+                    array.append("\(contact.givenName) \(contact.familyName)")
+                } 
+                
             }
             return array
         }()
         
+        print("\(contacts[2].phoneNumbers.isEmpty)")
         
         setupButtons()
         self.view.bringSubview(toFront: contactView)
@@ -120,6 +126,7 @@ class ComposeViewController: UIViewController {
         setupMisc()
         setupKeyboardObserver()
     
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -158,6 +165,25 @@ class ComposeViewController: UIViewController {
         
         contacts = results
 
+    }
+    
+    public func getNumbersOfContacts(names: [String]) -> [String] {
+        var array: [String] = []
+        let store = CNContactStore()
+        for name in names {
+            let predicate = CNContact.predicateForContacts(matchingName: name)
+            do {
+                let tempcontacts =  try store.unifiedContacts(matching: predicate, keysToFetch: [CNContactPhoneNumbersKey] as   [CNKeyDescriptor])
+                let text = tempcontacts[0].phoneNumbers[0].value.stringValue
+                let phoneNumber = try phoneNumberKit.parse(text)
+                let parsedNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
+                array.append(parsedNumber)
+                print("\(parsedNumber)")
+            } catch {
+                print("Error fetching contact: \(error)")
+            }
+        }
+        return array
     }
 
     ///Add listeners when keyboard opens/closes.
@@ -288,6 +314,9 @@ class ComposeViewController: UIViewController {
     func sendMedia() {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy HH:mm"
+        
+        let recipients = getNumbersOfContacts(names: selectedNames)
+        
         if let videoURL = video {
             let videoName = "\(NSUUID().uuidString)\(videoURL)"
             let ref = DataService.instance.videosStorageRef.child(videoName)
@@ -296,8 +325,9 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription)")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: self.selectedNames, mediaURL: downloadURL!, mediaType: "video", releaseDate: formatter.string(from: self.futureDate!))
-                    
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: recipients, mediaURL: downloadURL!, mediaType: "video", releaseDate: formatter.string(from: self.futureDate!))
+                    self.video = nil
+                    print("sent video")
                 }
             })
             self.dismiss(animated: true, completion: nil)
@@ -308,7 +338,9 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription))")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: self.selectedNames, mediaURL: downloadURL!, mediaType: "image", releaseDate: formatter.string(from: self.futureDate!))
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: formatter.string(from: self.futureDate!))
+                     self.image = nil
+                    print("sent image")
                 }
             })
             self.dismiss(animated: true, completion: nil)
@@ -431,7 +463,7 @@ extension ComposeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) 
         cell.textLabel?.font = UIFont(name: "Raleway-Light", size: 20)
         cell.textLabel?.isUserInteractionEnabled = false
         cell.backgroundColor = UIColor(colorLiteralRed: 255.0/255.0, green: 65.0/255.0, blue: 98.0/255.0, alpha: 1)
@@ -480,8 +512,7 @@ extension ComposeViewController: UITableViewDelegate {
         
             if selectedNames.contains((cell.textLabel?.text)!){
                 
-                selectedNames.append((cell.textLabel?.text)!)
-                selectedNames = selectedNames.filter({$0 != tableView.cellForRow(at: indexPath)?.textLabel?.text})
+                selectedNames = selectedNames.filter({$0 != cell.textLabel?.text})
                 cell.isSelected = false
                 cell.accessoryView = UIView()
                 updateSendBar(listOfNames: selectedNames)
@@ -491,6 +522,7 @@ extension ComposeViewController: UITableViewDelegate {
                 updateSendBar(listOfNames: selectedNames)
             }
         }
+        
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

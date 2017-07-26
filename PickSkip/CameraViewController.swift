@@ -46,6 +46,8 @@ class CameraViewController: UIViewController {
         previewView.removeExistingContent()
         previewView.isHidden = true
         optionsView.isHidden = true
+        self.image = nil
+        self.videoURL = nil
     }
 
 
@@ -57,14 +59,14 @@ class CameraViewController: UIViewController {
                 previewView.removeExistingContent()
                 previewView.isHidden = true
                 optionsView.isHidden = true
-                print("sent pic")
+                print("moved pic")
                 self.image = nil
             } else if let videoURL = videoURL {
                 destination?.video = videoURL
                 previewView.removeExistingContent()
                 previewView.isHidden = true
                 optionsView.isHidden = true
-                print("sent vid")
+                print("moved vid")
                 self.videoURL = nil
             }
         }

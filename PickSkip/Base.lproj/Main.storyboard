@@ -230,6 +230,16 @@
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="le9-2O-Wwo">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="88.333333333333329"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OHS-fH-vyU">
+                                        <rect key="frame" x="27" y="29" width="46" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="logout"/>
+                                        <connections>
+                                            <action selector="logout:" destination="ysK-90-dgi" eventType="touchUpInside" id="jiI-FO-yJW"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" red="0.98776036500930786" green="0.25351643562316895" blue="0.38402098417282104" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                         </subviews>

@@ -27,6 +27,7 @@ class HistoryTableViewController: UIViewController {
         tableView.tableHeaderView = UIView()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.tableFooterView = UIView()
 //        tableView.refreshControl = UIRefreshControl()
 //        tableView.refreshControl?.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: .valueChanged)
         loadContent()

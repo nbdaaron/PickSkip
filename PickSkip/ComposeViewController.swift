@@ -124,6 +124,10 @@ class ComposeViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     ///Load Contacts into the contacts array
     private func loadContacts() {
         let store = CNContactStore()

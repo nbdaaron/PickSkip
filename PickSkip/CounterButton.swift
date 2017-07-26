@@ -20,7 +20,6 @@ class CounterButton : UIButton {
     
     public init(buttonType: String, frame: CGRect){
         super.init(frame: frame)
-        type = buttonType
         
         setupButton()
     }

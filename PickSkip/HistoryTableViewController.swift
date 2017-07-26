@@ -36,7 +36,7 @@ class HistoryTableViewController: UIViewController {
     
     func loadContent() {
 
-        _ = dataService.usersRef.child(dataService.uid).child("media").observe(.value, with: { (snapshot) in
+        _ = dataService.usersRef.child(Auth.auth().currentUser!.uid).child("media").observe(.value, with: { (snapshot) in
             if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
                 self.mediaArray.removeAll()
             for (key, _) in valueDict {

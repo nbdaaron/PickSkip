@@ -10,6 +10,7 @@
 		1A014DFE1F2100E600561BEE /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A014DFD1F2100E600561BEE /* Media.swift */; };
 		1A435C741F1ECFE1007E5478 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A435C731F1ECFE1007E5478 /* DataService.swift */; };
 		1AA1D97D1F19932700DAEFE5 /* ComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA1D97C1F19932700DAEFE5 /* ComposeViewController.swift */; };
+		1AC709091F28382100AEB3AB /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC709081F28382100AEB3AB /* ContactCell.swift */; };
 		1AD269191F184360003C438B /* CounterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269181F184360003C438B /* CounterButton.swift */; };
 		1AD2691E1F184633003C438B /* Raleway-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AD2691D1F18462E003C438B /* Raleway-Light.ttf */; };
 		278180731F1999EA00E63CB3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 278180721F1999EA00E63CB3 /* GoogleService-Info.plist */; };
@@ -34,6 +35,7 @@
 		1A014DFD1F2100E600561BEE /* Media.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		1A435C731F1ECFE1007E5478 /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		1AA1D97C1F19932700DAEFE5 /* ComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
+		1AC709081F28382100AEB3AB /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
 		1AD269181F184360003C438B /* CounterButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CounterButton.swift; sourceTree = "<group>"; };
 		1AD2691D1F18462E003C438B /* Raleway-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Light.ttf"; sourceTree = "<group>"; };
 		278180721F1999EA00E63CB3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 			children = (
 				27C7D9B91F1596D200A5737F /* PreviewView.swift */,
 				27C7D9AF1F1482DE00A5737F /* CameraView.swift */,
+				1AC709081F28382100AEB3AB /* ContactCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -314,6 +317,7 @@
 				27C7D9B41F148C3200A5737F /* RecordButton.swift in Sources */,
 				1AA1D97D1F19932700DAEFE5 /* ComposeViewController.swift in Sources */,
 				278180781F19A1F500E63CB3 /* PhoneNumberVerificationViewController.swift in Sources */,
+				1AC709091F28382100AEB3AB /* ContactCell.swift in Sources */,
 				27C7D9A11F14805800A5737F /* PickSkip.xcdatamodeld in Sources */,
 				27C7D9B81F158CFE00A5737F /* MainPagesViewController.swift in Sources */,
 				2781807A1F1A971700E63CB3 /* HistoryTableViewController.swift in Sources */,

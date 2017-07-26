@@ -14,8 +14,6 @@ import FirebaseAuth
 class DataService {
     private static let _instance = DataService()
     
-    var uid: String = Auth.auth().currentUser!.uid
-    
     static var instance: DataService {
         return _instance
     }

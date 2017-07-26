@@ -14,8 +14,6 @@ import FirebaseAuth
 class DataService {
     private static let _instance = DataService()
     
-    var uid: String = Auth.auth().currentUser!.uid
-    
     static var instance: DataService {
         return _instance
     }
@@ -43,7 +41,7 @@ class DataService {
     func saveUser(uid: String) {
         let profile: Dictionary<String, AnyObject> = ["firstname": "" as AnyObject, "lastname": "" as AnyObject]
         
-        mainRef.child("users").child(uid).child("profile").setValue(profile)
+        mainRef.child("users").child(Auth.auth().currentUser!.phoneNumber!).child("profile").setValue(profile)
         
     }
     
@@ -55,11 +53,7 @@ class DataService {
                                                 "recipients": recipients as AnyObject]
         
         mainRef.child("media").childByAutoId().setValue(pr, withCompletionBlock: {(error, databaseReference) in
-            self.mainRef.child("users").child("\(Auth.auth().currentUser!.uid)").child("media").updateChildValues([databaseReference.key: true])
-            for recipient in recipients {
-                self.mainRef.child("ghostusers").child("\(recipient)").updateChildValues([databaseReference.key: true])
-            }
-            
+            self.mainRef.child("users").child("\(String(describing: Auth.auth().currentUser!.providerData.first!.phoneNumber!))").child("media").updateChildValues([databaseReference.key: true])
         })
     }
     

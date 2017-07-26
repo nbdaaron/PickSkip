@@ -211,7 +211,8 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ZRE-iq-cwT">
                                 <rect key="frame" x="0.0" y="88" width="414" height="647.66666666666663"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="sectionIndexBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="dsp-0b-nyZ">
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
@@ -230,10 +231,30 @@
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="le9-2O-Wwo">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="88.333333333333329"/>
-                                <color key="backgroundColor" red="0.98776036500930786" green="0.25351643562316895" blue="0.38402098417282104" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q6h-dE-DIh">
+                                        <rect key="frame" x="9" y="29" width="44" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="logout"/>
+                                        <connections>
+                                            <action selector="logout:" destination="ysK-90-dgi" eventType="touchUpInside" id="yo9-xP-4z5"/>
+                                        </connections>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PickSkipTitle" translatesAutoresizingMaskIntoConstraints="NO" id="h3k-w3-tMn">
+                                        <rect key="frame" x="106.66666666666669" y="29.333333333333329" width="201" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="sb7-yf-VXk"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.9882352941176471" green="0.25490196078431371" blue="0.38431372549019605" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="h3k-w3-tMn" firstAttribute="centerY" secondItem="le9-2O-Wwo" secondAttribute="centerY" constant="10" id="OQc-HR-ieg"/>
+                                    <constraint firstItem="h3k-w3-tMn" firstAttribute="centerX" secondItem="le9-2O-Wwo" secondAttribute="centerX" id="OWc-8K-v5W"/>
+                                </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="0.25490196078431371" blue="0.38431372549019605" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="veG-fY-cYo" firstAttribute="top" secondItem="db5-gQ-UuW" secondAttribute="bottom" id="HyT-hq-HeE"/>
                             <constraint firstAttribute="trailing" secondItem="le9-2O-Wwo" secondAttribute="trailing" id="Iq5-Gj-CJ1"/>
@@ -373,7 +394,7 @@
                                         <rect key="frame" x="15" y="74" width="384" height="573.33333333333326"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="SC3-9U-BLa">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="SC3-9U-BLa" customClass="ContactCell" customModule="PickSkip" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="28" width="384" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="SC3-9U-BLa" id="rSX-gV-qhw">
@@ -441,31 +462,49 @@
                                         <rect key="frame" x="15" y="15" width="384" height="53.333333333333329"/>
                                         <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="0 year"/>
+                                        <connections>
+                                            <action selector="count:" destination="JLf-O4-IKa" eventType="touchUpInside" id="Tk8-Ni-jPy"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hPI-wg-8wU" customClass="CounterButton" customModule="PickSkip" customModuleProvider="target">
                                         <rect key="frame" x="14.999999999999986" y="83.333333333333329" width="227.66666666666663" height="53.999999999999986"/>
                                         <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="0 month"/>
+                                        <connections>
+                                            <action selector="count:" destination="JLf-O4-IKa" eventType="touchUpInside" id="ich-sp-OaG"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xCy-7Q-Udi" customClass="CounterButton" customModule="PickSkip" customModuleProvider="target">
                                         <rect key="frame" x="257.66666666666674" y="83.333333333333329" width="141.33333333333331" height="53.999999999999986"/>
                                         <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="0 week"/>
+                                        <connections>
+                                            <action selector="count:" destination="JLf-O4-IKa" eventType="touchUpInside" id="9Ok-t2-cRr"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Hm-bH-nzx" customClass="CounterButton" customModule="PickSkip" customModuleProvider="target">
                                         <rect key="frame" x="328.66666666666674" y="152.33333333333331" width="70.333333333333314" height="53.333333333333314"/>
                                         <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="0 min"/>
+                                        <connections>
+                                            <action selector="countMin:" destination="JLf-O4-IKa" eventType="touchUpInside" id="9dy-Kb-Xyx"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EM7-BA-Z2e" customClass="CounterButton" customModule="PickSkip" customModuleProvider="target">
                                         <rect key="frame" x="214.33333333333331" y="153" width="99.333333333333314" height="53.333333333333343"/>
                                         <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="0 hour"/>
+                                        <connections>
+                                            <action selector="count:" destination="JLf-O4-IKa" eventType="touchUpInside" id="Tfs-Jh-ZCc"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z4L-55-RNb" customClass="CounterButton" customModule="PickSkip" customModuleProvider="target">
                                         <rect key="frame" x="81.666666666666657" y="152.33333333333331" width="117.66666666666666" height="53.333333333333314"/>
                                         <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="0 day"/>
+                                        <connections>
+                                            <action selector="count:" destination="JLf-O4-IKa" eventType="touchUpInside" id="Jj8-Zo-WMO"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WNq-1w-7Ln" userLabel="undo">
                                         <rect key="frame" x="15" y="152.33333333333331" width="51" height="53.333333333333314"/>
@@ -549,6 +588,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="PickSkipTitle" width="201" height="67"/>
         <image name="backButton1" width="14" height="27"/>
         <image name="logoPanel" width="375" height="368"/>
         <image name="logopanelflipped" width="375" height="368"/>

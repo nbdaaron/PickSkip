@@ -27,6 +27,7 @@ class HistoryTableViewController: UIViewController {
         tableView.tableHeaderView = UIView()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.tableFooterView = UIView()
 //        tableView.refreshControl = UIRefreshControl()
 //        tableView.refreshControl?.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: .valueChanged)
         loadContent()
@@ -36,31 +37,34 @@ class HistoryTableViewController: UIViewController {
     
     func loadContent() {
 
-        _ = dataService.usersRef.child(dataService.uid).child("media").observe(.value, with: { (snapshot) in
+        _ = dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").observe(.value, with: { (snapshot) in
             if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
                 self.mediaArray.removeAll()
             for (key, _) in valueDict {
                 self.dataService.mainRef.child("media").child(key).observe(.value, with: {(snapshot) in
-                    let content = snapshot.value as! Dictionary<String, AnyObject>
-                    let url = content["mediaURL"] as! String
-                    let type = content["mediaType"] as! String
-                    let id = content["senderID"] as! String
-                    let date = content["releaseDate"] as! String
-                    let httpsReference = Storage.storage().reference(forURL: url)
-                    httpsReference.getData(maxSize: 1024 * 1024 * 1024, completion: {(data, error) in
-                        if let error = error {
-                            print("something is wrong: \(error.localizedDescription)")
-                        } else if type == "image" {
-                            let mediaInstance = Media(id: id, type: type, image: data, video: nil, dateString: date)
-                            self.mediaArray.append(mediaInstance)
-                             self.tableView.reloadData()
-                        } else if type == "video" {
-                            //implement video handling
-//                            let mediaInstance = Media(id: id, type: type, image: nil, video: data)
-                        } else {
-                            print("Something went wrong during load")
-                        }
-                    })
+                    
+                    if let content = snapshot.value as? Dictionary<String, AnyObject> {
+                        let url = content["mediaURL"] as! String
+                        let type = content["mediaType"] as! String
+                        let id = content["senderID"] as! String
+                        let date = content["releaseDate"] as! String
+                        let httpsReference = Storage.storage().reference(forURL: url)
+                        httpsReference.getData(maxSize: 1024 * 1024 * 1024, completion: {(data, error) in
+                            if let error = error {
+                                print("something is wrong: \(error.localizedDescription)")
+                            } else if type == "image" {
+                                let mediaInstance = Media(id: id, type: type, image: data, video: nil, dateString: date)
+                                self.mediaArray.append(mediaInstance)
+                                self.tableView.reloadData()
+                            } else if type == "video" {
+                                //implement video handling
+                                //                            let mediaInstance = Media(id: id, type: type, image: nil, video: data)
+                            } else {
+                                print("Something went wrong during load")
+                            }
+                        })
+                    }
+                    
                 })
             }
             }
@@ -80,6 +84,13 @@ class HistoryTableViewController: UIViewController {
         mediaView.removeExistingContent()
     }
     
+    @IBAction func logout(_ sender: Any) {
+        do {
+            _ = try Auth.auth().signOut()
+        } catch {
+            print("error signing out")
+        }
+    }
     
 
 }

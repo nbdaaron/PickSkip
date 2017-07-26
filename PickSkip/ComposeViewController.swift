@@ -10,6 +10,7 @@ import UIKit
 import Contacts
 import NotificationCenter
 import FirebaseAuth
+import PhoneNumberKit
 
 class ComposeViewController: UIViewController {
 
@@ -48,24 +49,23 @@ class ComposeViewController: UIViewController {
     var selectedContactsText: UILabel!
     var sendButton: UIButton!
     
-    var filtered : [String] = []
+    var filtered : [CNContact] = []
     var searchActive = false
     
     var nowDate = ""
     var nowTime = ""
-    
     var dateComponents : DateComponents!
     var date : Date!
     var futureDate: Date!
 
     var upperPanLimit: CGFloat = 0.0
     
-    var contactsToDisplayArray: [String] = []
-    var selectedNames: [String] = []
+    var selectedNames: [CNContact] = []
+    var contacts : [CNContact] = []
     
     var sendBarBottomAnchorConstraint: NSLayoutConstraint?
     
-    var contacts : [CNContact]!
+    let phoneNumberKit = PhoneNumberKit()
     
     var image: Data?
     var video: URL?
@@ -104,14 +104,7 @@ class ComposeViewController: UIViewController {
         listOfContactsTable.tableFooterView = UIView()
         listOfContactsTable.allowsMultipleSelection = true
         listOfContactsTable.isScrollEnabled = true
-        
-        contactsToDisplayArray = {
-            var array: [String] = []
-            for contact in contacts {
-                array.append("\(contact.givenName) \(contact.familyName)")
-            }
-            return array
-        }()
+
         
         
         setupButtons()
@@ -131,6 +124,10 @@ class ComposeViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     ///Load Contacts into the contacts array
     private func loadContacts() {
         let store = CNContactStore()
@@ -143,20 +140,21 @@ class ComposeViewController: UIViewController {
             print("Error fetching containers from ComposeViewController#loadContacts: \(error)")
         }
         
-        var results : [CNContact] = []
-        
         for container in allContainers {
             let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
             
             do {
                 let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
-                results.append(contentsOf: containerResults)
+                for contact in containerResults {
+                    if !contact.phoneNumbers.isEmpty {
+                        contacts.append(contact)
+                    }
+                }
+                
             } catch {
                 print("Error fetching results for container from ComposeViewController#loadContacts: \(error)")
             }
         }
-        
-        contacts = results
 
     }
 
@@ -194,27 +192,14 @@ class ComposeViewController: UIViewController {
         dayButton.type = "day"
         hourButton.type = "hour"
         minButton.type = "min"
-        
-        let tapGesture1 = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
-        let tapGesture2 = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
-        let tapGesture3 = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
-        let tapGesture4 = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
-        let tapGesture5 = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
-        let tapGesture6 = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
-        
+      
         let longTap1 = UILongPressGestureRecognizer(target: self, action: #selector(longTapGesture(gesture:)))
         let longTap2 = UILongPressGestureRecognizer(target: self, action: #selector(longTapGesture(gesture:)))
         let longTap3 = UILongPressGestureRecognizer(target: self, action: #selector(longTapGesture(gesture:)))
         let longTap4 = UILongPressGestureRecognizer(target: self, action: #selector(longTapGesture(gesture:)))
         let longTap5 = UILongPressGestureRecognizer(target: self, action: #selector(longTapGesture(gesture:)))
         let longTap6 = UILongPressGestureRecognizer(target: self, action: #selector(longTapGesture(gesture:)))
-        
-        yearButton.addGestureRecognizer(tapGesture1)
-        monthButton.addGestureRecognizer(tapGesture2)
-        weekButton.addGestureRecognizer(tapGesture3)
-        dayButton.addGestureRecognizer(tapGesture4)
-        hourButton.addGestureRecognizer(tapGesture5)
-        minButton.addGestureRecognizer(tapGesture6)
+
         minButton.addGestureRecognizer(longTap1)
         yearButton.addGestureRecognizer(longTap2)
         monthButton.addGestureRecognizer(longTap3)
@@ -287,6 +272,21 @@ class ComposeViewController: UIViewController {
     func sendMedia() {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy HH:mm"
+        var recipients: [String] = []
+        
+        for selectedContact in selectedNames {
+            do {
+                let phoneNumber = try phoneNumberKit.parse(selectedContact.phoneNumbers[0].value.stringValue)
+                let parsedNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
+                recipients.append(parsedNumber)
+            } catch {
+                print("error trying to parse phone number")
+            }
+            
+        }
+        
+        
+        
         if let videoURL = video {
             let videoName = "\(NSUUID().uuidString)\(videoURL)"
             let ref = DataService.instance.videosStorageRef.child(videoName)
@@ -295,7 +295,7 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription)")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: self.selectedNames, mediaURL: downloadURL!, mediaType: "video", releaseDate: formatter.string(from: self.futureDate!))
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: recipients, mediaURL: downloadURL!, mediaType: "video", releaseDate: formatter.string(from: self.futureDate!))
                     
                 }
             })
@@ -307,7 +307,7 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription))")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: self.selectedNames, mediaURL: downloadURL!, mediaType: "image", releaseDate: formatter.string(from: self.futureDate!))
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: formatter.string(from: self.futureDate!))
                 }
             })
             self.dismiss(animated: true, completion: nil)
@@ -325,15 +325,19 @@ class ComposeViewController: UIViewController {
         })
         
     }
+
     
-    ///Called when a delay button is tapped. Increments delay.
-    func tapGesture(gesture: UITapGestureRecognizer) {
-        guard let button = gesture.view as? CounterButton else {return}
-        if button.type == "min" {
-            button.count += 5
-            button.setTitle(String(button.count) + "\n" + button.type, for: .normal)
-        } else {
+    @IBAction func count(_ sender: Any) {
+        if let button = sender as? CounterButton {
             button.count += 1
+            button.setTitle(String(button.count) + " " + button.type, for: .normal)
+        }
+        changeDate()
+    }
+    
+    @IBAction func countMin(_ sender: Any) {
+        if let button = sender as? CounterButton {
+            button.count += 5
             button.setTitle(String(button.count) + " " + button.type, for: .normal)
         }
         changeDate()
@@ -398,15 +402,16 @@ class ComposeViewController: UIViewController {
     }
     
     ///Called when contacts are selected/deselected from the table.
-    func updateSendBar(listOfNames: [String]){
+    func updateSendBar(listOfContacts: [CNContact]){
         var tempList: [String] = []
-        for name in listOfNames {
-            let trimmedString = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        for contact in listOfContacts {
+            let text = contact.givenName + " " + contact.familyName
+            let trimmedString = text.trimmingCharacters(in: .whitespacesAndNewlines)
             tempList.append(trimmedString)
         }
         selectedContactsText.text = tempList.joined(separator: ", ")
         
-        if listOfNames.count == 0 {
+        if listOfContacts.count == 0 {
             sendBarView.isHidden = true
         } else {
             sendBarView.isHidden = false
@@ -425,12 +430,12 @@ extension ComposeViewController: UITableViewDataSource {
         if(searchActive){
             return filtered.count
         } else {
-            return contactsToDisplayArray.count
+            return contacts.count
         }
-    }
+     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ContactCell
         cell.textLabel?.font = UIFont(name: "Raleway-Light", size: 20)
         cell.textLabel?.isUserInteractionEnabled = false
         cell.backgroundColor = UIColor(colorLiteralRed: 255.0/255.0, green: 65.0/255.0, blue: 98.0/255.0, alpha: 1)
@@ -439,27 +444,38 @@ extension ComposeViewController: UITableViewDataSource {
         
         if searchActive {
             if selectedNames.contains(filtered[indexPath.row]) {
+                
                 let view = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
                 view.backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 237.0/255.0, blue: 143.0/255.0, alpha: 1)
                 view.layer.cornerRadius = 10
                 cell.accessoryView = view
                 cell.isSelected = true
+                
             } else {
+                
                 cell.accessoryView = UIView()
+                
             }
-            cell.textLabel?.text = filtered[indexPath.row]
+            cell.contact = filtered[indexPath.row]
+            cell.textLabel?.text = filtered[indexPath.row].givenName + " " + filtered[indexPath.row].familyName
             return cell
         } else {
-            if selectedNames.contains(contactsToDisplayArray[indexPath.row]) {
+            if selectedNames.contains(contacts[indexPath.row]) {
+                
                 let view = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
                 view.backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 237.0/255.0, blue: 143.0/255.0, alpha: 1)
                 view.layer.cornerRadius = 10
                 cell.accessoryView = view
                 cell.isSelected = true
+                
             } else {
+                
                 cell.accessoryView = UIView()
+                
             }
-            cell.textLabel?.text = contactsToDisplayArray[indexPath.row]
+            cell.contact = contacts[indexPath.row]
+            cell.textLabel?.text = contacts[indexPath.row].givenName + " " + contacts[indexPath.row].familyName
+            
             return cell
         }
     }
@@ -471,31 +487,37 @@ extension ComposeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if let cell = tableView.cellForRow(at: indexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? ContactCell {
             let view = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
             view.backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 237.0/255.0, blue: 143.0/255.0, alpha: 1)
             view.layer.cornerRadius = 10
             cell.accessoryView = view
-        
-            if selectedNames.contains((cell.textLabel?.text)!){
+
+            if selectedNames.contains(cell.contact){
                 
-                selectedNames.append((cell.textLabel?.text)!)
-                selectedNames = selectedNames.filter({$0 != tableView.cellForRow(at: indexPath)?.textLabel?.text})
+                selectedNames.append(cell.contact)
+                selectedNames = selectedNames.filter({$0 != cell.contact})
                 cell.isSelected = false
                 cell.accessoryView = UIView()
-                updateSendBar(listOfNames: selectedNames)
+                updateSendBar(listOfContacts: selectedNames)
                 return
             }else {
-                selectedNames.append((cell.textLabel?.text)!)
-                updateSendBar(listOfNames: selectedNames)
+                selectedNames.append(cell.contact)
+                updateSendBar(listOfContacts: selectedNames)
             }
+            
+            print(cell.contact)
         }
+        
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        tableView.cellForRow(at: indexPath)?.accessoryView = UIView()
-        selectedNames = selectedNames.filter({$0 != tableView.cellForRow(at: indexPath)?.textLabel?.text})
-        updateSendBar(listOfNames: selectedNames)
+        if let cell = tableView.cellForRow(at: indexPath) as? ContactCell {
+            cell.accessoryView = UIView()
+            selectedNames = selectedNames.filter({$0 != cell.contact})
+            updateSendBar(listOfContacts: selectedNames)
+        }
+
     }
     
     
@@ -540,14 +562,14 @@ extension ComposeViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.characters.count == 0 {
             filtered.removeAll()
-            filtered = contactsToDisplayArray
+            filtered = contacts
         }
         else {
             filtered.removeAll()
-            for string: String in contactsToDisplayArray {
-                let nameRange: NSRange = (string as NSString).range(of: searchBar.text!, options: ([.caseInsensitive, .diacriticInsensitive]))
+            for contact in contacts {
+                let nameRange: NSRange = ((contact.givenName + " " + contact.familyName) as NSString).range(of: searchBar.text!, options: ([.caseInsensitive, .diacriticInsensitive]))
                 if nameRange.location != NSNotFound {
-                    filtered.append(string)
+                    filtered.append(contact)
                 }
             }
         }

@@ -74,7 +74,7 @@ class PhoneNumberVerificationViewController: UIViewController {
             DataService.instance.mainRef.child("ghostusers").child(number).observeSingleEvent(of: .value, with: { (snapshot) in
                 let value = snapshot.value as? [AnyHashable : Any]
                 if let ghostMedia = value {
-                    DataService.instance.usersRef.child(Auth.auth().currentUser!.uid).child("media").updateChildValues(ghostMedia)
+                    DataService.instance.usersRef.child(number).child("media").updateChildValues(ghostMedia)
                     DataService.instance.mainRef.child("ghostusers").child(number).removeValue()
                 }
             })

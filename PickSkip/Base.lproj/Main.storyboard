@@ -546,6 +546,35 @@
                                     <constraint firstItem="xCy-7Q-Udi" firstAttribute="leading" secondItem="hPI-wg-8wU" secondAttribute="trailing" constant="15" id="zTe-Ff-AB5"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nqy-2J-f8w" userLabel="sendbar">
+                                <rect key="frame" x="0.0" y="666" width="414" height="70"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cQi-dz-BP5">
+                                        <rect key="frame" x="15" y="7.6666666666666288" width="331.33333333333331" height="56"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleAspectFit" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6yB-zw-dZR">
+                                        <rect key="frame" x="356.33333333333326" y="15" width="47.666666666666686" height="41"/>
+                                        <state key="normal" title="Button" image="RewindButton"/>
+                                        <connections>
+                                            <action selector="sendContent:" destination="JLf-O4-IKa" eventType="touchUpInside" id="a9Z-o5-Zt0"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.9262879490852356" green="0.94734472036361694" blue="0.51670569181442261" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="cQi-dz-BP5" firstAttribute="height" secondItem="nqy-2J-f8w" secondAttribute="height" multiplier="0.8" id="BeQ-xP-RJh"/>
+                                    <constraint firstItem="cQi-dz-BP5" firstAttribute="leading" secondItem="nqy-2J-f8w" secondAttribute="leading" constant="15" id="Bf7-7H-lC7"/>
+                                    <constraint firstItem="6yB-zw-dZR" firstAttribute="centerY" secondItem="nqy-2J-f8w" secondAttribute="centerY" id="IU4-wm-yaZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="6yB-zw-dZR" secondAttribute="trailing" constant="10" id="Tia-b0-0Gc"/>
+                                    <constraint firstAttribute="height" constant="70" id="e2d-DV-HIt"/>
+                                    <constraint firstItem="cQi-dz-BP5" firstAttribute="width" secondItem="nqy-2J-f8w" secondAttribute="width" multiplier="0.8" id="fms-XL-Ig2"/>
+                                    <constraint firstItem="6yB-zw-dZR" firstAttribute="leading" secondItem="cQi-dz-BP5" secondAttribute="trailing" constant="10" id="jmD-b0-FrS"/>
+                                    <constraint firstItem="cQi-dz-BP5" firstAttribute="centerY" secondItem="nqy-2J-f8w" secondAttribute="centerY" id="tBI-hP-VN3"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.062745098039215685" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -553,11 +582,13 @@
                             <constraint firstItem="3k2-c1-kEO" firstAttribute="height" secondItem="Fwg-k4-LGt" secondAttribute="height" multiplier="0.9" id="KLa-wu-DSR"/>
                             <constraint firstItem="lqO-GK-9k1" firstAttribute="leading" secondItem="Fwg-k4-LGt" secondAttribute="leading" id="NAo-ay-hKZ"/>
                             <constraint firstItem="lqO-GK-9k1" firstAttribute="top" secondItem="Fwg-k4-LGt" secondAttribute="top" id="Oad-y9-ohj"/>
+                            <constraint firstItem="nqy-2J-f8w" firstAttribute="leading" secondItem="Fwg-k4-LGt" secondAttribute="leading" id="V7m-lm-f4c"/>
                             <constraint firstAttribute="trailing" secondItem="lqO-GK-9k1" secondAttribute="trailing" id="YjM-Kn-l5D"/>
                             <constraint firstItem="lqO-GK-9k1" firstAttribute="height" secondItem="Fwg-k4-LGt" secondAttribute="height" multiplier="0.1" id="ZFR-Xf-3O5"/>
                             <constraint firstItem="oXQ-DL-nLB" firstAttribute="height" secondItem="Fwg-k4-LGt" secondAttribute="height" multiplier="0.3" id="cGp-wL-Pvt"/>
                             <constraint firstAttribute="trailing" secondItem="3k2-c1-kEO" secondAttribute="trailing" id="drg-Nr-47r"/>
                             <constraint firstItem="oXQ-DL-nLB" firstAttribute="top" secondItem="lqO-GK-9k1" secondAttribute="bottom" id="mgr-Xl-vs5"/>
+                            <constraint firstAttribute="trailing" secondItem="nqy-2J-f8w" secondAttribute="trailing" id="o1z-dU-RT9"/>
                             <constraint firstAttribute="trailing" secondItem="oXQ-DL-nLB" secondAttribute="trailing" id="u6g-9G-LgS"/>
                             <constraint firstItem="oXQ-DL-nLB" firstAttribute="leading" secondItem="Fwg-k4-LGt" secondAttribute="leading" id="vTZ-HI-cy0"/>
                             <constraint firstItem="3k2-c1-kEO" firstAttribute="top" secondItem="oXQ-DL-nLB" secondAttribute="bottom" id="w88-Xt-PJA"/>
@@ -577,6 +608,9 @@
                         <outlet property="monthButton" destination="hPI-wg-8wU" id="EIq-8m-eYx"/>
                         <outlet property="resetButton" destination="WNq-1w-7Ln" id="366-XL-Ert"/>
                         <outlet property="searchBar" destination="Kfj-Rd-vlA" id="amK-fi-16M"/>
+                        <outlet property="selectedContactsText" destination="cQi-dz-BP5" id="ip7-Wa-KPQ"/>
+                        <outlet property="sendBarView" destination="nqy-2J-f8w" id="iyn-fb-sRf"/>
+                        <outlet property="sendButton" destination="6yB-zw-dZR" id="71s-OB-Rho"/>
                         <outlet property="timeLabel" destination="PZH-Am-pHi" id="BS2-F5-efI"/>
                         <outlet property="weekButton" destination="xCy-7Q-Udi" id="clY-uo-teu"/>
                         <outlet property="yearButton" destination="3CA-7K-p2F" id="X6m-U0-01a"/>
@@ -589,6 +623,7 @@
     </scenes>
     <resources>
         <image name="PickSkipTitle" width="201" height="67"/>
+        <image name="RewindButton" width="64" height="41"/>
         <image name="backButton1" width="14" height="27"/>
         <image name="logoPanel" width="375" height="368"/>
         <image name="logopanelflipped" width="375" height="368"/>

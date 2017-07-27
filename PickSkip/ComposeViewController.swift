@@ -42,12 +42,14 @@ class ComposeViewController: UIViewController {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var contactViewTop: NSLayoutConstraint!
     
-    ///Floating Send Bar
-    var sendBarView: UIView!
     
-    ///Contents of Floating Send Bar
-    var selectedContactsText: UILabel!
-    var sendButton: UIButton!
+    @IBOutlet weak var sendBarView: UIView!
+    
+    @IBOutlet weak var selectedContactsText: UILabel!
+    
+    @IBOutlet weak var sendButton: UIButton!
+    ///Floating Send Bar
+    
     
     var filtered : [CNContact] = []
     var searchActive = false
@@ -63,7 +65,8 @@ class ComposeViewController: UIViewController {
     var selectedNames: [CNContact] = []
     var contacts : [CNContact] = []
     
-    var sendBarBottomAnchorConstraint: NSLayoutConstraint?
+    var sendBarBottomAnchorConstraint: NSLayoutConstraint!
+    
     
     let phoneNumberKit = PhoneNumberKit()
     
@@ -97,22 +100,18 @@ class ComposeViewController: UIViewController {
         nowTime = timeformatter.string(from: date)
         timeLabel.text = nowTime
         
-        
         listOfContactsTable.dataSource = self
         listOfContactsTable.delegate = self
         listOfContactsTable.backgroundColor = UIColor(colorLiteralRed: 255.0/255.0, green: 65.0/255.0, blue: 98.0/255.0, alpha: 1)
         listOfContactsTable.tableFooterView = UIView()
         listOfContactsTable.allowsMultipleSelection = true
         listOfContactsTable.isScrollEnabled = true
-
-        
         
         setupButtons()
         self.view.bringSubview(toFront: contactView)
         contactView.layer.cornerRadius = contactView.frame.width / 50
         setupMisc()
         setupKeyboardObserver()
-    
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -218,58 +217,20 @@ class ComposeViewController: UIViewController {
         searchBar.delegate = self
         searchBar.backgroundImage = UIImage()
         
-        sendBarView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        sendBarView.backgroundColor = UIColor(colorLiteralRed: 231.0/255.0, green: 237.0/255.0, blue: 143.0/255.0, alpha: 1)
-        sendBarView.translatesAutoresizingMaskIntoConstraints = false
-        sendBarView.isHidden = true
-        self.view.addSubview(sendBarView)
-        
-        selectedContactsText = UILabel()
-        selectedContactsText.translatesAutoresizingMaskIntoConstraints = false
-        
+
         selectedContactsText.textColor = .black
         selectedContactsText.text = "hello"
         selectedContactsText.font = UIFont(name: "Raleway-Light", size: 20)
         
-        sendBarView.addSubview(selectedContactsText)
-        
-        
-        sendButton = UIButton()
-        sendButton.setImage(#imageLiteral(resourceName: "RewindButton"), for: .normal)
-        sendButton.translatesAutoresizingMaskIntoConstraints = false
-        sendButton.imageView?.contentMode = UIViewContentMode.scaleAspectFit
-        sendBarView.addSubview(sendButton)
-        
-        let pressGesture = UITapGestureRecognizer(target: self, action: #selector(sendMedia))
-        sendButton.addGestureRecognizer(pressGesture)
-        
-        
-        let constraints:[NSLayoutConstraint] = [
-            
-            sendBarView.heightAnchor.constraint(equalToConstant: 70),
-            sendBarView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            sendBarView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            
-            selectedContactsText.leadingAnchor.constraint(equalTo: sendBarView.leadingAnchor, constant: 15),
-            selectedContactsText.widthAnchor.constraint(equalTo: sendBarView.widthAnchor, multiplier: 0.8),
-            selectedContactsText.heightAnchor.constraint(equalTo: sendBarView.heightAnchor, multiplier: 0.8),
-            selectedContactsText.centerYAnchor.constraint(equalTo: sendBarView.centerYAnchor),
-            
-            sendButton.trailingAnchor.constraint(equalTo: sendBarView.trailingAnchor, constant: -10),
-            sendButton.centerYAnchor.constraint(equalTo: sendBarView.centerYAnchor),
-            sendButton.leadingAnchor.constraint(equalTo: selectedContactsText.trailingAnchor, constant: 10),
-            
-            ]
         
         sendBarBottomAnchorConstraint = NSLayoutConstraint(item: sendBarView, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: 0)
         sendBarBottomAnchorConstraint?.isActive = true
-        NSLayoutConstraint.activate(constraints)
         
         self.view.bringSubview(toFront: sendBarView)
         
     }
     
-    func sendMedia() {
+    @IBAction func sendContent(_ sender: Any) {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy HH:mm"
         var recipients: [String] = []
@@ -284,7 +245,6 @@ class ComposeViewController: UIViewController {
             }
             
         }
-        
         
         
         if let videoURL = video {
@@ -313,6 +273,7 @@ class ComposeViewController: UIViewController {
             self.dismiss(animated: true, completion: nil)
         }
     }
+
     
     ///Called when the header of the screen is tapped.
     func headerTap(sender: UITapGestureRecognizer) {

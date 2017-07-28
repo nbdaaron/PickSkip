@@ -18,6 +18,7 @@ class HistoryTableViewController: UIViewController {
     var dataService = DataService.instance
     var mediaArray: [Media] = []
     var date: Date!
+    var listenerHandle: UInt?
     
     
     override func viewDidLoad() {
@@ -30,18 +31,27 @@ class HistoryTableViewController: UIViewController {
         tableView.tableFooterView = UIView()
 //        tableView.refreshControl = UIRefreshControl()
 //        tableView.refreshControl?.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: .valueChanged)
-        loadContent()
         
-
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        loadContent()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if let handle = listenerHandle {
+            Database.database().reference().removeObserver(withHandle: handle)
+        }
     }
     
     func loadContent() {
-
-        _ = dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").observe(.value, with: { (snapshot) in
+        print(Auth.auth().currentUser!.providerData.first!.phoneNumber!)
+        listenerHandle = dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").observe(.value, with: { (snapshot) in
             if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
                 self.mediaArray.removeAll()
+                print(valueDict)
             for (key, _) in valueDict {
-                self.dataService.mainRef.child("media").child(key).observe(.value, with: {(snapshot) in
+                self.dataService.mainRef.child("media").child(key).observeSingleEvent(of: .value, with: {(snapshot) in
                     
                     if let content = snapshot.value as? Dictionary<String, AnyObject> {
                         let url = content["mediaURL"] as! String
@@ -53,6 +63,7 @@ class HistoryTableViewController: UIViewController {
                             if let error = error {
                                 print("something is wrong: \(error.localizedDescription)")
                             } else if type == "image" {
+                                print("Image found. Appending to media array.")
                                 let mediaInstance = Media(id: id, type: type, image: data, video: nil, dateString: date)
                                 self.mediaArray.append(mediaInstance)
                                 self.tableView.reloadData()

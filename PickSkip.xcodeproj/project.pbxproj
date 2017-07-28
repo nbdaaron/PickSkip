@@ -28,6 +28,7 @@
 		27C7D9B41F148C3200A5737F /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C7D9B31F148C3200A5737F /* RecordButton.swift */; };
 		27C7D9B81F158CFE00A5737F /* MainPagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C7D9B71F158CFE00A5737F /* MainPagesViewController.swift */; };
 		27C7D9BA1F1596D200A5737F /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C7D9B91F1596D200A5737F /* PreviewView.swift */; };
+		27FB343A1F2AC928001CCDC6 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FB34391F2AC928001CCDC6 /* Util.swift */; };
 		B5E4CAE28826422624621697 /* Pods_PickSkip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4457F76BBDBD47ADE88818AC /* Pods_PickSkip.framework */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		27C7D9B31F148C3200A5737F /* RecordButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
 		27C7D9B71F158CFE00A5737F /* MainPagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainPagesViewController.swift; sourceTree = "<group>"; };
 		27C7D9B91F1596D200A5737F /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		27FB34391F2AC928001CCDC6 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		4457F76BBDBD47ADE88818AC /* Pods_PickSkip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PickSkip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB23FB6301C676C7310726D0 /* Pods-PickSkip.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PickSkip.release.xcconfig"; path = "Pods/Target Support Files/Pods-PickSkip/Pods-PickSkip.release.xcconfig"; sourceTree = "<group>"; };
 		DC6D90F42C90859AD365FFB1 /* Pods-PickSkip.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PickSkip.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PickSkip/Pods-PickSkip.debug.xcconfig"; sourceTree = "<group>"; };
@@ -85,6 +87,8 @@
 			isa = PBXGroup;
 			children = (
 				1A435C731F1ECFE1007E5478 /* DataService.swift */,
+				27FB34391F2AC928001CCDC6 /* Util.swift */,
+				27C7D9B11F14859C00A5737F /* Constants.swift */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -124,7 +128,6 @@
 				27C7D9A41F14805800A5737F /* LaunchScreen.storyboard */,
 				27C7D9A71F14805800A5737F /* Info.plist */,
 				27C7D99F1F14805800A5737F /* PickSkip.xcdatamodeld */,
-				27C7D9B11F14859C00A5737F /* Constants.swift */,
 			);
 			path = PickSkip;
 			sourceTree = "<group>";
@@ -315,6 +318,7 @@
 				27C7D9BA1F1596D200A5737F /* PreviewView.swift in Sources */,
 				27C7D9991F14805800A5737F /* AppDelegate.swift in Sources */,
 				27C7D9B41F148C3200A5737F /* RecordButton.swift in Sources */,
+				27FB343A1F2AC928001CCDC6 /* Util.swift in Sources */,
 				1AA1D97D1F19932700DAEFE5 /* ComposeViewController.swift in Sources */,
 				278180781F19A1F500E63CB3 /* PhoneNumberVerificationViewController.swift in Sources */,
 				1AC709091F28382100AEB3AB /* ContactCell.swift in Sources */,

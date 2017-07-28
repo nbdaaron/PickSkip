@@ -45,29 +45,4 @@ class Constants {
 
     static let microphone: AVCaptureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
     
-    ///Adds and saves Login Listener on any view controller. Should be called from viewWillAppear. Will send to Login Page if user is not logged in.
-    static func addLoginCheckListener(_ vc: UIViewController) {
-        currentLoginCheckListener = Auth.auth().addStateDidChangeListener { (auth, user) in
-            if user == nil {
-                let loginViewController = vc.storyboard!.instantiateViewController(withIdentifier: "LoginViewController")
-                vc.present(loginViewController, animated: true, completion: nil)
-            } else {
-                
-            }
-        }
-    }
-    
-    ///Removes the current Login Listener. Should be called from viewWillDisappear.
-    static func removeCurrentLoginCheckListener() {
-        currentLoginCheckListener = nil
-    }
-    
-    ///The current Login Listener. If updated, the original listener will be removed.
-    static var currentLoginCheckListener: AuthStateDidChangeListenerHandle? {
-        willSet {
-            if let listener = currentLoginCheckListener {
-                Auth.auth().removeStateDidChangeListener(listener)
-            }
-        }
-    }
 }

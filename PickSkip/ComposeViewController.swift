@@ -123,7 +123,7 @@ class ComposeViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    deinit {
+    override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -217,11 +217,11 @@ class ComposeViewController: UIViewController {
         searchBar.delegate = self
         searchBar.backgroundImage = UIImage()
         
-
+        sendBarView.isHidden = true
         selectedContactsText.textColor = .black
-        selectedContactsText.text = "hello"
         selectedContactsText.font = UIFont(name: "Raleway-Light", size: 20)
         
+        sendButton.imageView?.contentMode = UIViewContentMode.scaleAspectFit
         
         sendBarBottomAnchorConstraint = NSLayoutConstraint(item: sendBarView, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: 0)
         sendBarBottomAnchorConstraint?.isActive = true
@@ -374,8 +374,10 @@ class ComposeViewController: UIViewController {
         
         if listOfContacts.count == 0 {
             sendBarView.isHidden = true
+            listOfContactsTable.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
         } else {
             sendBarView.isHidden = false
+            listOfContactsTable.contentInset = UIEdgeInsetsMake(0, 0, 80, 0)
         }
     }
 

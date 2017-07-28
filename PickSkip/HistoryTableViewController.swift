@@ -44,9 +44,6 @@ class HistoryTableViewController: UIViewController {
     
     func loadContent() {
         
-        //Reload media array.
-        mediaArray = [Media]()
-        
         dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").observe(.value, with: { (snapshot) in
             if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
                 let keys = Array(valueDict.keys)
@@ -62,6 +59,16 @@ class HistoryTableViewController: UIViewController {
             return
         }
         let key = keys[index]
+        
+        
+        //Skip existing content
+        for media in mediaArray {
+            if media.key == key {
+                grabMedia(at: index + 1, from: keys)
+                return
+            }
+        }
+        
         self.dataService.mainRef.child("media").child(key).observeSingleEvent(of: .value, with: {(snapshot) in
             if let content = snapshot.value as? Dictionary<String, AnyObject> {
                 let url = content["mediaURL"] as! String
@@ -70,7 +77,7 @@ class HistoryTableViewController: UIViewController {
                 let date = content["releaseDate"] as! Int
                 let httpsReference = Storage.storage().reference(forURL: url)
                 
-                let mediaInstance = Media(id: id, type: type, dateInt: date, url: httpsReference)
+                let mediaInstance = Media(id: id, key: key, type: type, dateInt: date, url: httpsReference)
                 self.mediaArray.append(mediaInstance)
                 
                 self.grabMedia(at: index + 1, from: keys)

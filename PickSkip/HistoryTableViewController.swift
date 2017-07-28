@@ -32,6 +32,8 @@ class HistoryTableViewController: UIViewController {
 //        tableView.refreshControl = UIRefreshControl()
 //        tableView.refreshControl?.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: .valueChanged)
     
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         loadContent()
     }

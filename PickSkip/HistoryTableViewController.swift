@@ -18,6 +18,7 @@ class HistoryTableViewController: UIViewController {
     var dataService = DataService.instance
     var mediaArray: [Media] = []
     var date: Date!
+    var listenerHandle: UInt?
     
     
     override func viewDidLoad() {
@@ -30,8 +31,6 @@ class HistoryTableViewController: UIViewController {
         tableView.tableFooterView = UIView()
 //        tableView.refreshControl = UIRefreshControl()
 //        tableView.refreshControl?.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: .valueChanged)
-
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         loadContent()

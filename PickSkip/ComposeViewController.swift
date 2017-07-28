@@ -114,6 +114,17 @@ class ComposeViewController: UIViewController {
         setupKeyboardObserver()
     }
     
+    ///Adds login listener to automatically send users to the login screen if not logged in.
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Util.addLoginCheckListener(self)
+    }
+    
+    ///Removes login listener when the view disappears.
+    override func viewWillDisappear(_ animated: Bool) {
+        Util.removeCurrentLoginCheckListener()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         upperPanLimit = -(contactView.frame.minY - headerView.frame.height)
     }
@@ -130,7 +141,7 @@ class ComposeViewController: UIViewController {
     ///Load Contacts into the contacts array
     private func loadContacts() {
         let store = CNContactStore()
-        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey]
+        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactOrganizationNameKey]
         
         var allContainers : [CNContainer] = []
         do {
@@ -145,7 +156,7 @@ class ComposeViewController: UIViewController {
             do {
                 let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
                 for contact in containerResults {
-                    if !contact.phoneNumbers.isEmpty {
+                    if !contact.phoneNumbers.isEmpty && !contacts.contains(contact) {
                         contacts.append(contact)
                     }
                 }
@@ -365,9 +376,7 @@ class ComposeViewController: UIViewController {
     func updateSendBar(listOfContacts: [CNContact]){
         var tempList: [String] = []
         for contact in listOfContacts {
-            let text = contact.givenName + " " + contact.familyName
-            let trimmedString = text.trimmingCharacters(in: .whitespacesAndNewlines)
-            tempList.append(trimmedString)
+            tempList.append(Util.getNameFromContact(contact))
         }
         selectedContactsText.text = tempList.joined(separator: ", ")
         
@@ -419,7 +428,7 @@ extension ComposeViewController: UITableViewDataSource {
                 
             }
             cell.contact = filtered[indexPath.row]
-            cell.textLabel?.text = filtered[indexPath.row].givenName + " " + filtered[indexPath.row].familyName
+            cell.textLabel?.text = Util.getNameFromContact(filtered[indexPath.row])
             return cell
         } else {
             if selectedNames.contains(contacts[indexPath.row]) {
@@ -436,7 +445,7 @@ extension ComposeViewController: UITableViewDataSource {
                 
             }
             cell.contact = contacts[indexPath.row]
-            cell.textLabel?.text = contacts[indexPath.row].givenName + " " + contacts[indexPath.row].familyName
+            cell.textLabel?.text = Util.getNameFromContact(contacts[indexPath.row])
             
             return cell
         }
@@ -456,7 +465,6 @@ extension ComposeViewController: UITableViewDelegate {
             cell.accessoryView = view
 
             if selectedNames.contains(cell.contact){
-                
                 selectedNames.append(cell.contact)
                 selectedNames = selectedNames.filter({$0 != cell.contact})
                 cell.isSelected = false
@@ -529,7 +537,7 @@ extension ComposeViewController: UISearchBarDelegate {
         else {
             filtered.removeAll()
             for contact in contacts {
-                let nameRange: NSRange = ((contact.givenName + " " + contact.familyName) as NSString).range(of: searchBar.text!, options: ([.caseInsensitive, .diacriticInsensitive]))
+                let nameRange: NSRange = (Util.getNameFromContact(contact) as NSString).range(of: searchBar.text!, options: ([.caseInsensitive, .diacriticInsensitive]))
                 if nameRange.location != NSNotFound {
                     filtered.append(contact)
                 }

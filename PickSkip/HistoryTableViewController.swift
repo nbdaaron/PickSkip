@@ -66,14 +66,20 @@ class HistoryTableViewController: UIViewController {
                 let url = content["mediaURL"] as! String
                 let type = content["mediaType"] as! String
                 let id = content["senderID"] as! String
-                let date = content["releaseDate"] as! String
+                let date = content["releaseDate"] as! Int
                 let httpsReference = Storage.storage().reference(forURL: url)
                 httpsReference.getData(maxSize: 1024 * 1024 * 1024, completion: {(data, error) in
                     if let error = error {
                         print("something is wrong: \(error.localizedDescription)")
                     } else if type == "image" {
-                        let mediaInstance = Media(id: id, type: type, image: data, video: nil, dateString: date)
+                        let mediaInstance = Media(id: id, type: type, image: data, video: nil, dateInt: date)
                         self.mediaArray.append(mediaInstance)
+                        
+                        //orders cells by date placing the earliers on top
+                        if self.mediaArray.count > 1 {
+                            self.mediaArray.sort(by: {$0.date.compare($1.date) == .orderedAscending})
+                        }
+                        
                         self.tableView.reloadData()
                     } else if type == "video" {
                         //implement video handling

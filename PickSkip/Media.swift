@@ -17,16 +17,13 @@ class Media {
     var video: URL?
     var date: Date!
     
-    init(id: String, type: String, image: Data?, video: URL?, dateString: String!) {
+    init(id: String, type: String, image: Data?, video: URL?, dateInt: Int!) {
         self.mediaID = id
         self.mediaType = type
         self.image = image
         self.video = video
+        date = Date(timeIntervalSince1970: TimeInterval(dateInt))
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm"
-        
-        self.date = dateFormatter.date(from: dateString)
     }
     
 }

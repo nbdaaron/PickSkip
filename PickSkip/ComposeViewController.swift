@@ -231,10 +231,9 @@ class ComposeViewController: UIViewController {
     }
     
     @IBAction func sendContent(_ sender: Any) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy HH:mm"
-        var recipients: [String] = []
         
+        var recipients: [String] = []
+        print(Int(self.futureDate!.timeIntervalSince1970))
         for selectedContact in selectedNames {
             do {
                 let phoneNumber = try phoneNumberKit.parse(selectedContact.phoneNumbers[0].value.stringValue)
@@ -255,7 +254,7 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription)")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: recipients, mediaURL: downloadURL!, mediaType: "video", releaseDate: formatter.string(from: self.futureDate!))
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: recipients, mediaURL: downloadURL!, mediaType: "video", releaseDate: Int(self.futureDate!.timeIntervalSince1970))
                     
                 }
             })
@@ -267,7 +266,7 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription))")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: formatter.string(from: self.futureDate!))
+                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: Int(self.futureDate!.timeIntervalSince1970))
                 }
             })
             self.dismiss(animated: true, completion: nil)

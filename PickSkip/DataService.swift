@@ -45,7 +45,7 @@ class DataService {
         
     }
     
-    func sendMedia(senderUID: String, recipients: [String], mediaURL: URL, mediaType: String, releaseDate: String) {
+    func sendMedia(senderUID: String, recipients: [String], mediaURL: URL, mediaType: String, releaseDate: Int) {
         let pr: Dictionary<String, AnyObject> = ["mediaType": mediaType as AnyObject,
                                                 "mediaURL" : mediaURL.absoluteString as AnyObject,
                                                 "releaseDate": releaseDate as AnyObject,
@@ -53,7 +53,7 @@ class DataService {
                                                 "recipients": recipients as AnyObject]
         
         mainRef.child("media").childByAutoId().setValue(pr, withCompletionBlock: {(error, databaseReference) in
-            self.mainRef.child("users").child("\(String(describing: Auth.auth().currentUser!.providerData.first!.phoneNumber!))").child("media").updateChildValues([databaseReference.key: true])
+            self.mainRef.child("users").child("\(String(describing: Auth.auth().currentUser!.providerData.first!.phoneNumber!))").child("media").child(databaseReference.key).child("releaseDate").setValue(releaseDate)
         })
     }
     

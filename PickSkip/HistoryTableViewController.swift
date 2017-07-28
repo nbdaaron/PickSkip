@@ -31,56 +31,52 @@ class HistoryTableViewController: UIViewController {
         tableView.tableFooterView = UIView()
 //        tableView.refreshControl = UIRefreshControl()
 //        tableView.refreshControl?.addTarget(self, action: #selector(handleRefresh(refreshControl:)), for: .valueChanged)
-        
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         loadContent()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        if let handle = listenerHandle {
-            Database.database().reference().removeObserver(withHandle: handle)
-        }
+    override func viewDidDisappear(_ animated: Bool) {
+        dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").removeAllObservers()
     }
     
     func loadContent() {
-        print(Auth.auth().currentUser!.providerData.first!.phoneNumber!)
-        listenerHandle = dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").observe(.value, with: { (snapshot) in
+        
+        //Reload media array.
+        mediaArray = [Media]()
+        
+        dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").observe(.value, with: { (snapshot) in
             if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
-                self.mediaArray.removeAll()
-                print(valueDict)
-            for (key, _) in valueDict {
-                self.dataService.mainRef.child("media").child(key).observeSingleEvent(of: .value, with: {(snapshot) in
-                    
-                    if let content = snapshot.value as? Dictionary<String, AnyObject> {
-                        let url = content["mediaURL"] as! String
-                        let type = content["mediaType"] as! String
-                        let id = content["senderID"] as! String
-                        let date = content["releaseDate"] as! String
-                        let httpsReference = Storage.storage().reference(forURL: url)
-                        httpsReference.getData(maxSize: 1024 * 1024 * 1024, completion: {(data, error) in
-                            if let error = error {
-                                print("something is wrong: \(error.localizedDescription)")
-                            } else if type == "image" {
-                                print("Image found. Appending to media array.")
-                                let mediaInstance = Media(id: id, type: type, image: data, video: nil, dateString: date)
-                                self.mediaArray.append(mediaInstance)
-                                self.tableView.reloadData()
-                            } else if type == "video" {
-                                //implement video handling
-                                //                            let mediaInstance = Media(id: id, type: type, image: nil, video: data)
-                            } else {
-                                print("Something went wrong during load")
-                            }
-                        })
-                    }
-                    
-                })
-            }
+                let keys = Array(valueDict.keys)
+                self.grabMedia(at: 0, from: keys)
             }
         })
         
+    }
+    
+    func grabMedia(at index: Int, from keys: [String]) {
+        if index >= keys.count {
+            self.tableView.reloadData()
+            return
+        }
+        let key = keys[index]
+        self.dataService.mainRef.child("media").child(key).observeSingleEvent(of: .value, with: {(snapshot) in
+            if let content = snapshot.value as? Dictionary<String, AnyObject> {
+                let url = content["mediaURL"] as! String
+                let type = content["mediaType"] as! String
+                let id = content["senderID"] as! String
+                let date = content["releaseDate"] as! Int
+                let httpsReference = Storage.storage().reference(forURL: url)
+                
+                let mediaInstance = Media(id: id, type: type, dateInt: date, url: httpsReference)
+                self.mediaArray.append(mediaInstance)
+                
+                self.grabMedia(at: index + 1, from: keys)
+            } else {
+                print("Problem grabbing media in HistoryTableViewController#grabMedia: Incorrect database format")
+            }
+            
+        })
     }
     
     func prepareMediaView() {
@@ -97,7 +93,7 @@ class HistoryTableViewController: UIViewController {
     
     @IBAction func logout(_ sender: Any) {
         do {
-            _ = try Auth.auth().signOut()
+            try Auth.auth().signOut()
         } catch {
             print("error signing out")
         }
@@ -115,22 +111,27 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: false)
         date = Date()
         print("current time: \(date)")
         if date < mediaArray[indexPath.row].date {
             print("current time is less")
         } else {
-            let image = UIImage(data: mediaArray[indexPath.row].image!)
-            mediaView.displayImage(image!)
-            view.bringSubview(toFront: mediaView)
-            mediaView.isHidden = false
+            if mediaArray[indexPath.row].loadState == .loaded {
+                let image = UIImage(data: mediaArray[indexPath.row].image!)
+                mediaView.displayImage(image!)
+                view.bringSubview(toFront: mediaView)
+                mediaView.isHidden = false
+            } else if mediaArray[indexPath.row].loadState == .unloaded {
+                mediaArray[indexPath.row].load() {
+                    //CODE TO EXECUTE WHEN DONE LOADING
+                    self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.green
+                }
+                //CODE TO EXECUTE WHILE LOADING
+                self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.blue
+            }
             
         }
-        
-//        let image = UIImage(data: mediaArray[indexPath.row].image!)
-//        mediaView.displayImage(image!)
-//        mediaView.isHidden = false
     }
     
     
@@ -138,10 +139,14 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         cell.textLabel!.text = "\(mediaArray[indexPath.row].date!)"
+        cell.selectionStyle = .none
         
         return cell
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70.0
+    }
     /*
      // Override to support conditional editing of the table view.
      override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

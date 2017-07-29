@@ -29,6 +29,9 @@ class Constants {
     ///The following storyboard IDs are used to create the Main Pages scroll view.
     static let mainPagesViews: [String] = ["HistoryTableViewController", "CameraViewController"]
     
+    ///The initial View Controller to display in the Main Pages scroll view.
+    static let initialViewPosition: Int = mainPagesViews.index(of: "CameraViewController")!
+    
     ///Temporary file name for recorded videos
     static let videoFileName: String = "temp.mp4"
 

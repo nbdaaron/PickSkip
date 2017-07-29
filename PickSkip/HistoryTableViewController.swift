@@ -19,6 +19,7 @@ class HistoryTableViewController: UIViewController {
     var mediaArray: [Media] = []
     var date: Date!
     var listenerHandle: UInt?
+    var uid: String?
     
     
     override func viewDidLoad() {
@@ -35,6 +36,16 @@ class HistoryTableViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        if let uid = uid {
+            //If new user logged in, remove existing photos.
+            if (Auth.auth().currentUser?.uid != uid) {
+                mediaArray = [Media]()
+                tableView.reloadData()
+            }
+        }
+        
+        //Set current user ID.
+        uid = Auth.auth().currentUser?.uid
         loadContent()
     }
     

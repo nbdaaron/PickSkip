@@ -44,27 +44,33 @@ class HistoryTableViewController: UIViewController {
     
     func loadContent() {
         
-        dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").observe(.value, with: { (snapshot) in
-            if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
-                let keys = Array(valueDict.keys)
-                self.grabMedia(at: 0, from: keys)
+        dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").queryOrdered(byChild: "releaseDate").queryLimited(toFirst: 5).observe(.value, with: { (snapshot) in
+            
+            for snap in snapshot.children.allObjects as! [DataSnapshot] {
+                print(snap.key)
+                self.grabMedia(from: snap.key)
             }
+//            if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
+//                let keys = Array(valueDict.keys)
+//                self.grabMedia(at: 0, from: keys)
+//                
+//            }
+            
         })
-        
+
     }
     
-    func grabMedia(at index: Int, from keys: [String]) {
-        if index >= keys.count {
-            self.tableView.reloadData()
-            return
-        }
-        let key = keys[index]
-        
-        
+    func grabMedia(from key: String) {
+//        if index >= keys.count {
+//            self.tableView.reloadData()
+//            return
+//        }
+//        let key = keys[index]
+//        
+//        
         //Skip existing content
         for media in mediaArray {
             if media.key == key {
-                grabMedia(at: index + 1, from: keys)
                 return
             }
         }
@@ -79,8 +85,8 @@ class HistoryTableViewController: UIViewController {
                 
                 let mediaInstance = Media(id: id, key: key, type: type, dateInt: date, url: httpsReference)
                 self.mediaArray.append(mediaInstance)
-                
-                self.grabMedia(at: index + 1, from: keys)
+                self.tableView.reloadData()
+//                self.grabMedia(at: index + 1, from: keys)
             } else {
                 print("Problem grabbing media in HistoryTableViewController#grabMedia: Incorrect database format")
             }

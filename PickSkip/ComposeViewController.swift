@@ -265,7 +265,7 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription)")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: recipients, mediaURL: downloadURL!, mediaType: "video", releaseDate: Int(self.futureDate!.timeIntervalSince1970))
+                    DataService.instance.sendMedia(phoneNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "video", releaseDate: Int(self.futureDate!.timeIntervalSince1970))
                     
                 }
             })
@@ -277,7 +277,7 @@ class ComposeViewController: UIViewController {
                     print("error: \(error.localizedDescription))")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderUID: Auth.auth().currentUser!.uid, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: Int(self.futureDate!.timeIntervalSince1970))
+                    DataService.instance.sendMedia(phoneNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: Int(self.futureDate!.timeIntervalSince1970))
                 }
             })
             self.dismiss(animated: true, completion: nil)

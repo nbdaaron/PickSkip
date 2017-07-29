@@ -76,6 +76,8 @@ class PhoneNumberVerificationViewController: UIViewController {
                 if let ghostMedia = value {
                     DataService.instance.usersRef.child(number).child("media").updateChildValues(ghostMedia)
                     DataService.instance.mainRef.child("ghostusers").child(number).removeValue()
+                } else {
+                    DataService.instance.saveUser(with: number)
                 }
             })
 

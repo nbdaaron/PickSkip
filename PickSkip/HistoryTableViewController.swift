@@ -35,58 +35,58 @@ class HistoryTableViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        loadContent()
+//        loadContent()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").removeAllObservers()
     }
     
-    func loadContent() {
-        
-        dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").observe(.value, with: { (snapshot) in
-            if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
-                let keys = Array(valueDict.keys)
-                self.grabMedia(at: 0, from: keys)
-            }
-        })
-        
-    }
-    
-    func grabMedia(at index: Int, from keys: [String]) {
-        if index >= keys.count {
-            self.tableView.reloadData()
-            return
-        }
-        let key = keys[index]
-        
-        
-        //Skip existing content
-        for media in mediaArray {
-            if media.key == key {
-                grabMedia(at: index + 1, from: keys)
-                return
-            }
-        }
-        
-        self.dataService.mainRef.child("media").child(key).observeSingleEvent(of: .value, with: {(snapshot) in
-            if let content = snapshot.value as? Dictionary<String, AnyObject> {
-                let url = content["mediaURL"] as! String
-                let type = content["mediaType"] as! String
-                let id = content["senderID"] as! String
-                let date = content["releaseDate"] as! Int
-                let httpsReference = Storage.storage().reference(forURL: url)
-                
-                let mediaInstance = Media(id: id, key: key, type: type, dateInt: date, url: httpsReference)
-                self.mediaArray.append(mediaInstance)
-                
-                self.grabMedia(at: index + 1, from: keys)
-            } else {
-                print("Problem grabbing media in HistoryTableViewController#grabMedia: Incorrect database format")
-            }
-            
-        })
-    }
+//    func loadContent() {
+//        
+//        dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").observe(.value, with: { (snapshot) in
+//            if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
+//                let keys = Array(valueDict.keys)
+//                self.grabMedia(at: 0, from: keys)
+//            }
+//        })
+//        
+//    }
+//    
+//    func grabMedia(at index: Int, from keys: [String]) {
+//        if index >= keys.count {
+//            self.tableView.reloadData()
+//            return
+//        }
+//        let key = keys[index]
+//        
+//        
+//        //Skip existing content
+//        for media in mediaArray {
+//            if media.key == key {
+//                grabMedia(at: index + 1, from: keys)
+//                return
+//            }
+//        }
+//        
+//        self.dataService.mainRef.child("media").child(key).observeSingleEvent(of: .value, with: {(snapshot) in
+//            if let content = snapshot.value as? Dictionary<String, AnyObject> {
+//                let url = content["mediaURL"] as! String
+//                let type = content["mediaType"] as! String
+//                let id = content["senderID"] as! String
+//                let date = content["releaseDate"] as! Int
+//                let httpsReference = Storage.storage().reference(forURL: url)
+//                
+//                let mediaInstance = Media(id: id, key: key, type: type, dateInt: date, url: httpsReference)
+//                self.mediaArray.append(mediaInstance)
+//                
+//                self.grabMedia(at: index + 1, from: keys)
+//            } else {
+//                print("Problem grabbing media in HistoryTableViewController#grabMedia: Incorrect database format")
+//            }
+//            
+//        })
+//    }
     
     func prepareMediaView() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideMedia))

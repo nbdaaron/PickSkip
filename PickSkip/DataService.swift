@@ -38,22 +38,22 @@ class DataService {
         return storageRef.child("videos")
     }
     
-    func saveUser(uid: String) {
+    func saveUser(with phoneNumber: String) {
         let profile: Dictionary<String, AnyObject> = ["firstname": "" as AnyObject, "lastname": "" as AnyObject]
         
-        mainRef.child("users").child(Auth.auth().currentUser!.phoneNumber!).child("profile").setValue(profile)
-        
+        mainRef.child("users").child(phoneNumber).child("profile").setValue(profile)
+        mainRef.child("users").child(phoneNumber).child("media").child("lists").setValue(0)
     }
     
-    func sendMedia(senderUID: String, recipients: [String], mediaURL: URL, mediaType: String, releaseDate: Int) {
+    func sendMedia(phoneNumber: String, recipients: [String], mediaURL: URL, mediaType: String, releaseDate: Int) {
         let pr: Dictionary<String, AnyObject> = ["mediaType": mediaType as AnyObject,
                                                 "mediaURL" : mediaURL.absoluteString as AnyObject,
                                                 "releaseDate": releaseDate as AnyObject,
-                                                "senderID": senderUID as AnyObject,
+                                                "senderNumber": phoneNumber as AnyObject,
                                                 "recipients": recipients as AnyObject]
         
         mainRef.child("media").childByAutoId().setValue(pr, withCompletionBlock: {(error, databaseReference) in
-            self.mainRef.child("users").child("\(String(describing: Auth.auth().currentUser!.providerData.first!.phoneNumber!))").child("media").child(databaseReference.key).child("releaseDate").setValue(releaseDate)
+            print("media uploaded")
         })
     }
     

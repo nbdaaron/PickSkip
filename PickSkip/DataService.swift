@@ -38,10 +38,10 @@ class DataService {
         return storageRef.child("videos")
     }
     
-    func saveUser(uid: String) {
+    func saveUser() {
         let profile: Dictionary<String, AnyObject> = ["firstname": "" as AnyObject, "lastname": "" as AnyObject]
         
-        mainRef.child("users").child(Auth.auth().currentUser!.phoneNumber!).child("profile").setValue(profile)
+        mainRef.child("users").child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("profile").setValue(profile)
         
     }
     

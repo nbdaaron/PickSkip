@@ -222,6 +222,7 @@ extension CameraView: AVCaptureFileOutputRecordingDelegate {
         } else {
             
             delegate.submit(videoURL: outputFileURL)
+            
         }
     }
 }

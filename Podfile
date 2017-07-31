@@ -11,5 +11,6 @@ target 'PickSkip' do
     pod 'Firebase/Database'
     pod 'Firebase/Storage'
     pod 'PhoneNumberKit'
+    pod 'TokenField', '~> 0.1.2'
 end
 

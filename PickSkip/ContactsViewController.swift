@@ -22,6 +22,7 @@ class ContactsViewController: UIViewController {
 
     @IBOutlet weak var contactTableView: UITableView!
     
+    @IBOutlet weak var tokenFieldHeight: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,7 +106,6 @@ extension ContactsViewController: UITableViewDataSource {
         } else {
             return contacts.count
         }
-        return filtered.count
     }
     
 }
@@ -146,6 +146,12 @@ extension ContactsViewController: TokenFieldDataSource {
     func tokenFieldCollapsedText(_ tokenField: TokenField) -> String {
         //implement
         return "temp"
+    }
+}
+
+extension ContactsViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        tokenField.endEditing(true)
     }
 }
 
@@ -192,5 +198,9 @@ extension ContactsViewController: TokenFieldDelegate {
     
     func tokenField(_ tokenField: TokenField, didChangeContentHeight height: CGFloat) {
         //implement
+        print(height)
+        UIView.animate(withDuration: 0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations:{
+            self.tokenFieldHeight.constant = height
+            self.view.layoutIfNeeded()})
     }
 }

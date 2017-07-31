@@ -510,23 +510,27 @@ public class TokenField: UIView {
         let oldHeight = frame.size.height
         var newFrame = frame
         
-        if currentY + Constants.defaultTokenHeight > frame.height {
-            if currentY + Constants.defaultTokenHeight <= maxHeight {
-                newFrame.size.height = currentY
-                    + Constants.defaultTokenHeight
-                    + Constants.defaultVerticalInset * 2
-            } else {
-                newFrame.size.height = maxHeight
-            }
-        } else {
-            if currentY + Constants.defaultTokenHeight > originalHeight {
-                newFrame.size.height = currentY
-                    + Constants.defaultTokenHeight
-                    + Constants.defaultVerticalInset * 2
-            } else {
-                newFrame.size.height = maxHeight
-            }
-        }
+//        if currentY + Constants.defaultTokenHeight > frame.height {
+//            if currentY + Constants.defaultTokenHeight <= maxHeight {
+//                newFrame.size.height = currentY
+//                    + Constants.defaultTokenHeight
+//                    + Constants.defaultVerticalInset * 2
+//            } else {
+//                newFrame.size.height = maxHeight
+//            }
+//        } else {
+//            if currentY + Constants.defaultTokenHeight > originalHeight {
+//                newFrame.size.height = currentY
+//                    + Constants.defaultTokenHeight
+//                    + Constants.defaultVerticalInset * 2
+//            } else {
+//                newFrame.size.height = maxHeight
+//            }
+//        }
+        newFrame.size.height = currentY
+            + Constants.defaultTokenHeight
+            + Constants.defaultVerticalInset * 2
+        
         if oldHeight != newFrame.height {
             frame = newFrame
             delegate?.tokenField(self, didChangeContentHeight: newFrame.height)

@@ -79,17 +79,23 @@ extension ContactsViewController: UITableViewDataSource {
         cell.textLabel?.isUserInteractionEnabled = false
         
         if searchActive {
+            contactTableView.isHidden = false
             if selectedNames.contains(filtered[indexPath.row]) {
-                cell.isHighlighted = true
+                cell.backgroundColor = .green
+            } else {
+                cell.backgroundColor = .clear
             }
             cell.contact = filtered[indexPath.row]
             cell.textLabel?.text = Util.getNameFromContact(filtered[indexPath.row])
         } else {
-            if selectedNames.contains(contacts[indexPath.row]) {
-                cell.isHighlighted = true
-            }
-            cell.contact = contacts[indexPath.row]
-            cell.textLabel?.text = Util.getNameFromContact(contacts[indexPath.row])
+//            if selectedNames.contains(contacts[indexPath.row]) {
+//                cell.backgroundColor = .green
+//            } else {
+//                cell.backgroundColor = .clear
+//            }
+//            cell.contact = contacts[indexPath.row]
+//            cell.textLabel?.text = Util.getNameFromContact(contacts[indexPath.row])
+            contactTableView.isHidden = true
         }
         
         return cell
@@ -131,6 +137,7 @@ extension ContactsViewController: UITableViewDelegate {
 extension ContactsViewController: TokenFieldDataSource {
     func tokenField(_ tokenField: TokenField, titleForTokenAtIndex index: Int) -> String {
         //implement
+        print("Index: \(index)")
         return Util.getNameFromContact(selectedNames[index]) + ","
     }
     
@@ -160,32 +167,37 @@ extension ContactsViewController: TokenFieldDelegate {
     func tokenFieldDidBeginEditing(_ tokenField: TokenField) {
         //implement
         searchActive = true
-        print("text began editing")
     }
     
     func tokenField(_ tokenField: TokenField, didEnterText text: String) {
         //implement
         searchActive = false
         tokenField.endEditing(true)
-        print("text entered")
     }
     
     func tokenField(_ tokenField: TokenField, didDeleteTokenAtIndex index: Int) {
         //implement
+        print(Util.getNameFromContact(selectedNames[index]))
+        print("count before deleting \(selectedNames.count)")
         selectedNames.remove(at: index)
+        print("count after deleting \(selectedNames.count)")
+        if selectedNames.count == 0 {
+            self.contactTableView.isHidden = true
+        } else {
+            contactTableView.reloadData()
+        }
         tokenField.reloadData()
-        contactTableView.reloadData()
-        print("token deleted")
     }
     
     func tokenField(_ tokenField: TokenField, didChangeText text: String) {
-        searchActive = true
+        
         if text.characters.count == 0 {
             filtered.removeAll()
             filtered = contacts
-        }
-        else {
+            searchActive = false
+        } else {
             filtered.removeAll()
+            searchActive = true
             for contact in contacts {
                 let nameRange: NSRange = (Util.getNameFromContact(contact) as NSString).range(of: text, options: ([.caseInsensitive, .diacriticInsensitive]))
                 if nameRange.location != NSNotFound {
@@ -198,7 +210,6 @@ extension ContactsViewController: TokenFieldDelegate {
     
     func tokenField(_ tokenField: TokenField, didChangeContentHeight height: CGFloat) {
         //implement
-        print(height)
         UIView.animate(withDuration: 0.8, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: .curveEaseInOut, animations:{
             self.tokenFieldHeight.constant = height
             self.view.layoutIfNeeded()})

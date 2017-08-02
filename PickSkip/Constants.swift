@@ -50,3 +50,14 @@ class Constants {
     static let microphone: AVCaptureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
     
 }
+
+public extension Date {
+    
+    var month: String  { return Formatter.month.string(from: self) }
+    var hour:  String      { return Formatter.hour12.string(from: self) }
+    var minute: String     { return Formatter.minute.string(from: self) }
+    var amPM: String         { return Formatter.amPM.string(from: self) }
+    var year: String {return Formatter.year.string(from: self)}
+    var day: String {return Formatter.date.string(from: self)}
+    
+}

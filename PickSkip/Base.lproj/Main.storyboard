@@ -439,7 +439,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
-                                            <segue destination="KFh-Ug-EV8" kind="show" identifier="showContactsView" id="had-Tu-h9f"/>
+                                            <segue destination="KFh-Ug-EV8" kind="show" identifier="showContactsView" animates="NO" id="had-Tu-h9f"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -513,21 +513,20 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BPe-gk-fec" customClass="TokenField" customModule="TokenField">
                                 <rect key="frame" x="0.0" y="74" width="414" height="45"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="qNd-Ti-vUl"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Your message will arrive in" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vga-Rc-xdw">
-                                <rect key="frame" x="68" y="150" width="278" height="41"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your message will arrive in" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vga-Rc-xdw">
+                                <rect key="frame" x="75" y="150" width="291" height="26"/>
                                 <fontDescription key="fontDescription" name="Raleway-Light" family="Raleway" pointSize="22"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.53364326584507038" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2 years" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Szh-i3-wuM">
-                                <rect key="frame" x="165" y="199" width="181" height="60"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Raleway-ExtraLight" family="Raleway" pointSize="50"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 years" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Szh-i3-wuM">
+                                <rect key="frame" x="100" y="176" width="266" height="47"/>
+                                <fontDescription key="fontDescription" name="Raleway-ExtraLight" family="Raleway" pointSize="40"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.51279159330985913" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -539,7 +538,7 @@
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="94H-hb-Njq" id="yf9-JP-uTA">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -548,20 +547,32 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="Szh-i3-wuM" firstAttribute="top" secondItem="Vga-Rc-xdw" secondAttribute="bottom" id="4sh-HG-I7v"/>
+                            <constraint firstAttribute="trailing" secondItem="Vga-Rc-xdw" secondAttribute="trailing" constant="48" id="GUz-xj-ULy"/>
                             <constraint firstItem="BPe-gk-fec" firstAttribute="top" secondItem="Pvi-Nc-acU" secondAttribute="bottom" constant="10" id="XXw-Ht-WMp"/>
+                            <constraint firstItem="Szh-i3-wuM" firstAttribute="leading" secondItem="RPb-xS-f4t" secondAttribute="leading" constant="100" id="ZSY-rK-ZTR"/>
                             <constraint firstItem="GWM-Pe-UVJ" firstAttribute="top" secondItem="eaX-AN-wNt" secondAttribute="bottom" id="bbj-aa-PJI"/>
+                            <constraint firstItem="Vga-Rc-xdw" firstAttribute="top" secondItem="BPe-gk-fec" secondAttribute="bottom" constant="31" id="cyO-oY-1Km"/>
                             <constraint firstItem="eaX-AN-wNt" firstAttribute="leading" secondItem="RPb-xS-f4t" secondAttribute="leading" id="lMH-e1-531"/>
+                            <constraint firstItem="Szh-i3-wuM" firstAttribute="trailing" secondItem="Vga-Rc-xdw" secondAttribute="trailing" id="laZ-pM-YcW"/>
                             <constraint firstItem="BPe-gk-fec" firstAttribute="leading" secondItem="RPb-xS-f4t" secondAttribute="leading" id="omq-yp-vTw"/>
                             <constraint firstAttribute="trailing" secondItem="eaX-AN-wNt" secondAttribute="trailing" id="rV8-gi-iqD"/>
                             <constraint firstItem="eaX-AN-wNt" firstAttribute="top" secondItem="BPe-gk-fec" secondAttribute="bottom" id="w1J-ID-0xl"/>
                             <constraint firstAttribute="trailing" secondItem="BPe-gk-fec" secondAttribute="trailing" id="w9O-sj-6YG"/>
+                            <constraint firstItem="Vga-Rc-xdw" firstAttribute="leading" secondItem="RPb-xS-f4t" secondAttribute="leading" constant="75" id="wxf-FA-u8t"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="NhF-YU-jVj">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="TUv-XF-OEs"/>
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="TUv-XF-OEs">
+                            <connections>
+                                <action selector="cancel:" destination="caL-77-dvh" id="QEc-Sr-Wje"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="contactTableView" destination="eaX-AN-wNt" id="PeY-48-ah2"/>
+                        <outlet property="infoLabel" destination="Vga-Rc-xdw" id="Opq-e7-V01"/>
+                        <outlet property="timeLabel" destination="Szh-i3-wuM" id="czg-Py-UbS"/>
                         <outlet property="tokenField" destination="BPe-gk-fec" id="RrV-t1-fw7"/>
                         <outlet property="tokenFieldHeight" destination="qNd-Ti-vUl" id="faK-a8-lYM"/>
                     </connections>
@@ -578,7 +589,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="C8C-Cf-glK">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="barTintColor" red="0.94901960784313721" green="0.47843137254901957" blue="0.63529411764705879" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="barTintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>

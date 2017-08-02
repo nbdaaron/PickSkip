@@ -11,8 +11,25 @@ import UIKit
 
 class CounterButton : UIButton {
     
-    var resetButton: UIButton!
-    var dateLabel: UILabel!
+    var resetButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(#imageLiteral(resourceName: "undoButton"), for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.backgroundColor = .clear
+        return button
+    } ()
+    
+    var dateLabel: UILabel! = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "Raleway-Light", size: 25)
+        label.adjustsFontSizeToFitWidth = true
+        label.textColor = .white
+        label.text = "alksdmasdlkma"
+        label.backgroundColor = .clear
+        return label
+    }()
 
     
     public init(buttonType: String, frame: CGRect){
@@ -33,23 +50,9 @@ class CounterButton : UIButton {
     }
     
     func setupButton() {
-        
-        resetButton = UIButton()
-        resetButton.translatesAutoresizingMaskIntoConstraints = false
-        resetButton.setImage(#imageLiteral(resourceName: "undoButton"), for: .normal)
-        resetButton.imageView?.contentMode = .scaleAspectFit
-        resetButton.backgroundColor = .clear
         resetButton.tag = self.tag
         self.addSubview(resetButton)
-        
-        dateLabel = UILabel()
-        dateLabel.translatesAutoresizingMaskIntoConstraints = false
-        dateLabel.font = UIFont(name: "Raleway-Light", size: 25)
-        dateLabel.adjustsFontSizeToFitWidth = true
-        dateLabel.textColor = .white
-        dateLabel.text = "alksdmasdlkma"
-        dateLabel.backgroundColor = .clear
-        
+
         self.addSubview(dateLabel)
         
         if self.tag == 2 {

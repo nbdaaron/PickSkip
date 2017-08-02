@@ -47,7 +47,7 @@ public class TokenField: UIView {
         /// Default maximum height = 150.0
         public static let defaultMaxHeight: CGFloat          = 150.0
         /// Default vertical inset = 7.0
-        public static let defaultVerticalInset: CGFloat      = 7.0
+        public static let defaultVerticalInset: CGFloat      = 0
         /// Default horizontal inset = 15.0
         public static let defaultHorizontalInset: CGFloat    = 15.0
         /// Default token padding = 2.0
@@ -147,6 +147,7 @@ public class TokenField: UIView {
     /// Input textView. Lazily instantited.
     public lazy var inputTextView: UITextView = {
         let inputTextView = BackspaceTextView()
+        inputTextView.backgroundColor = .white
         inputTextView.keyboardType = self.inputTextViewKeyboardType
         inputTextView.textColor = self.inputTextViewTextColor
         inputTextView.font = UIFont(name: "HelveticaNeue", size: 15.5)
@@ -278,7 +279,7 @@ public class TokenField: UIView {
         if inputViewShouldBecomeFirstResponder {
             inputTextViewBecomeFirstResponder()
         } else {
-            focusInputTextView()
+            //focusInputTextView()
         }
     }
     
@@ -382,7 +383,7 @@ public class TokenField: UIView {
                 height: toLabel.frame.height
             )
         )
-        label.font = UIFont(name: "HelveticaNeue", size: 15.5)
+        label.font = UIFont(name: "Raleway-Light", size: 20)
         label.text = dataSource?.tokenFieldCollapsedText(self) ?? ""
         label.textColor = colorScheme
         label.minimumScaleFactor = 5.0/label.font.pointSize
@@ -429,7 +430,7 @@ public class TokenField: UIView {
                     height: token.frame.height
                 )
             } else {
-                currentY += token.frame.height + Constants.defaultVeritcalPadding
+                currentY += token.frame.height + Constants.defaultVeritcalPadding * 2
                 currentX = 0
                 var tokenWidth = token.frame.width
                 if (tokenWidth > scrollView.contentSize.width) { // token is wider than max width
@@ -454,7 +455,7 @@ public class TokenField: UIView {
           : Constants.defaultTokenHeight
         
         if currentX + Constants.defaultMinInputWidth >= scrollView.contentSize.width {
-            currentY += Constants.defaultTokenHeight + Constants.defaultVeritcalPadding
+            currentY += Constants.defaultTokenHeight + Constants.defaultVeritcalPadding * 2
             
         }
         

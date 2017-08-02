@@ -242,14 +242,15 @@
                                             <action selector="logout:" destination="ysK-90-dgi" eventType="touchUpInside" id="yo9-xP-4z5"/>
                                         </connections>
                                     </button>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PickSkipTitle" translatesAutoresizingMaskIntoConstraints="NO" id="h3k-w3-tMn">
-                                        <rect key="frame" x="106.66666666666669" y="29.333333333333329" width="201" height="50"/>
+                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PickSkipBW" translatesAutoresizingMaskIntoConstraints="NO" id="h3k-w3-tMn">
+                                        <rect key="frame" x="131.66666666666669" y="29.333333333333329" width="151.00000000000006" height="50"/>
+                                        <color key="tintColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="sb7-yf-VXk"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
-                                <color key="backgroundColor" red="0.9882352941176471" green="0.25490196078431371" blue="0.38431372549019605" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="h3k-w3-tMn" firstAttribute="centerY" secondItem="le9-2O-Wwo" secondAttribute="centerY" constant="10" id="OQc-HR-ieg"/>
                                     <constraint firstItem="h3k-w3-tMn" firstAttribute="centerX" secondItem="le9-2O-Wwo" secondAttribute="centerX" id="OWc-8K-v5W"/>
@@ -277,6 +278,7 @@
                     <connections>
                         <outlet property="mediaView" destination="db5-gQ-UuW" id="MaO-C5-q2b"/>
                         <outlet property="tableView" destination="ZRE-iq-cwT" id="B1g-ss-35B"/>
+                        <outlet property="viewTitle" destination="h3k-w3-tMn" id="VeZ-Im-gxB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ocR-iC-Jpq" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -534,10 +536,10 @@
                                 <rect key="frame" x="0.0" y="119" width="414" height="617"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="94H-hb-Njq" customClass="ContactCell" customModule="PickSkip" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="jow-Im-dQ9" customClass="ContactCell" customModule="PickSkip" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="94H-hb-Njq" id="yf9-JP-uTA">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jow-Im-dQ9" id="Wpr-TI-NXj">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
@@ -602,7 +604,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="PickSkipTitle" width="201" height="67"/>
+        <image name="PickSkipBW" width="151" height="51"/>
         <image name="logoPanel" width="375" height="368"/>
         <image name="logopanelflipped" width="375" height="368"/>
         <image name="pickskiplogo" width="269" height="67"/>

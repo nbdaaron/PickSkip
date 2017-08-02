@@ -10,6 +10,7 @@
 		1A014DFE1F2100E600561BEE /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A014DFD1F2100E600561BEE /* Media.swift */; };
 		1A435C741F1ECFE1007E5478 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A435C731F1ECFE1007E5478 /* DataService.swift */; };
 		1A46FE1F1F2FCB000096A0EF /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A46FE1E1F2FCB000096A0EF /* ContactsViewController.swift */; };
+		1AA23D811F3253ED006A630D /* UnopenedMediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA23D801F3253ED006A630D /* UnopenedMediaCell.swift */; };
 		1AABB3B51F301B870092B639 /* Raleway-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AABB3AB1F301B700092B639 /* Raleway-ExtraLight.ttf */; };
 		1AC709091F28382100AEB3AB /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC709081F28382100AEB3AB /* ContactCell.swift */; };
 		1AD269191F184360003C438B /* CounterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269181F184360003C438B /* CounterButton.swift */; };
@@ -54,6 +55,7 @@
 		1A014DFD1F2100E600561BEE /* Media.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		1A435C731F1ECFE1007E5478 /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		1A46FE1E1F2FCB000096A0EF /* ContactsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
+		1AA23D801F3253ED006A630D /* UnopenedMediaCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnopenedMediaCell.swift; sourceTree = "<group>"; };
 		1AABB3A51F301B700092B639 /* Raleway-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Black.ttf"; sourceTree = "<group>"; };
 		1AABB3A61F301B700092B639 /* Raleway-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-BlackItalic.ttf"; sourceTree = "<group>"; };
 		1AABB3A71F301B700092B639 /* Raleway-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Bold.ttf"; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 				27C7D9B91F1596D200A5737F /* PreviewView.swift */,
 				27C7D9AF1F1482DE00A5737F /* CameraView.swift */,
 				1AC709081F28382100AEB3AB /* ContactCell.swift */,
+				1AA23D801F3253ED006A630D /* UnopenedMediaCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -438,6 +441,7 @@
 				27C7D9AE1F14825A00A5737F /* CameraViewController.swift in Sources */,
 				1AD269191F184360003C438B /* CounterButton.swift in Sources */,
 				27C7D9B01F1482DE00A5737F /* CameraView.swift in Sources */,
+				1AA23D811F3253ED006A630D /* UnopenedMediaCell.swift in Sources */,
 				1A014DFE1F2100E600561BEE /* Media.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

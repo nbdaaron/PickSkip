@@ -14,6 +14,9 @@ import Firebase
 class Constants {
     
     //TODO: lower this...
+    
+    static let defaultFont: String = "Raleway-Light"
+    
     ///Maximum allowed download size for any content in bytes.
     static let maxDownloadSize: Int64 = 1073741824 //2^30 bytes = 1GB
 

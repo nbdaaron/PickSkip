@@ -45,15 +45,20 @@ class DataService {
         
     }
     
-    func sendMedia(senderUID: String, recipients: [String], mediaURL: URL, mediaType: String, releaseDate: Int) {
+    func sendMedia(senderNumber: String, recipients: [String], mediaURL: URL, mediaType: String, releaseDate: Int) {
+        let date = Date()
         let pr: Dictionary<String, AnyObject> = ["mediaType": mediaType as AnyObject,
                                                 "mediaURL" : mediaURL.absoluteString as AnyObject,
                                                 "releaseDate": releaseDate as AnyObject,
-                                                "senderID": senderUID as AnyObject,
-                                                "recipients": recipients as AnyObject]
+                                                "sentDate": Int(date.timeIntervalSince1970) as AnyObject,
+                                                "senderNumber": senderNumber as AnyObject,
+                                                "recipients": recipients as AnyObject,
+                                                "opened": false as AnyObject]
         
         mainRef.child("media").childByAutoId().setValue(pr, withCompletionBlock: {(error, databaseReference) in
-            self.mainRef.child("users").child("\(String(describing: Auth.auth().currentUser!.providerData.first!.phoneNumber!))").child("media").child(databaseReference.key).child("releaseDate").setValue(releaseDate)
+            if let error = error  {
+                print("error sending message + \(error.localizedDescription)")
+            }
         })
     }
     

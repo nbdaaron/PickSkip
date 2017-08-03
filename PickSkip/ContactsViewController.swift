@@ -9,23 +9,17 @@
 import UIKit
 import TokenField
 import Contacts
+import Firebase
+import PhoneNumberKit
 
 
 class ContactsViewController: UIViewController {
     
-    var selectedNames: [CNContact] = []
-    var contacts : [CNContact] = []
-    var filtered : [CNContact] = []
-    var searchActive = false
     
     @IBOutlet weak var tokenField: TokenField!
-
     @IBOutlet weak var contactTableView: UITableView!
-    
     @IBOutlet weak var tokenFieldHeight: NSLayoutConstraint!
-    
     @IBOutlet weak var timeLabel: UILabel!
-    
     @IBOutlet weak var infoLabel: UILabel!
     
     var sendButton: UIButton = {
@@ -43,10 +37,17 @@ class ContactsViewController: UIViewController {
         return button
     }()
     
+    var selectedNames: [CNContact] = []
+    var contacts : [CNContact] = []
+    var filtered : [CNContact] = []
+    var searchActive = false
     var keyboardIsActive = false
     var buttonBottomConstraint: NSLayoutConstraint!
     var dateComponenets: DateComponents!
     var releaseDate: Date!
+    var image: Data?
+    var video: URL?
+    let phoneNumberKit = PhoneNumberKit()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +56,7 @@ class ContactsViewController: UIViewController {
         tokenField.dataSource = self
         tokenField.delegate = self
         loadContacts()
-        layoutSendButton()
+        setupSendButton()
         
         timeLabel.adjustsFontSizeToFitWidth = true
         infoLabel.adjustsFontSizeToFitWidth = true
@@ -65,8 +66,7 @@ class ContactsViewController: UIViewController {
         timeLabel.text = formatDateComponenets(date: dateComponenets)
         timeLabel.sizeToFit()
         
-        print("datecomponenets: \(dateComponenets)")
-        print("release: \(releaseDate)")
+        
         
         setupKeyboardObserver()
         // Do any additional setup after loading the view.
@@ -93,7 +93,7 @@ class ContactsViewController: UIViewController {
         
     }
     
-    private func layoutSendButton() {
+    private func setupSendButton() {
         self.view.addSubview(sendButton)
         
         let constraints = [
@@ -105,6 +105,10 @@ class ContactsViewController: UIViewController {
         
         buttonBottomConstraint = NSLayoutConstraint(item: sendButton, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: -10)
         buttonBottomConstraint?.isActive = true
+        
+        let sendGesture = UITapGestureRecognizer(target: self, action: #selector(sendContent(gesture:)))
+        sendButton.addGestureRecognizer(sendGesture)
+        
     }
     
     private func loadContacts() {
@@ -194,6 +198,48 @@ class ContactsViewController: UIViewController {
         dateComponenets = nil
         releaseDate = nil
     }
+    
+    func sendContent(gesture: UITapGestureRecognizer) {
+        var recipients: [String] = []
+        for selectedContact in selectedNames {
+            do {
+                let phoneNumber = try phoneNumberKit.parse(selectedContact.phoneNumbers[0].value.stringValue)
+                let parsedNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
+                recipients.append(parsedNumber)
+            } catch {
+                print("error trying to parse phone number")
+            }
+            
+        }
+
+        
+        if let videoURL = video {
+            let videoName = "\(NSUUID().uuidString)\(videoURL)"
+            let ref = DataService.instance.videosStorageRef.child(videoName)
+            _ = ref.putFile(from: videoURL, metadata: nil, completion: { (metadata, error) in
+                if let error = error {
+                    print("error: \(error.localizedDescription)")
+                } else {
+                    let downloadURL = metadata?.downloadURL()
+                    DataService.instance.sendMedia(senderNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "video", releaseDate: Int(self.releaseDate.timeIntervalSince1970))
+                    
+                }
+            })
+            self.dismiss(animated: true, completion: nil)
+        } else if let image = image {
+            let ref = DataService.instance.imagesStorageRef.child("\(NSUUID().uuidString).jpg")
+            _ = ref.putData(image, metadata: nil, completion: {(metadata, error) in
+                if let error  = error {
+                    print("error: \(error.localizedDescription))")
+                } else {
+                    let downloadURL = metadata?.downloadURL()
+                    DataService.instance.sendMedia(senderNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: Int(self.releaseDate.timeIntervalSince1970))
+                }
+            })
+            //self.dismiss(animated: true, completion: nil)
+            self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
+        }
+    }
 
     
 
@@ -274,7 +320,6 @@ extension ContactsViewController: UITableViewDelegate {
 extension ContactsViewController: TokenFieldDataSource {
     func tokenField(_ tokenField: TokenField, titleForTokenAtIndex index: Int) -> String {
         //implement
-        print("Index: \(index)")
         return Util.getNameFromContact(selectedNames[index]) + ","
     }
     
@@ -307,17 +352,13 @@ extension ContactsViewController: TokenFieldDelegate {
     }
     
     func tokenField(_ tokenField: TokenField, didEnterText text: String) {
-        //implement
         searchActive = false
         tokenField.endEditing(true)
     }
     
     func tokenField(_ tokenField: TokenField, didDeleteTokenAtIndex index: Int) {
         //implement
-        print(Util.getNameFromContact(selectedNames[index]))
-        print("count before deleting \(selectedNames.count)")
         selectedNames.remove(at: index)
-        print("count after deleting \(selectedNames.count)")
         if selectedNames.count == 0 {
             self.contactTableView.isHidden = true
             infoLabel.isHidden = false

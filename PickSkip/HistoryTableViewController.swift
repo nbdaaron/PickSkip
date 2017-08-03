@@ -12,13 +12,12 @@ import Firebase
 class HistoryTableViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    
     @IBOutlet weak var mediaView: PreviewView!
-    
     @IBOutlet weak var viewTitle: UIImageView!
     
     var dataService = DataService.instance
-    var mediaArray: [Media] = []
+    var openedMediaArray: [Media] = []
+    var unopenedMediaArray: [Media] = []
     var testarray1 = ["test1", "test2", "test4", "test5"]
     var testarray2 = ["test7", "test8", "test9"]
     var date: Date!
@@ -68,7 +67,6 @@ class HistoryTableViewController: UIViewController {
         dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").queryOrdered(byChild: "releaseDate").queryLimited(toFirst: 5).observe(.value, with: { (snapshot) in
             
             for snap in snapshot.children.allObjects as! [DataSnapshot] {
-                print(snap.key)
                 self.grabMedia(from: snap.key)
             }
 //            if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
@@ -90,22 +88,39 @@ class HistoryTableViewController: UIViewController {
 //        
 //        
         //Skip existing content
-        for media in mediaArray {
+        for media in unopenedMediaArray {
             if media.key == key {
                 return
             }
         }
         
+        for media in openedMediaArray {
+            if media.key == key {
+                return
+            }
+        }
+        
+        
+        
         self.dataService.mainRef.child("media").child(key).observeSingleEvent(of: .value, with: {(snapshot) in
             if let content = snapshot.value as? Dictionary<String, AnyObject> {
+                let isOpened = content["opened"] as! Bool
                 let url = content["mediaURL"] as! String
                 let type = content["mediaType"] as! String
-                let id = content["senderID"] as! String
-                let date = content["releaseDate"] as! Int
+                let senderNumber = content["senderNumber"] as! String
+                let releaseDate = content["releaseDate"] as! Int
+                let sentDate = content["sentDate"] as! Int
+
                 let httpsReference = Storage.storage().reference(forURL: url)
+                let mediaInstance = Media(senderNumber: senderNumber, key: key, type: type, releaseDateInt: releaseDate, sentDateInt: sentDate, url: httpsReference, state: isOpened)
                 
-                let mediaInstance = Media(id: id, key: key, type: type, dateInt: date, url: httpsReference)
-                self.mediaArray.append(mediaInstance)
+                if isOpened {
+                    self.openedMediaArray.append(mediaInstance)
+                } else {
+                    self.unopenedMediaArray.append(mediaInstance)
+                }
+                print(self.openedMediaArray)
+                print(self.unopenedMediaArray)
                 self.tableView.reloadData()
 //                self.grabMedia(at: index + 1, from: keys)
             } else {
@@ -150,34 +165,28 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return testarray1.count
+            return openedMediaArray.count
         } else {
-            return testarray2.count
+            return unopenedMediaArray.count
         }
         
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! UnopenedMediaCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! UnopenedMediaCell
+        if indexPath.section == 0 && openedMediaArray.count != 0 {
             cell.selectionStyle = .gray
             cell.backgroundColor = .white
             cell.cellFrame.layer.borderWidth = 0
-            cell.nameLabel.text = testarray1[indexPath.row]
+            cell.nameLabel.text = openedMediaArray[indexPath.row].senderNumber
             return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! UnopenedMediaCell
+        } else if indexPath.section == 1 && unopenedMediaArray.count != 0 {
             cell.selectionStyle = .none
             cell.backgroundColor = .white
             cell.cellFrame.layer.borderWidth = 1
-            cell.nameLabel.text = testarray2[indexPath.row]
-//            cell.textLabel!.text = "\(mediaArray[indexPath.row].date!)"
-//            cell.selectionStyle = .none
-//            cell.layer.borderWidth = 1
-//            cell.layer.borderColor = UIColor.black.cgColor
-
-            
+            cell.nameLabel.text = unopenedMediaArray[indexPath.row].senderNumber
+            return cell
+        } else {
             return cell
         }
         
@@ -186,27 +195,37 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
     // MARK: - Table view data source
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: false)
-//        date = Date()
-//        print("current time: \(date)")
-//        if date < mediaArray[indexPath.row].date {
-//            print("current time is less")
-//        } else {
-//            if mediaArray[indexPath.row].loadState == .loaded {
-//                let image = UIImage(data: mediaArray[indexPath.row].image!)
-//                mediaView.displayImage(image!)
-//                view.bringSubview(toFront: mediaView)
-//                mediaView.isHidden = false
-//            } else if mediaArray[indexPath.row].loadState == .unloaded {
-//                mediaArray[indexPath.row].load() {
-//                    //CODE TO EXECUTE WHEN DONE LOADING
-//                    self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.green
-//                }
-//                //CODE TO EXECUTE WHILE LOADING
-//                self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.blue
-//            }
-//            
-//        }
+        tableView.deselectRow(at: indexPath, animated: false)
+        
+        print("current time: \(date)")
+        
+        if indexPath.section == 0 {
+            displayPicture(mediaArray: openedMediaArray, indexPath: indexPath)
+        } else {
+            displayPicture(mediaArray: unopenedMediaArray, indexPath: indexPath)
+        }
+    }
+    
+    func displayPicture(mediaArray: [Media], indexPath: IndexPath){
+        date = Date()
+        if date < mediaArray[indexPath.row].releaseDate {
+            print("current time is less")
+        } else {
+            if mediaArray[indexPath.row].loadState == .loaded {
+                let image = UIImage(data: mediaArray[indexPath.row].image!)
+                mediaView.displayImage(image!)
+                view.bringSubview(toFront: mediaView)
+                mediaView.isHidden = false
+            } else if mediaArray[indexPath.row].loadState == .unloaded {
+                mediaArray[indexPath.row].load() {
+                    //CODE TO EXECUTE WHEN DONE LOADING
+                    self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.green
+                }
+                //CODE TO EXECUTE WHILE LOADING
+                self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.blue
+            }
+            
+        }
     }
     
     

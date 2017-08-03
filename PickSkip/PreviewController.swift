@@ -11,7 +11,7 @@ import AVFoundation
 
 class PreviewController: UIViewController {
     
-    var player: AVPlayer?
+    var video: URL?
     var image: UIImage?
     @IBOutlet weak var previewContent: PreviewView!
     @IBOutlet weak var buttonsView: UIView!
@@ -38,7 +38,8 @@ class PreviewController: UIViewController {
         
         buttonsView.backgroundColor = .clear
         self.view.backgroundColor = .clear
-        if let player = player  {
+        if let video = video  {
+            let player = AVPlayer(url: video)
             previewContent.displayVideo(player)
         } else if let image = image {
             previewContent.isHidden = false
@@ -147,6 +148,11 @@ class PreviewController: UIViewController {
             let destination = navController.topViewController as! ContactsViewController
             destination.releaseDate = sendtoDate
             destination.dateComponenets = dateComponents
+            if let video = video {
+                destination.video = video
+            } else if let image = image {
+                destination.image = UIImageJPEGRepresentation(image, 1.0)
+            }
         }
     }
     

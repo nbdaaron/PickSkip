@@ -16,7 +16,7 @@ class CameraViewController: UIViewController {
     @IBOutlet weak var recordButton: RecordButton!
     
     var image: UIImage!
-    var videoPlayer: AVPlayer!
+    var video: URL!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,10 +36,10 @@ class CameraViewController: UIViewController {
                 destination?.image = image
                 print("sent pic")
                 self.image = nil
-            } else if let videoPlayer = videoPlayer {
-                destination?.player = videoPlayer
+            } else if let video = video {
+                destination?.video = video
                 print("sent vid")
-                self.videoPlayer = nil
+                self.video = nil
             }
         }
         
@@ -56,7 +56,7 @@ extension CameraViewController: CameraViewDelegate {
     
     ///Accepts a video, displays it on the PreviewView.
     func submit(videoURL: URL) {
-        self.videoPlayer = AVPlayer(url: videoURL)
+        self.video = videoURL
         self.performSegue(withIdentifier: "showPreview", sender: self)
     }
 }

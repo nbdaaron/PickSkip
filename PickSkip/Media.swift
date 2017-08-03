@@ -20,14 +20,12 @@ class Media {
     var url: StorageReference!
     var loadState: LoadState = .unloaded
     var key: String!
-    var state: Bool!
     
-    init(senderNumber: String, key: String, type: String, releaseDateInt: Int!, sentDateInt: Int!, url: StorageReference!, state: Bool!) {
+    init(senderNumber: String, key: String, type: String, releaseDateInt: Int!, sentDateInt: Int!, url: StorageReference!) {
         self.senderNumber = senderNumber
         self.mediaType = type
         self.url = url
         self.key = key
-        self.state = state
         releaseDate = Date(timeIntervalSince1970: TimeInterval(releaseDateInt))
         sentDate = Date(timeIntervalSince1970: TimeInterval(sentDateInt))
         

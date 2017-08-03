@@ -52,14 +52,25 @@ class DataService {
                                                 "releaseDate": releaseDate as AnyObject,
                                                 "sentDate": Int(date.timeIntervalSince1970) as AnyObject,
                                                 "senderNumber": senderNumber as AnyObject,
-                                                "recipients": recipients as AnyObject,
-                                                "opened": false as AnyObject]
+                                                "recipients": recipients as AnyObject]
         
         mainRef.child("media").childByAutoId().setValue(pr, withCompletionBlock: {(error, databaseReference) in
             if let error = error  {
                 print("error sending message + \(error.localizedDescription)")
             }
         })
+    }
+    
+    func setOpened(key: String, releaseDate: Int) {
+        usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("media").child("opened").child(key).setValue(releaseDate, withCompletionBlock: {(error, databaseReference) in
+            if let error = error {
+                print("error sending message + \(error.localizedDescription)")
+            } else {
+                self.usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("media").child("unopened").child(key).removeValue()
+            }
+            print("setting opened completed")
+        })
+        print("setting opened")
     }
     
 }

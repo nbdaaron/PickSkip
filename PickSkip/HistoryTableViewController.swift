@@ -18,8 +18,6 @@ class HistoryTableViewController: UIViewController {
     var dataService = DataService.instance
     var openedMediaArray: [Media] = []
     var unopenedMediaArray: [Media] = []
-    var testarray1 = ["test1", "test2", "test4", "test5"]
-    var testarray2 = ["test7", "test8", "test9"]
     var date: Date!
     var listenerHandle: UInt?
     
@@ -38,7 +36,8 @@ class HistoryTableViewController: UIViewController {
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(titlePressed(gesture:)))
         viewTitle.addGestureRecognizer(gesture)
-    
+        
+        loadContent()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -47,88 +46,140 @@ class HistoryTableViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        loadContent()
-        if testarray2.count < 8 {
-            let difference = CGFloat(7 - testarray2.count)
-            tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: self.view.frame.height * (difference) / 8, right: 0)
-            
-        } else {
-            tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .top, animated: true)
-        }
+//        if testarray2.count < 8 {
+//            let difference = CGFloat(7 - testarray2.count)
+//            tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: self.view.frame.height * (difference) / 8, right: 0)
+//            
+//        } else {
+//            tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .top, animated: true)
+//        }
         
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").removeAllObservers()
+//        dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").removeAllObservers()
     }
     
     func loadContent() {
         
-        dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").queryOrdered(byChild: "releaseDate").queryLimited(toFirst: 5).observe(.value, with: { (snapshot) in
-            
+        dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").child("unopened").queryOrderedByValue().queryLimited(toFirst: 5).observe(.value, with: { (snapshot) in
             for snap in snapshot.children.allObjects as! [DataSnapshot] {
-                self.grabMedia(from: snap.key)
+                
+                for media in self.unopenedMediaArray {
+                    if media.key == snap.key {
+                        return
+                    }
+                }
+                
+                self.dataService.mainRef.child("media").child(snap.key).observeSingleEvent(of: .value, with: {(snapshot) in
+                    if let content = snapshot.value as? Dictionary<String, AnyObject> {
+                        
+                        let httpsReference = Storage.storage().reference(forURL: content["mediaURL"] as! String)
+                        
+                        let mediaInstance = Media(senderNumber: content["senderNumber"] as! String,
+                                                  key: snap.key,
+                                                  type: content["mediaType"] as! String,
+                                                  releaseDateInt: content["releaseDate"] as! Int,
+                                                  sentDateInt: content["sentDate"] as! Int,
+                                                  url: httpsReference)
+                        
+                        self.unopenedMediaArray.append(mediaInstance)
+                        self.tableView.reloadData()
+                        //                self.grabMedia(at: index + 1, from: keys)
+                    } else {
+                        print("Problem grabbing media in HistoryTableViewController#grabMedia: Incorrect database format")
+                    }
+                    
+                })
             }
+
+        })
+            
+        dataService.usersRef.child(Auth.auth().currentUser!.providerData.first!.phoneNumber!).child("media").child("opened").queryOrderedByValue().queryLimited(toLast: 5).observe(.value, with: { (snapshot) in
+                self.openedMediaArray = []
+                for snap in snapshot.children.allObjects as! [DataSnapshot] {
+    
+//                    for media in self.openedMediaArray {
+//                        if media.key == snap.key {
+//                            return
+//                        }
+//                    }
+                    
+                    self.dataService.mainRef.child("media").child(snap.key).observeSingleEvent(of: .value, with: {(snapshot) in
+                        if let content = snapshot.value as? Dictionary<String, AnyObject> {
+                            let httpsReference = Storage.storage().reference(forURL: content["mediaURL"] as! String)
+                            let mediaInstance = Media(senderNumber: content["senderNumber"] as! String,
+                                                      key: snap.key,
+                                                      type: content["mediaType"] as! String,
+                                                      releaseDateInt: content["releaseDate"] as! Int,
+                                                      sentDateInt: content["sentDate"] as! Int,
+                                                      url: httpsReference)
+                            self.openedMediaArray.append(mediaInstance)
+                            self.tableView.reloadData()
+                            //                self.grabMedia(at: index + 1, from: keys)
+                        } else {
+                            print("Problem grabbing media in HistoryTableViewController#grabMedia: Incorrect database format")
+                        }
+                        
+                    })
+                }
+            })
+
+    }
+    
+            //////////
 //            if let valueDict = snapshot.value as? Dictionary<String, AnyObject> {
 //                let keys = Array(valueDict.keys)
 //                self.grabMedia(at: 0, from: keys)
 //                
 //            }
             
-        })
-
-    }
-    
-    func grabMedia(from key: String) {
-//        if index >= keys.count {
-//            self.tableView.reloadData()
-//            return
-//        }
-//        let key = keys[index]
-//        
-//        
-        //Skip existing content
-        for media in unopenedMediaArray {
-            if media.key == key {
-                return
-            }
-        }
         
-        for media in openedMediaArray {
-            if media.key == key {
-                return
-            }
-        }
-        
-        
-        
-        self.dataService.mainRef.child("media").child(key).observeSingleEvent(of: .value, with: {(snapshot) in
-            if let content = snapshot.value as? Dictionary<String, AnyObject> {
-                let isOpened = content["opened"] as! Bool
-                let url = content["mediaURL"] as! String
-                let type = content["mediaType"] as! String
-                let senderNumber = content["senderNumber"] as! String
-                let releaseDate = content["releaseDate"] as! Int
-                let sentDate = content["sentDate"] as! Int
-
-                let httpsReference = Storage.storage().reference(forURL: url)
-                let mediaInstance = Media(senderNumber: senderNumber, key: key, type: type, releaseDateInt: releaseDate, sentDateInt: sentDate, url: httpsReference, state: isOpened)
-                
-                if isOpened {
-                    self.openedMediaArray.append(mediaInstance)
-                } else {
-                    self.unopenedMediaArray.append(mediaInstance)
-                }
-                print(self.openedMediaArray)
-                print(self.unopenedMediaArray)
-                self.tableView.reloadData()
-//                self.grabMedia(at: index + 1, from: keys)
-            } else {
-                print("Problem grabbing media in HistoryTableViewController#grabMedia: Incorrect database format")
-            }
             
-        })
-    }
+    
+    
+//    func appendMedia(from key: String, to mediaArray: [Media]) {
+////        if index >= keys.count {
+////            self.tableView.reloadData()
+////            return
+////        }
+////        let key = keys[index]
+////        
+////        
+//        //Skip existing content
+//        for media in unopenedMediaArray {
+//            if media.key == key {
+//                return
+//            }
+//        }
+//        
+//        for media in openedMediaArray {
+//            if media.key == key {
+//                return
+//            }
+//        }
+//        
+//        
+//        
+//        self.dataService.mainRef.child("media").child(key).observeSingleEvent(of: .value, with: {(snapshot) in
+//            if let content = snapshot.value as? Dictionary<String, AnyObject> {
+//                let url = content["mediaURL"] as! String
+//                let type = content["mediaType"] as! String
+//                let senderNumber = content["senderNumber"] as! String
+//                let releaseDate = content["releaseDate"] as! Int
+//                let sentDate = content["sentDate"] as! Int
+//
+//                let httpsReference = Storage.storage().reference(forURL: url)
+//                let mediaInstance = Media(senderNumber: senderNumber, key: key, type: type, releaseDateInt: releaseDate, sentDateInt: sentDate, url: httpsReference)
+//                
+//                var mediaArray = mediaArray.append(mediaInstance)
+//                self.tableView.reloadData()
+////                self.grabMedia(at: index + 1, from: keys)
+//            } else {
+//                print("Problem grabbing media in HistoryTableViewController#grabMedia: Incorrect database format")
+//            }
+//            
+//        })
     
     func prepareMediaView() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideMedia))
@@ -140,6 +191,7 @@ class HistoryTableViewController: UIViewController {
     func hideMedia() {
         mediaView.isHidden = true
         mediaView.removeExistingContent()
+        tableView.reloadData()
     }
     
     @IBAction func logout(_ sender: Any) {
@@ -200,33 +252,32 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
         print("current time: \(date)")
         
         if indexPath.section == 0 {
-            displayPicture(mediaArray: openedMediaArray, indexPath: indexPath)
+//            displayPicture(mediaArray: openedMediaArray, indexPath: indexPath)
         } else {
-            displayPicture(mediaArray: unopenedMediaArray, indexPath: indexPath)
-        }
-    }
-    
-    func displayPicture(mediaArray: [Media], indexPath: IndexPath){
-        date = Date()
-        if date < mediaArray[indexPath.row].releaseDate {
-            print("current time is less")
-        } else {
-            if mediaArray[indexPath.row].loadState == .loaded {
-                let image = UIImage(data: mediaArray[indexPath.row].image!)
-                mediaView.displayImage(image!)
-                view.bringSubview(toFront: mediaView)
-                mediaView.isHidden = false
-            } else if mediaArray[indexPath.row].loadState == .unloaded {
-                mediaArray[indexPath.row].load() {
-                    //CODE TO EXECUTE WHEN DONE LOADING
-                    self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.green
+            date = Date()
+            if date < unopenedMediaArray[indexPath.row].releaseDate {
+                print("current time is less")
+            } else {
+                if unopenedMediaArray[indexPath.row].loadState == .loaded {
+                    let image = UIImage(data: unopenedMediaArray[indexPath.row].image!)
+                    mediaView.displayImage(image!)
+                    view.bringSubview(toFront: mediaView)
+                    mediaView.isHidden = false
+                    
+                    DataService.instance.setOpened(key: unopenedMediaArray[indexPath.row].key, releaseDate: Int(unopenedMediaArray[indexPath.row].releaseDate.timeIntervalSince1970))
+                    self.unopenedMediaArray.remove(at: indexPath.row)
+                } else if unopenedMediaArray[indexPath.row].loadState == .unloaded {
+                    unopenedMediaArray[indexPath.row].load() {
+                        //CODE TO EXECUTE WHEN DONE LOADING
+                        self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.green
+                    }
+                    //CODE TO EXECUTE WHILE LOADING
+                    self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.blue
                 }
-                //CODE TO EXECUTE WHILE LOADING
-                self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.blue
             }
-            
         }
     }
+ 
     
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

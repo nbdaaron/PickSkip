@@ -11,21 +11,23 @@ import Firebase
 
 
 class Media {
-    var mediaID: String!
+    var senderNumber: String!
     var mediaType: String!
     var image: Data?
     var video: URL?
-    var date: Date!
+    var releaseDate: Date!
+    var sentDate: Date!
     var url: StorageReference!
     var loadState: LoadState = .unloaded
     var key: String!
     
-    init(id: String, key: String, type: String, dateInt: Int!, url: StorageReference!) {
-        self.mediaID = id
+    init(senderNumber: String, key: String, type: String, releaseDateInt: Int!, sentDateInt: Int!, url: StorageReference!) {
+        self.senderNumber = senderNumber
         self.mediaType = type
         self.url = url
         self.key = key
-        date = Date(timeIntervalSince1970: TimeInterval(dateInt))
+        releaseDate = Date(timeIntervalSince1970: TimeInterval(releaseDateInt))
+        sentDate = Date(timeIntervalSince1970: TimeInterval(sentDateInt))
         
     }
     

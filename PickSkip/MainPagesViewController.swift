@@ -24,7 +24,9 @@ class MainPagesViewController: UIPageViewController {
         }
         
         //Prepares the first view controller to be displayed.
+
         setViewControllers([pages[Constants.initialViewPosition]], direction: .forward, animated: true, completion: nil)
+
     }
 
     override func didReceiveMemoryWarning() {

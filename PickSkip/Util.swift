@@ -38,6 +38,19 @@ class Util {
         }
     }
     
+    static func formateDateLabelDate(date: Date) -> String {
+        let today = Date()
+        let dateFormatter = DateFormatter()
+        if date.day == today.day {
+            dateFormatter.dateFormat = "h:m a"
+            let dateString = dateFormatter.string(from: date)
+            return "Today \n \(dateString)"
+        } else {
+            dateFormatter.dateFormat = "MMMM d, Y \n h:m a"
+            return dateFormatter.string(from: date)
+        }
+    }
+    
     ///Removes the current Login Listener. Should be called from viewWillDisappear.
     static func removeCurrentLoginCheckListener() {
         currentLoginCheckListener = nil
@@ -51,4 +64,6 @@ class Util {
             }
         }
     }
+    
+    
 }

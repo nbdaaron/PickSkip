@@ -11,12 +11,26 @@ import UIKit
 
 class CounterButton : UIButton {
     
-    var count = 0
-    var type : String!
+    var resetButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(#imageLiteral(resourceName: "undoButton"), for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.backgroundColor = .clear
+        return button
+    } ()
     
-    fileprivate var buttonBorder : CALayer!
-    fileprivate var buttonLabel : CATextLayer!
-    
+    var dateLabel: UILabel! = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "Raleway-Light", size: 25)
+        label.adjustsFontSizeToFitWidth = true
+        label.textColor = .white
+        label.text = "alksdmasdlkma"
+        label.backgroundColor = .clear
+        return label
+    }()
+
     
     public init(buttonType: String, frame: CGRect){
         super.init(frame: frame)
@@ -26,8 +40,6 @@ class CounterButton : UIButton {
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        
-        
         setupButton()
         
     }
@@ -38,39 +50,84 @@ class CounterButton : UIButton {
     }
     
     func setupButton() {
-        self.backgroundColor = UIColor(colorLiteralRed: 22.0/255.0, green: 222.0/255.0, blue: 238.0/255.0, alpha: 1)
-        layer.cornerRadius = self.frame.height / 5
-        layer.borderWidth = 0
-        translatesAutoresizingMaskIntoConstraints = false
+        resetButton.tag = self.tag
+        self.addSubview(resetButton)
+
+        self.addSubview(dateLabel)
+        
+        if self.tag == 2 {
+            dateLabel.textAlignment = .left
+            let constraints = [
+                resetButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
+                resetButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5),
+                resetButton.heightAnchor.constraint(equalToConstant: 30.0),
+                resetButton.widthAnchor.constraint(equalToConstant: 30.0),
+                dateLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10.0),
+                dateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+                dateLabel.widthAnchor.constraint(equalToConstant: 100),
+                dateLabel.heightAnchor.constraint(equalToConstant: 40)
+            ]
+            NSLayoutConstraint.activate(constraints)
+        } else {
+            dateLabel.textAlignment = .right
+            let constraints = [
+                resetButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
+                resetButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5),
+                resetButton.heightAnchor.constraint(equalToConstant: 30.0),
+                resetButton.widthAnchor.constraint(equalToConstant: 30.0),
+                dateLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10.0),
+                dateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+                dateLabel.widthAnchor.constraint(equalToConstant: 100),
+                dateLabel.heightAnchor.constraint(equalToConstant: 40)
+            ]
+            
+            NSLayoutConstraint.activate(constraints)
+        }
+        
         
         titleLabel?.adjustsFontSizeToFitWidth = true
         titleLabel?.minimumScaleFactor = 0.5
-        titleLabel?.lineBreakMode = .byWordWrapping
         titleLabel?.textAlignment = .center
         setTitleColor(.white, for: .normal)
-        titleLabel?.font = UIFont(name: "Raleway-Light", size: self.frame.height / 3)
-        
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapGesture(gesture:)))
-//        let longTapGesture = UILongPressGestureRecognizer(target: self, action: #selector(longTapGesture(gesture:)))
-//        self.addGestureRecognizer(tapGesture)
-//        self.addGestureRecognizer(longTapGesture)
-        
+        backgroundColor = UIColor(colorLiteralRed: 0.0, green: 0.0, blue: 0.0, alpha: 0.55)
+        titleLabel?.lineBreakMode = .byWordWrapping
+        titleLabel?.font = UIFont(name: "BebasNeueRegular", size: 40.0)
+        layer.borderWidth = 1.3
+        layer.borderColor = UIColor.black.cgColor
+        updateCounter(to: 0)
     }
-//    
-//    func tapGesture(gesture: UITapGestureRecognizer) {
-//        self.count += 1
-//        self.setTitle(String(self.count) + "\n" + self.type, for: .normal)
-//    }
-//    
-//    func longTapGesture(gesture: UILongPressGestureRecognizer){
-//        self.count = 0
-//        self.setTitle(String(self.count) + "\n" + self.type, for: .normal)
-//    }
-  
     
+    func updateCounter(to count: Int) {
+        switch self.tag {
+        case 1:
+            setTitle("\(count)" + "\n" + "hour", for: .normal)
+        case 2:
+            setTitle("\(count)" + "\n" + "minute", for: .normal)
+        case 3:
+            setTitle("\(count)" + "\n" + "month", for: .normal)
+        case 4:
+            setTitle("\(count)" + "\n" + "day", for: .normal)
+        case 5:
+            setTitle("\(count)" + "\n" + "year", for: .normal)
+        default:
+            print("error updating buttons")
+        }
+        flash()
+    }
     
+    func flash() {
+        
+        let flash = CABasicAnimation(keyPath: "opacity")
+        flash.duration = 0.1
+        flash.fromValue = 1
+        flash.toValue = 0.1
+        flash.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        flash.autoreverses = true
+        flash.repeatCount = 1
+        
+        layer.add(flash, forKey: nil)
+    }
 
-    
     
     
 }

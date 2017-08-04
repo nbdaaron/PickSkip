@@ -13,12 +13,10 @@ import Firebase
 
 class CameraViewController: UIViewController {
     @IBOutlet weak var cameraView: CameraView!
-    @IBOutlet weak var previewView: PreviewView!
-    @IBOutlet weak var optionsView: UIView!
     @IBOutlet weak var recordButton: RecordButton!
     
-    var image: Data?
-    var videoURL: URL?
+    var image: UIImage!
+    var video: URL!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,44 +28,21 @@ class CameraViewController: UIViewController {
         
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    ///Display the preview layer - called after a photo/video submission is received.
-    func displayPreview() {
-        previewView.isHidden = false
-        optionsView.isHidden = false
-    }
-    
-    ///Hide the preview layer - called when the 'X' button is tapped from the options view.
-    @IBAction func closePreview(_ sender: Any) {
-        previewView.removeExistingContent()
-        previewView.isHidden = true
-        optionsView.isHidden = true
-    }
-
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showComposeView" {
-            let destination = segue.destination as? ComposeViewController
+        if segue.identifier == "showPreview" {
+            let destination = segue.destination as? PreviewController
             if let image = image {
                 destination?.image = image
-                previewView.removeExistingContent()
-                previewView.isHidden = true
-                optionsView.isHidden = true
                 print("sent pic")
                 self.image = nil
-            } else if let videoURL = videoURL {
-                destination?.video = videoURL
-                previewView.removeExistingContent()
-                previewView.isHidden = true
-                optionsView.isHidden = true
+            } else if let video = video {
+                destination?.video = video
                 print("sent vid")
-                self.videoURL = nil
+                self.video = nil
             }
         }
+        
     }
 }
 
@@ -75,16 +50,13 @@ extension CameraViewController: CameraViewDelegate {
     
     ///Accepts an image, displays it on the PreviewView.
     func submit(image: UIImage) {
-        displayPreview()
-        self.image = UIImageJPEGRepresentation(image, 1.0)
-        previewView.displayImage(image)
+        self.image = image
+        self.performSegue(withIdentifier: "showPreview", sender: self)
     }
     
     ///Accepts a video, displays it on the PreviewView.
     func submit(videoURL: URL) {
-        displayPreview()
-        self.videoURL = videoURL
-        let player = AVPlayer(url: videoURL)
-        previewView.displayVideo(player)
+        self.video = videoURL
+        self.performSegue(withIdentifier: "showPreview", sender: self)
     }
 }

@@ -38,23 +38,39 @@ class DataService {
         return storageRef.child("videos")
     }
     
-    func saveUser(uid: String) {
+    func saveUser() {
         let profile: Dictionary<String, AnyObject> = ["firstname": "" as AnyObject, "lastname": "" as AnyObject]
         
-        mainRef.child("users").child(Auth.auth().currentUser!.phoneNumber!).child("profile").setValue(profile)
+        mainRef.child("users").child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("profile").setValue(profile)
         
     }
     
-    func sendMedia(senderUID: String, recipients: [String], mediaURL: URL, mediaType: String, releaseDate: Int) {
+    func sendMedia(senderNumber: String, recipients: [String], mediaURL: URL, mediaType: String, releaseDate: Int) {
+        let date = Date()
         let pr: Dictionary<String, AnyObject> = ["mediaType": mediaType as AnyObject,
                                                 "mediaURL" : mediaURL.absoluteString as AnyObject,
                                                 "releaseDate": releaseDate as AnyObject,
-                                                "senderID": senderUID as AnyObject,
+                                                "sentDate": Int(date.timeIntervalSince1970) as AnyObject,
+                                                "senderNumber": senderNumber as AnyObject,
                                                 "recipients": recipients as AnyObject]
         
         mainRef.child("media").childByAutoId().setValue(pr, withCompletionBlock: {(error, databaseReference) in
-            self.mainRef.child("users").child("\(String(describing: Auth.auth().currentUser!.providerData.first!.phoneNumber!))").child("media").child(databaseReference.key).child("releaseDate").setValue(releaseDate)
+            if let error = error  {
+                print("error sending message + \(error.localizedDescription)")
+            }
         })
+    }
+    
+    func setOpened(key: String, releaseDate: Int) {
+        usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("media").child("opened").child(key).setValue(releaseDate, withCompletionBlock: {(error, databaseReference) in
+            if let error = error {
+                print("error sending message + \(error.localizedDescription)")
+            } else {
+                self.usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("media").child("unopened").child(key).removeValue()
+            }
+            print("setting opened completed")
+        })
+        print("setting opened")
     }
     
 }

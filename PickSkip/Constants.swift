@@ -14,6 +14,9 @@ import Firebase
 class Constants {
     
     //TODO: lower this...
+    
+    static let defaultFont: String = "Raleway-Light"
+    
     ///Maximum allowed download size for any content in bytes.
     static let maxDownloadSize: Int64 = 1073741824 //2^30 bytes = 1GB
 
@@ -51,5 +54,23 @@ class Constants {
     static let frontCamera: AVCaptureDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .front)
 
     static let microphone: AVCaptureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
+    
+}
+
+class CellFrameView: UIView {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.layer.cornerRadius = self.bounds.height / 2
+    }
+}
+
+public extension Date {
+    
+    var month: String  { return Formatter.month.string(from: self) }
+    var hour:  String      { return Formatter.hour12.string(from: self) }
+    var minute: String     { return Formatter.minute.string(from: self) }
+    var amPM: String         { return Formatter.amPM.string(from: self) }
+    var year: String {return Formatter.year.string(from: self)}
+    var day: String {return Formatter.date.string(from: self)}
     
 }

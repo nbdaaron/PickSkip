@@ -85,6 +85,7 @@ class LoginViewController: UIViewController {
             }
         }
         if Auth.auth().currentUser != nil {
+            DataService.instance.saveUser()
             dismiss(animated: true, completion: nil)
         }
     }

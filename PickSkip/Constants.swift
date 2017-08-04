@@ -54,6 +54,13 @@ class Constants {
     
 }
 
+class CellFrameView: UIView {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.layer.cornerRadius = self.bounds.height / 2
+    }
+}
+
 public extension Date {
     
     var month: String  { return Formatter.month.string(from: self) }

@@ -11,8 +11,8 @@ import UIKit
 
 class UnopenedMediaCell: UITableViewCell {
     
-    var cellFrame: customView = {
-        let view = customView()
+    var cellFrame: CellFrameView = {
+        let view = CellFrameView()
         view.backgroundColor = .white
         view.layer.borderColor = UIColor(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.4).cgColor
         view.layer.borderWidth = 1
@@ -56,7 +56,7 @@ class UnopenedMediaCell: UITableViewCell {
             cellFrame.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             cellFrame.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             cellFrame.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.8),
-            cellFrame.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.9),
+            cellFrame.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.97),
             nameLabel.leadingAnchor.constraint(equalTo: cellFrame.leadingAnchor, constant: self.bounds.height * 0.8 / 2),
             nameLabel.topAnchor.constraint(equalTo: cellFrame.topAnchor),
             nameLabel.bottomAnchor.constraint(equalTo: cellFrame.bottomAnchor),
@@ -81,9 +81,3 @@ class UnopenedMediaCell: UITableViewCell {
     
 }
 
-class customView: UIView {
-    override func layoutSubviews() {
-        super.layoutSubviews()
-            self.layer.cornerRadius = self.bounds.height / 2
-    }
-}

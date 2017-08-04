@@ -30,12 +30,14 @@ class HistoryTableViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
-        tableView.register(UnopenedMediaCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(UnopenedMediaCell.self, forCellReuseIdentifier: "unopenedCell")
+        tableView.register(OpenedMediaCell.self, forCellReuseIdentifier: "openedCell")
         tableView.separatorColor = .clear
         tableView.reloadData()
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(titlePressed(gesture:)))
         viewTitle.addGestureRecognizer(gesture)
+        
         
         loadContent()
     }
@@ -201,6 +203,8 @@ class HistoryTableViewController: UIViewController {
             print("error signing out")
         }
     }
+
+    
     
     func titlePressed(gesture: UITapGestureRecognizer) {
         tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .top, animated: true)
@@ -225,21 +229,24 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! UnopenedMediaCell
+        
         if indexPath.section == 0 && openedMediaArray.count != 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "openedCell", for: indexPath) as! OpenedMediaCell
             cell.selectionStyle = .gray
             cell.backgroundColor = .white
-            cell.cellFrame.layer.borderWidth = 0
             cell.nameLabel.text = openedMediaArray[indexPath.row].senderNumber
+            cell.dateLabel.text = Util.formateDateLabelDate(date: openedMediaArray[indexPath.row].sentDate)
             return cell
         } else if indexPath.section == 1 && unopenedMediaArray.count != 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "unopenedCell", for: indexPath) as! UnopenedMediaCell
             cell.selectionStyle = .none
             cell.backgroundColor = .white
             cell.cellFrame.layer.borderWidth = 1
             cell.nameLabel.text = unopenedMediaArray[indexPath.row].senderNumber
+
             return cell
         } else {
-            return cell
+            return UITableViewCell()
         }
         
     }
@@ -252,7 +259,22 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
         print("current time: \(date)")
         
         if indexPath.section == 0 {
-//            displayPicture(mediaArray: openedMediaArray, indexPath: indexPath)
+            if openedMediaArray[indexPath.row].loadState == .loaded {
+                
+                let image = UIImage(data: openedMediaArray[indexPath.row].image!)
+                mediaView.displayImage(image!)
+                view.bringSubview(toFront: mediaView)
+                mediaView.isHidden = false
+                
+            } else if openedMediaArray[indexPath.row].loadState == .unloaded {
+                
+                openedMediaArray[indexPath.row].load() {
+                    //CODE TO EXECUTE WHEN DONE LOADING
+                    self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.green
+                }
+                //CODE TO EXECUTE WHILE LOADING
+                self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.blue
+            }
         } else {
             date = Date()
             if date < unopenedMediaArray[indexPath.row].releaseDate {

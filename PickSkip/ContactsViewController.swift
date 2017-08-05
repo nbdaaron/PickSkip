@@ -31,7 +31,7 @@ class ContactsViewController: UIViewController {
         button.titleLabel?.textAlignment = .center
         button.setTitle("Send", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont(name: "Raleway-Light", size: 30)
+        button.titleLabel?.font = UIFont(name: Constants.defaultFont, size: 30)
         button.layer.cornerRadius = 20
         button.isHidden = true
         return button
@@ -63,7 +63,7 @@ class ContactsViewController: UIViewController {
         timeLabel.lineBreakMode = .byWordWrapping
         timeLabel.textAlignment = .right
         timeLabel.numberOfLines = 0
-        timeLabel.text = formatDateComponenets(date: dateComponenets)
+        timeLabel.text = dateToString(dateComponents: dateComponenets)
         timeLabel.sizeToFit()
         
         
@@ -72,21 +72,25 @@ class ContactsViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    func formatDateComponenets(date: DateComponents) -> String {
+    func dateToString(dateComponents: DateComponents) -> String {
         var timeString = ""
-        if let year = date.year, year != 0 {
+        if dateComponents.year == 0 && dateComponents.month == 0 && dateComponents.day == 0 && dateComponents.hour == 0 && dateComponents.minute == 0 {
+            infoLabel.text = "Your message will arrive"
+            return "now"
+        }
+        if let year = dateComponents.year, year != 0 {
             timeString += String(describing: year) + " year" + "\n"
         }
-        if let month = date.month, month != 0 {
+        if let month = dateComponents.month, month != 0 {
             timeString += String(describing: month) + " month " + "\n"
         }
-        if let day = date.day, day != 0 {
+        if let day = dateComponents.day, day != 0 {
             timeString += String(describing: day) + " day " + "\n"
         }
-        if let hour = date.hour, hour != 0 {
+        if let hour = dateComponents.hour, hour != 0 {
             timeString += String(describing: hour) + " hour " + "\n"
         }
-        if let minute = date.minute, minute != 0 {
+        if let minute = dateComponents.minute, minute != 0 {
             timeString += String(describing: minute) + " minute"
         }
         return timeString
@@ -225,7 +229,6 @@ class ContactsViewController: UIViewController {
                     
                 }
             })
-            self.dismiss(animated: true, completion: nil)
         } else if let image = image {
             let ref = DataService.instance.imagesStorageRef.child("\(NSUUID().uuidString).jpg")
             _ = ref.putData(image, metadata: nil, completion: {(metadata, error) in
@@ -236,9 +239,12 @@ class ContactsViewController: UIViewController {
                     DataService.instance.sendMedia(senderNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: Int(self.releaseDate.timeIntervalSince1970))
                 }
             })
-            //self.dismiss(animated: true, completion: nil)
-            self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
         }
+        let presentingVC = self.presentingViewController as! PreviewController
+        self.dismiss(animated: false, completion: {
+            presentingVC.previewContent.removeExistingContent()
+            presentingVC.dismiss(animated: false, completion: nil)
+        })
     }
 
     
@@ -250,7 +256,7 @@ extension ContactsViewController: UITableViewDataSource {
         //implement
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ContactCell
-        cell.textLabel?.font = UIFont(name: "Raleway-Light", size: 20)
+        cell.textLabel?.font = UIFont(name: Constants.defaultFont, size: 20)
         cell.textLabel?.isUserInteractionEnabled = false
         
         if searchActive {

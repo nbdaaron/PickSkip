@@ -52,6 +52,13 @@ class PreviewView: UIImageView {
         NotificationCenter.default.removeObserver(repeatObserver as Any)
     }
     
+    func pauseVideo() {
+        playerLayer?.player?.pause()
+    }
+    
+    func playVideo(){
+        playerLayer?.player?.play()
+    }
 
 
 }

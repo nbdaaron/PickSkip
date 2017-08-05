@@ -52,25 +52,44 @@ class DataService {
                                                 "releaseDate": releaseDate as AnyObject,
                                                 "sentDate": Int(date.timeIntervalSince1970) as AnyObject,
                                                 "senderNumber": senderNumber as AnyObject,
-                                                "recipients": recipients as AnyObject]
+                                                "recipients": recipients as AnyObject,
+                                                "opened": -1 as AnyObject]
         
-        mainRef.child("media").childByAutoId().setValue(pr, withCompletionBlock: {(error, databaseReference) in
-            if let error = error  {
-                print("error sending message + \(error.localizedDescription)")
+        let key = mainRef.childByAutoId().key
+        
+        for recipient in recipients {
+            //Add to recipient's history
+            usersRef.child(recipient).child("media").child(key).setValue(pr) {
+                error, databaseReference in
+                if let error = error  {
+                    print("error sending message from DataService#sendMedia - History: \(error.localizedDescription)")
+                }
             }
-        })
+            
+            //Add to recipient's story with sender.
+            mainRef.child("stories").child(recipient).child(senderNumber).child(key).setValue(pr) {
+                error, databaseReference in
+                if let error = error  {
+                    print("error sending message from DataService#sendMedia - Story 1: \(error.localizedDescription)")
+                }
+            }
+            
+            if (recipient != senderNumber) {
+                //Add to sender's story with recipient (IF recipient != sender to prevent duplicates).
+                mainRef.child("stories").child(senderNumber).child(recipient).child(key).setValue(pr) {
+                    error, databaseReference in
+                    if let error = error  {
+                        print("error sending message from DataService#sendMedia - Story 2: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+        
+
     }
     
     func setOpened(key: String, releaseDate: Int) {
-        usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("media").child("opened").child(key).setValue(releaseDate, withCompletionBlock: {(error, databaseReference) in
-            if let error = error {
-                print("error sending message + \(error.localizedDescription)")
-            } else {
-                self.usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("media").child("unopened").child(key).removeValue()
-            }
-            print("setting opened completed")
-        })
-        print("setting opened")
+        usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("media").child(key).child("opened").setValue(releaseDate)
     }
     
 }

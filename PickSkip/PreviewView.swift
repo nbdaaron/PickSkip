@@ -51,7 +51,5 @@ class PreviewView: UIImageView {
         playerLayer?.removeFromSuperlayer()
         NotificationCenter.default.removeObserver(repeatObserver as Any)
     }
-    
-
 
 }

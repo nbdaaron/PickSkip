@@ -225,7 +225,6 @@ class ContactsViewController: UIViewController {
                     
                 }
             })
-            self.dismiss(animated: true, completion: nil)
         } else if let image = image {
             let ref = DataService.instance.imagesStorageRef.child("\(NSUUID().uuidString).jpg")
             _ = ref.putData(image, metadata: nil, completion: {(metadata, error) in
@@ -236,9 +235,15 @@ class ContactsViewController: UIViewController {
                     DataService.instance.sendMedia(senderNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: Int(self.releaseDate.timeIntervalSince1970))
                 }
             })
-            //self.dismiss(animated: true, completion: nil)
-            self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
         }
+        
+        //self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
+        let presentingVC = self.presentingViewController as! PreviewController
+        
+        self.dismiss(animated: false, completion: {
+            presentingVC.previewContent.removeExistingContent()
+            presentingVC.dismiss(animated: false, completion: nil)
+        })
     }
 
     

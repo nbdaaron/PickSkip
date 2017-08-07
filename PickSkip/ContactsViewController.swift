@@ -37,7 +37,7 @@ class ContactsViewController: UIViewController {
         return button
     }()
     
-    var selectedNames: [CNContact] = []
+    var selectedContacts: [CNContact] = []
     var contacts : [CNContact] = []
     var filtered : [CNContact] = []
     var searchActive = false
@@ -183,7 +183,7 @@ class ContactsViewController: UIViewController {
     }
     
     func updateSendButton(){
-        if selectedNames.count == 0 {
+        if selectedContacts.count == 0 {
             sendButton.isHidden = true
             contactTableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
         } else {
@@ -205,7 +205,7 @@ class ContactsViewController: UIViewController {
     
     func sendContent(gesture: UITapGestureRecognizer) {
         var recipients: [String] = []
-        for selectedContact in selectedNames {
+        for selectedContact in selectedContacts {
             do {
                 let phoneNumber = try phoneNumberKit.parse(selectedContact.phoneNumbers[0].value.stringValue)
                 let parsedNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
@@ -258,26 +258,20 @@ extension ContactsViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ContactCell
         cell.textLabel?.font = UIFont(name: Constants.defaultFont, size: 20)
         cell.textLabel?.isUserInteractionEnabled = false
+        cell.selectionStyle = .none
         
         if searchActive {
             contactTableView.isHidden = false
             infoLabel.isHidden = true
             timeLabel.isHidden = true
-            if selectedNames.contains(filtered[indexPath.row]) {
-                cell.backgroundColor = .green
+            if selectedContacts.contains(filtered[indexPath.row]) {
+                cell.backgroundColor = .gray
             } else {
-                cell.backgroundColor = .clear
+                cell.backgroundColor = .white
             }
             cell.contact = filtered[indexPath.row]
             cell.textLabel?.text = Util.getNameFromContact(filtered[indexPath.row])
         } else {
-//            if selectedNames.contains(contacts[indexPath.row]) {
-//                cell.backgroundColor = .green
-//            } else {
-//                cell.backgroundColor = .clear
-//            }
-//            cell.contact = contacts[indexPath.row]
-//            cell.textLabel?.text = Util.getNameFromContact(contacts[indexPath.row])
             contactTableView.isHidden = true
             infoLabel.isHidden = false
             timeLabel.isHidden = false
@@ -305,20 +299,37 @@ extension ContactsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) as? ContactCell {
-            selectedNames.append(cell.contact)
-            tokenField.reloadData()
-            updateSendButton()
-
+            if selectedContacts.contains(cell.contact) {
+                selectedContacts = selectedContacts.filter({$0 != cell.contact})
+                if selectedContacts.isEmpty {
+                    tableView.isHidden = true
+                }
+                tokenField.reloadData()
+                updateSendButton()
+                cell.backgroundColor = .clear
+            } else {
+                selectedContacts.append(cell.contact)
+                tokenField.reloadData()
+                updateSendButton()
+                cell.backgroundColor = .gray
+            }
         }
+        print(selectedContacts)
     }
+    
+    
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) as? ContactCell {
-            selectedNames = selectedNames.filter({$0 != cell.contact})
+            selectedContacts = selectedContacts.filter({$0 != cell.contact})
+            if selectedContacts.isEmpty {
+                tableView.isHidden = true
+            }
             tokenField.reloadData()
             updateSendButton()
-
+            cell.backgroundColor = .clear
         }
+        print(selectedContacts)
     }
     
 }
@@ -326,16 +337,16 @@ extension ContactsViewController: UITableViewDelegate {
 extension ContactsViewController: TokenFieldDataSource {
     func tokenField(_ tokenField: TokenField, titleForTokenAtIndex index: Int) -> String {
         //implement
-        return Util.getNameFromContact(selectedNames[index]) + ","
+        return Util.getNameFromContact(selectedContacts[index]) + ","
     }
     
     func numberOfTokensInTokenField(_ tokenField: TokenField) -> Int {
         //implement
-        return selectedNames.count
+        return selectedContacts.count
     }
     
     func tokenField(_ tokenField: TokenField, colorSchemedForTokenAtIndex index: Int) -> UIColor {
-        return .blue
+        return .gray
     }
     
     func tokenFieldCollapsedText(_ tokenField: TokenField) -> String {
@@ -364,8 +375,8 @@ extension ContactsViewController: TokenFieldDelegate {
     
     func tokenField(_ tokenField: TokenField, didDeleteTokenAtIndex index: Int) {
         //implement
-        selectedNames.remove(at: index)
-        if selectedNames.count == 0 {
+        selectedContacts.remove(at: index)
+        if selectedContacts.count == 0 {
             self.contactTableView.isHidden = true
             infoLabel.isHidden = false
             timeLabel.isHidden = false

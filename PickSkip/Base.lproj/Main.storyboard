@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="SgT-EH-hbB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="SgT-EH-hbB">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -377,19 +377,14 @@
                                             <action selector="closePreview:" destination="BYZ-38-t0r" eventType="touchUpInside" id="B3R-qq-Gmq"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UVw-0k-MxP">
-                                        <rect key="frame" x="302" y="608" width="46" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal">
-                                            <attributedString key="attributedTitle">
-                                                <fragment content="Button">
-                                                    <attributes>
-                                                        <font key="NSFont" size="15" name="BebasNeueRegular"/>
-                                                    </attributes>
-                                                </fragment>
-                                            </attributedString>
-                                        </state>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UVw-0k-MxP" userLabel="showCounters">
+                                        <rect key="frame" x="329" y="631" width="65" height="65"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="65" id="EPd-7J-g07"/>
+                                            <constraint firstAttribute="height" constant="65" id="U6h-dF-0tD"/>
+                                        </constraints>
+                                        <size key="titleShadowOffset" width="5" height="5"/>
+                                        <state key="normal" image="ForwardButton"/>
                                         <connections>
                                             <action selector="showButtons:" destination="Q9z-fR-iZB" eventType="touchUpInside" id="wV8-pQ-gZc"/>
                                             <action selector="showDateButtons:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SVl-Bm-SHL"/>
@@ -397,6 +392,10 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="UVw-0k-MxP" secondAttribute="trailing" constant="20" id="bT4-OT-JLP"/>
+                                    <constraint firstAttribute="bottom" secondItem="UVw-0k-MxP" secondAttribute="bottom" constant="40" id="f2t-LY-mHF"/>
+                                </constraints>
                             </view>
                             <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZVv-yq-QRI">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
@@ -433,10 +432,13 @@
                                             <action selector="count:" destination="Q9z-fR-iZB" eventType="touchUpInside" id="VTY-Ru-oHf"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GmM-ul-tvd">
-                                        <rect key="frame" x="31" y="49" width="46" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Button"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GmM-ul-tvd">
+                                        <rect key="frame" x="15" y="52.666666666666671" width="40" height="40.000000000000014"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="D8c-2F-OVx"/>
+                                            <constraint firstAttribute="height" constant="40" id="zfk-ch-i0J"/>
+                                        </constraints>
+                                        <state key="normal" image="backButton"/>
                                         <connections>
                                             <action selector="returnToPreview:" destination="Q9z-fR-iZB" eventType="touchUpInside" id="fFq-iA-Zxx"/>
                                         </connections>
@@ -449,10 +451,13 @@
                                             <action selector="count:" destination="Q9z-fR-iZB" eventType="touchUpInside" id="7vj-sm-75s"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XZg-df-JVN">
-                                        <rect key="frame" x="320" y="49" width="46" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Button"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XZg-df-JVN">
+                                        <rect key="frame" x="334" y="40" width="65" height="65"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="65" id="Sis-mI-4O4"/>
+                                            <constraint firstAttribute="width" constant="65" id="kFG-Ty-WDK"/>
+                                        </constraints>
+                                        <state key="normal" image="ForwardButton"/>
                                         <connections>
                                             <segue destination="KFh-Ug-EV8" kind="show" identifier="showContactsView" animates="NO" id="had-Tu-h9f"/>
                                         </connections>
@@ -469,6 +474,7 @@
                                     <constraint firstItem="CGr-oU-oiW" firstAttribute="top" secondItem="czD-h2-AzC" secondAttribute="bottom" id="DcH-OS-C4I"/>
                                     <constraint firstItem="CGr-oU-oiW" firstAttribute="height" secondItem="ZVv-yq-QRI" secondAttribute="height" multiplier="0.211" id="Gyv-uL-5MZ"/>
                                     <constraint firstItem="czD-h2-AzC" firstAttribute="top" secondItem="xZX-l7-35h" secondAttribute="bottom" id="IHY-8N-NGY"/>
+                                    <constraint firstAttribute="trailing" secondItem="XZg-df-JVN" secondAttribute="trailing" constant="15" id="MI9-49-ceQ"/>
                                     <constraint firstAttribute="trailing" secondItem="CGr-oU-oiW" secondAttribute="trailing" id="PQs-f5-Iih"/>
                                     <constraint firstAttribute="trailing" secondItem="dge-RW-fsJ" secondAttribute="trailing" id="V77-Md-0ww"/>
                                     <constraint firstItem="dge-RW-fsJ" firstAttribute="leading" secondItem="xZX-l7-35h" secondAttribute="trailing" id="VYl-eY-DlN"/>
@@ -479,7 +485,10 @@
                                     <constraint firstAttribute="trailing" secondItem="EjK-jS-gqX" secondAttribute="trailing" id="nch-37-EjC"/>
                                     <constraint firstItem="EjK-jS-gqX" firstAttribute="leading" secondItem="czD-h2-AzC" secondAttribute="trailing" id="nn7-gD-AHQ"/>
                                     <constraint firstItem="CGr-oU-oiW" firstAttribute="top" secondItem="EjK-jS-gqX" secondAttribute="bottom" id="pcc-om-ce7"/>
+                                    <constraint firstItem="GmM-ul-tvd" firstAttribute="leading" secondItem="ZVv-yq-QRI" secondAttribute="leading" constant="15" id="quh-D5-PrQ"/>
+                                    <constraint firstItem="XZg-df-JVN" firstAttribute="top" secondItem="ZVv-yq-QRI" secondAttribute="top" constant="40" id="sy4-i1-v59"/>
                                     <constraint firstItem="czD-h2-AzC" firstAttribute="width" secondItem="xZX-l7-35h" secondAttribute="width" id="tJM-bn-98b"/>
+                                    <constraint firstItem="XZg-df-JVN" firstAttribute="centerY" secondItem="GmM-ul-tvd" secondAttribute="centerY" id="x4a-qk-e7v"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -500,13 +509,16 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="backButton" destination="GmM-ul-tvd" id="on7-6M-hwt"/>
                         <outlet property="buttonsView" destination="ZVv-yq-QRI" id="ayH-pV-sWi"/>
                         <outlet property="dayCounter" destination="EjK-jS-gqX" id="cyt-Hh-nw9"/>
+                        <outlet property="forwardButton" destination="XZg-df-JVN" id="r9T-Xv-lyx"/>
                         <outlet property="hourCounter" destination="xZX-l7-35h" id="9ak-Bs-34r"/>
                         <outlet property="minCounter" destination="dge-RW-fsJ" id="9ym-wD-XZk"/>
                         <outlet property="monthCounter" destination="czD-h2-AzC" id="4nO-p3-Fbw"/>
                         <outlet property="optionsView" destination="p6j-2z-XAR" id="TFe-FO-DZA"/>
                         <outlet property="previewContent" destination="vIK-uP-tok" id="7Uc-gL-vXf"/>
+                        <outlet property="showCountersButton" destination="UVw-0k-MxP" id="Cta-di-xNz"/>
                         <outlet property="yearCounter" destination="CGr-oU-oiW" id="6zw-nd-7ca"/>
                     </connections>
                 </viewController>
@@ -578,7 +590,8 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="NhF-YU-jVj">
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="TUv-XF-OEs">
+                        <barButtonItem key="leftBarButtonItem" image="backButton" style="plain" id="TUv-XF-OEs">
+                            <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.35780699823943662" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="cancel:" destination="caL-77-dvh" id="QEc-Sr-Wje"/>
                             </connections>
@@ -604,6 +617,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="C8C-Cf-glK">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.25277838908450706" colorSpace="calibratedRGB"/>
                         <color key="barTintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -617,7 +631,9 @@
         </scene>
     </scenes>
     <resources>
+        <image name="ForwardButton" width="100" height="100"/>
         <image name="PickSkipBW" width="151" height="51"/>
+        <image name="backButton" width="22" height="33"/>
         <image name="logoPanel" width="375" height="368"/>
         <image name="logopanelflipped" width="375" height="368"/>
         <image name="pickskiplogo" width="269" height="67"/>

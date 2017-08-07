@@ -31,13 +31,13 @@ class ContactsViewController: UIViewController {
         button.titleLabel?.textAlignment = .center
         button.setTitle("Send", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.titleLabel?.font = UIFont(name: "Raleway-Light", size: 30)
+        button.titleLabel?.font = UIFont(name: Constants.defaultFont, size: 30)
         button.layer.cornerRadius = 20
         button.isHidden = true
         return button
     }()
     
-    var selectedNames: [CNContact] = []
+    var selectedContacts: [CNContact] = []
     var contacts : [CNContact] = []
     var filtered : [CNContact] = []
     var searchActive = false
@@ -63,7 +63,7 @@ class ContactsViewController: UIViewController {
         timeLabel.lineBreakMode = .byWordWrapping
         timeLabel.textAlignment = .right
         timeLabel.numberOfLines = 0
-        timeLabel.text = formatDateComponenets(date: dateComponenets)
+        timeLabel.text = dateToString(dateComponents: dateComponenets)
         timeLabel.sizeToFit()
         
         
@@ -72,21 +72,25 @@ class ContactsViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    func formatDateComponenets(date: DateComponents) -> String {
+    func dateToString(dateComponents: DateComponents) -> String {
         var timeString = ""
-        if let year = date.year, year != 0 {
+        if dateComponents.year == 0 && dateComponents.month == 0 && dateComponents.day == 0 && dateComponents.hour == 0 && dateComponents.minute == 0 {
+            infoLabel.text = "Your message will arrive"
+            return "now"
+        }
+        if let year = dateComponents.year, year != 0 {
             timeString += String(describing: year) + " year" + "\n"
         }
-        if let month = date.month, month != 0 {
+        if let month = dateComponents.month, month != 0 {
             timeString += String(describing: month) + " month " + "\n"
         }
-        if let day = date.day, day != 0 {
+        if let day = dateComponents.day, day != 0 {
             timeString += String(describing: day) + " day " + "\n"
         }
-        if let hour = date.hour, hour != 0 {
+        if let hour = dateComponents.hour, hour != 0 {
             timeString += String(describing: hour) + " hour " + "\n"
         }
-        if let minute = date.minute, minute != 0 {
+        if let minute = dateComponents.minute, minute != 0 {
             timeString += String(describing: minute) + " minute"
         }
         return timeString
@@ -179,7 +183,7 @@ class ContactsViewController: UIViewController {
     }
     
     func updateSendButton(){
-        if selectedNames.count == 0 {
+        if selectedContacts.count == 0 {
             sendButton.isHidden = true
             contactTableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
         } else {
@@ -201,7 +205,7 @@ class ContactsViewController: UIViewController {
     
     func sendContent(gesture: UITapGestureRecognizer) {
         var recipients: [String] = []
-        for selectedContact in selectedNames {
+        for selectedContact in selectedContacts {
             do {
                 let phoneNumber = try phoneNumberKit.parse(selectedContact.phoneNumbers[0].value.stringValue)
                 let parsedNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
@@ -236,10 +240,7 @@ class ContactsViewController: UIViewController {
                 }
             })
         }
-        
-        //self.view.window?.rootViewController?.dismiss(animated: false, completion: nil)
         let presentingVC = self.presentingViewController as! PreviewController
-        
         self.dismiss(animated: false, completion: {
             presentingVC.previewContent.removeExistingContent()
             presentingVC.dismiss(animated: false, completion: nil)
@@ -255,28 +256,22 @@ extension ContactsViewController: UITableViewDataSource {
         //implement
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ContactCell
-        cell.textLabel?.font = UIFont(name: "Raleway-Light", size: 20)
+        cell.textLabel?.font = UIFont(name: Constants.defaultFont, size: 20)
         cell.textLabel?.isUserInteractionEnabled = false
+        cell.selectionStyle = .none
         
         if searchActive {
             contactTableView.isHidden = false
             infoLabel.isHidden = true
             timeLabel.isHidden = true
-            if selectedNames.contains(filtered[indexPath.row]) {
-                cell.backgroundColor = .green
+            if selectedContacts.contains(filtered[indexPath.row]) {
+                cell.backgroundColor = .gray
             } else {
-                cell.backgroundColor = .clear
+                cell.backgroundColor = .white
             }
             cell.contact = filtered[indexPath.row]
             cell.textLabel?.text = Util.getNameFromContact(filtered[indexPath.row])
         } else {
-//            if selectedNames.contains(contacts[indexPath.row]) {
-//                cell.backgroundColor = .green
-//            } else {
-//                cell.backgroundColor = .clear
-//            }
-//            cell.contact = contacts[indexPath.row]
-//            cell.textLabel?.text = Util.getNameFromContact(contacts[indexPath.row])
             contactTableView.isHidden = true
             infoLabel.isHidden = false
             timeLabel.isHidden = false
@@ -304,20 +299,37 @@ extension ContactsViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) as? ContactCell {
-            selectedNames.append(cell.contact)
-            tokenField.reloadData()
-            updateSendButton()
-
+            if selectedContacts.contains(cell.contact) {
+                selectedContacts = selectedContacts.filter({$0 != cell.contact})
+                if selectedContacts.isEmpty {
+                    tableView.isHidden = true
+                }
+                tokenField.reloadData()
+                updateSendButton()
+                cell.backgroundColor = .clear
+            } else {
+                selectedContacts.append(cell.contact)
+                tokenField.reloadData()
+                updateSendButton()
+                cell.backgroundColor = .gray
+            }
         }
+        print(selectedContacts)
     }
+    
+    
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) as? ContactCell {
-            selectedNames = selectedNames.filter({$0 != cell.contact})
+            selectedContacts = selectedContacts.filter({$0 != cell.contact})
+            if selectedContacts.isEmpty {
+                tableView.isHidden = true
+            }
             tokenField.reloadData()
             updateSendButton()
-
+            cell.backgroundColor = .clear
         }
+        print(selectedContacts)
     }
     
 }
@@ -325,16 +337,16 @@ extension ContactsViewController: UITableViewDelegate {
 extension ContactsViewController: TokenFieldDataSource {
     func tokenField(_ tokenField: TokenField, titleForTokenAtIndex index: Int) -> String {
         //implement
-        return Util.getNameFromContact(selectedNames[index]) + ","
+        return Util.getNameFromContact(selectedContacts[index]) + ","
     }
     
     func numberOfTokensInTokenField(_ tokenField: TokenField) -> Int {
         //implement
-        return selectedNames.count
+        return selectedContacts.count
     }
     
     func tokenField(_ tokenField: TokenField, colorSchemedForTokenAtIndex index: Int) -> UIColor {
-        return .blue
+        return .gray
     }
     
     func tokenFieldCollapsedText(_ tokenField: TokenField) -> String {
@@ -363,8 +375,8 @@ extension ContactsViewController: TokenFieldDelegate {
     
     func tokenField(_ tokenField: TokenField, didDeleteTokenAtIndex index: Int) {
         //implement
-        selectedNames.remove(at: index)
-        if selectedNames.count == 0 {
+        selectedContacts.remove(at: index)
+        if selectedContacts.count == 0 {
             self.contactTableView.isHidden = true
             infoLabel.isHidden = false
             timeLabel.isHidden = false

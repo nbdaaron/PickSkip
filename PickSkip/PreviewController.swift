@@ -22,6 +22,9 @@ class PreviewController: UIViewController {
     @IBOutlet weak var dayCounter: CounterButton!
     @IBOutlet weak var monthCounter: CounterButton!
     @IBOutlet weak var yearCounter: CounterButton!
+    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var forwardButton: UIButton!
+    @IBOutlet weak var showCountersButton: UIButton!
     
     var dateComponents = DateComponents()
     var sendtoDate = Date()
@@ -29,6 +32,20 @@ class PreviewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateLabels(with: sendtoDate)
+        
+        backButton.imageView?.contentMode = .scaleAspectFit
+        forwardButton.imageView?.contentMode = .scaleAspectFit
+        forwardButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
+        forwardButton.layer.shadowOffset = CGSize(width: 0.0, height: 4.0)
+        forwardButton.layer.shadowOpacity = 0.7
+        forwardButton.layer.shadowRadius = 0.0
+        forwardButton.layer.masksToBounds = false
+        // Shadow and Radius
+        showCountersButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
+        showCountersButton.layer.shadowOffset = CGSize(width: 0.0, height: 4.0)
+        showCountersButton.layer.shadowOpacity = 0.7
+        showCountersButton.layer.shadowRadius = 0.0
+        showCountersButton.layer.masksToBounds = false
         
         dateComponents.year = 0
         dateComponents.month = 0
@@ -87,8 +104,22 @@ class PreviewController: UIViewController {
     
     
     @IBAction func showButtons(_ sender: Any) {
-        buttonsView.isHidden = false
-        optionsView.isHidden = true
+//        buttonsView.isHidden = false
+//        optionsView.isHidden = true
+        UIView.animate(withDuration: 0.1,
+                       animations: {
+                        self.showCountersButton.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+                        self.forwardButton.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        },
+                       completion: { _ in
+                                self.previewContent.pauseVideo()
+                                self.buttonsView.isHidden = false
+                                self.optionsView.isHidden = true
+                        UIView.animate(withDuration: 0.2, animations: {
+                            self.forwardButton.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                        })
+        })
+        
     }
 
     
@@ -100,6 +131,12 @@ class PreviewController: UIViewController {
     @IBAction func returnToPreview(_ sender: Any) {
         buttonsView.isHidden = true
         optionsView.isHidden = false
+        UIView.animate(withDuration: 0.1,
+                       animations: {
+                        self.showCountersButton.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        })
+        self.previewContent.playVideo()
+        
     }
     
     func setupResetGesuture(button: UIButton) {

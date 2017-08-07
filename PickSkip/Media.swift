@@ -8,13 +8,13 @@
 
 import Foundation
 import Firebase
-
+import AVFoundation
 
 class Media {
     var senderNumber: String!
     var mediaType: String!
     var image: Data?
-    var video: URL?
+    var video: AVPlayer?
     var releaseDate: Date!
     var sentDate: Date!
     var url: StorageReference!
@@ -44,8 +44,11 @@ class Media {
                 
             } else if self.mediaType == "video" {
                 
-                //implement video handling
-                //self.video = data
+                let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                let filePath = documentsURL.appendingPathComponent(Constants.videoFileName)
+                try! data?.write(to: filePath, options: Data.WritingOptions.atomic)
+                self.video = AVPlayer(url: filePath)
+                
                 self.loadState = .loaded
                 completion()
                 

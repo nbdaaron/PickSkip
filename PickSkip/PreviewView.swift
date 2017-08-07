@@ -60,5 +60,4 @@ class PreviewView: UIImageView {
         playerLayer?.player?.play()
     }
 
-
 }

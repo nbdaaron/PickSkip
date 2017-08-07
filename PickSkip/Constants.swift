@@ -17,6 +17,9 @@ class Constants {
     
     static let defaultFont: String = "Raleway-Light"
     
+    ///Maximum allowed media to be loaded at once.
+    static let loadCount: UInt = UInt.max
+    
     ///Maximum allowed download size for any content in bytes.
     static let maxDownloadSize: Int64 = 1073741824 //2^30 bytes = 1GB
 

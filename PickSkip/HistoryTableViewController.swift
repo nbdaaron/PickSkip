@@ -23,7 +23,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     var uid: String?
     
     var loadingMore: Bool = false
-    
+    var initialFetch: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +44,12 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         setupLoadMore()
         
         loadContent()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if initialFetch == false {
+            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .middle, animated: true)
+        }
     }
     
     func loadContent() {
@@ -165,6 +171,8 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             }
             self.unopenedMediaArray.append(mediaInstance)
             self.tableView.reloadData()
+            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .middle, animated: true)
+            self.initialFetch = false
             self.loadingMore = false
         })
 
@@ -196,7 +204,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     
     func titlePressed(gesture: UITapGestureRecognizer) {
         if tableView.numberOfRows(inSection: 1) > 1 {
-            tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .top, animated: true)
+            tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .middle, animated: true)
         }
     }
     

@@ -42,11 +42,11 @@ class Util {
         let today = Date()
         let dateFormatter = DateFormatter()
         if date.day == today.day {
-            dateFormatter.dateFormat = "h:m a"
+            dateFormatter.dateFormat = "h:mm a"
             let dateString = dateFormatter.string(from: date)
             return "Today \n \(dateString)"
         } else {
-            dateFormatter.dateFormat = "MMMM d, Y \n h:m a"
+            dateFormatter.dateFormat = "MMMM d, Y \n h:mm a"
             return dateFormatter.string(from: date)
         }
     }

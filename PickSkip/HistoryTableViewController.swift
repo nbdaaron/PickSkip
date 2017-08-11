@@ -81,7 +81,8 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             
             //New media that should be in the list already are sorted in
             for i in 0..<self.unopenedMediaArray.count {
-                if mediaInstance.releaseDate > self.unopenedMediaArray[i].releaseDate {
+                if mediaInstance.releaseDate < self.unopenedMediaArray[i].releaseDate {
+                    print("Inserting at position \(i)")
                     self.unopenedMediaArray.insert(mediaInstance, at: i)
                     break
                 }
@@ -104,7 +105,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         print("Starting point: \(startingPoint)")
         //Load X opened.
         dataService.usersRef.child(number).child("opened").queryOrderedByPriority().queryStarting(atValue: startingPoint).queryLimited(toFirst: Constants.loadCount).observe(DataEventType.childAdded, with: { (snapshot) in
-            print(snapshot.priority)
             for media in self.openedMediaArray {
                 if media.key == snapshot.key {
                     self.tableView.refreshControl?.endRefreshing()
@@ -154,6 +154,15 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                                       openDate: -1)
             
             print("Appending value with releaseDate: \(snapshot.childSnapshot(forPath:"releaseDate").value as! Int)")
+            for i in 0..<self.unopenedMediaArray.count {
+                if mediaInstance.releaseDate < self.unopenedMediaArray[i].releaseDate {
+                    print("Inserting at position \(i)")
+                    self.unopenedMediaArray.insert(mediaInstance, at: i)
+                    self.tableView.reloadData()
+                    self.loadingMore = false
+                    return
+                }
+            }
             self.unopenedMediaArray.append(mediaInstance)
             self.tableView.reloadData()
             self.loadingMore = false

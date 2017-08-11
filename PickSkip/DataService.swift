@@ -59,7 +59,7 @@ class DataService {
         
         for recipient in recipients {
             //Add to recipient's history
-            usersRef.child(recipient).child("media").child(key).setValue(pr) {
+            usersRef.child(recipient).child("unopened").child(key).setValue(pr) {
                 error, databaseReference in
                 if let error = error  {
                     print("error sending message from DataService#sendMedia - History: \(error.localizedDescription)")
@@ -88,8 +88,18 @@ class DataService {
 
     }
     
-    func setOpened(key: String, releaseDate: Int) {
-        usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("media").child(key).child("opened").setValue(releaseDate)
+    func setOpened(key: String, openDate: Int) {
+        //Set opened to true
+        usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("unopened").child(key).child("opened").setValue(openDate)
+        
+        //Move to opened
+        usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("unopened").child(key).observeSingleEvent(of: .value, with: { (snapshot) in
+            self.usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("opened").child(key).setValue(snapshot.value)
+            self.usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("opened").child(key).setPriority(-openDate)
+            self.usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("unopened").child(key).removeValue()
+        })
+        
+        
     }
     
 }

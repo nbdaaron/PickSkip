@@ -20,15 +20,16 @@ class Media {
     var url: StorageReference!
     var loadState: LoadState = .unloaded
     var key: String!
+    var openDate: Int!
     
-    init(senderNumber: String, key: String, type: String, releaseDateInt: Int!, sentDateInt: Int!, url: StorageReference!) {
+    init(senderNumber: String, key: String, type: String, releaseDateInt: Int!, sentDateInt: Int!, url: StorageReference!, openDate: Int) {
         self.senderNumber = senderNumber
         self.mediaType = type
         self.url = url
         self.key = key
         releaseDate = Date(timeIntervalSince1970: TimeInterval(releaseDateInt))
         sentDate = Date(timeIntervalSince1970: TimeInterval(sentDateInt))
-        
+        self.openDate = openDate
     }
     
     func load(completion: @escaping () -> Void) {

@@ -45,37 +45,107 @@ class HistoryTableViewController: UIViewController {
     
     func loadContent() {
         
+        loadMoreOpened()
+        loadMoreUnopened()
+        
         let number = Auth.auth().currentUser!.providerData.first!.phoneNumber!
         
-        dataService.usersRef.child(number).child("media").queryOrderedByKey().observe(DataEventType.childAdded, with: { (snapshot) in
-                
-                for media in self.unopenedMediaArray {
-                    if media.key == snapshot.key {
-                        return
-                    }
-                }
-                
-                print(snapshot)
-                
-                let httpsReference = Storage.storage().reference(forURL: snapshot.childSnapshot(forPath: "mediaURL").value as! String)
-                
-                let mediaInstance = Media(senderNumber: snapshot.childSnapshot(forPath: "senderNumber").value as! String,
-                                          key: snapshot.key,
-                                          type: snapshot.childSnapshot(forPath: "mediaType").value as! String,
-                                          releaseDateInt: snapshot.childSnapshot(forPath: "releaseDate").value as! Int,
-                                          sentDateInt: snapshot.childSnapshot(forPath: "sentDate").value as! Int,
-                                          url: httpsReference)
+        //Listen for new unopened media. Insert if not already in list and falls within range.
+        dataService.usersRef.child(number).child("unopened").queryOrdered(byChild: "releaseDate").queryLimited(toLast: 1).observe(DataEventType.childAdded, with: { (snapshot) in
+            let releaseDate = snapshot.childSnapshot(forPath: "releaseDate").value as! Int
             
-            if snapshot.childSnapshot(forPath: "opened").value as! Int == -1 {
-                self.unopenedMediaArray.append(mediaInstance)
-            } else {
-                self.openedMediaArray.append(mediaInstance)
+            if UInt(self.unopenedMediaArray.count) > Constants.loadCount {
+                //Don't add new media if too far back
+                if releaseDate > Int(self.unopenedMediaArray.last!.releaseDate.timeIntervalSince1970) {
+                    return
+                }
             }
-                self.tableView.reloadData()
-
+            
+            for media in self.unopenedMediaArray {
+                //Don't add new media if already in list
+                if media.key == snapshot.key {
+                    return
+                }
+            }
+            
+            let httpsReference = Storage.storage().reference(forURL: snapshot.childSnapshot(forPath: "mediaURL").value as! String)
+            
+            let mediaInstance = Media(senderNumber: snapshot.childSnapshot(forPath: "senderNumber").value as! String,
+                                      key: snapshot.key,
+                                      type: snapshot.childSnapshot(forPath: "mediaType").value as! String,
+                                      releaseDateInt: snapshot.childSnapshot(forPath: "releaseDate").value as! Int,
+                                      sentDateInt: snapshot.childSnapshot(forPath: "sentDate").value as! Int,
+                                      url: httpsReference,
+                                      openDate: -1)
+            
+            self.unopenedMediaArray.append(mediaInstance)
+            self.tableView.reloadData()
         })
+
     }
 
+    func loadMoreOpened() {
+        
+        let number = Auth.auth().currentUser!.providerData.first!.phoneNumber!
+        let startingPoint = openedMediaArray.first?.openDate ?? 0
+        print("Loading first opened")
+        //Load X opened.
+        dataService.usersRef.child(number).child("opened").queryOrderedByPriority().queryEnding(atValue: startingPoint).queryLimited(toFirst: Constants.loadCount).observe(DataEventType.childAdded, with: { (snapshot) in
+            print(snapshot)
+            for media in self.openedMediaArray {
+                if media.key == snapshot.key {
+                    return
+                }
+            }
+            
+            let httpsReference = Storage.storage().reference(forURL: snapshot.childSnapshot(forPath: "mediaURL").value as! String)
+            
+            let mediaInstance = Media(senderNumber: snapshot.childSnapshot(forPath: "senderNumber").value as! String,
+                                      key: snapshot.key,
+                                      type: snapshot.childSnapshot(forPath: "mediaType").value as! String,
+                                      releaseDateInt: snapshot.childSnapshot(forPath: "releaseDate").value as! Int,
+                                      sentDateInt: snapshot.childSnapshot(forPath: "sentDate").value as! Int,
+                                      url: httpsReference,
+                                      openDate: snapshot.childSnapshot(forPath: "opened").value as! Int)
+            
+            self.openedMediaArray.insert(mediaInstance, at: 0)
+            self.tableView.reloadData()
+            
+            
+        })
+    }
+    
+    func loadMoreUnopened() {
+        
+        let number = Auth.auth().currentUser!.providerData.first!.phoneNumber!
+        let startingPoint = Int(unopenedMediaArray.last?.releaseDate.timeIntervalSince1970 ?? 0)
+
+        
+        //Load first X unopened
+        dataService.usersRef.child(number).child("unopened").queryOrdered(byChild: "releaseDate").queryStarting(atValue: startingPoint).queryLimited(toFirst: Constants.loadCount).observe(DataEventType.childAdded, with: { (snapshot) in
+            for media in self.unopenedMediaArray {
+                if media.key == snapshot.key {
+                    return
+                }
+            }
+            
+            let httpsReference = Storage.storage().reference(forURL: snapshot.childSnapshot(forPath: "mediaURL").value as! String)
+            
+            let mediaInstance = Media(senderNumber: snapshot.childSnapshot(forPath: "senderNumber").value as! String,
+                                      key: snapshot.key,
+                                      type: snapshot.childSnapshot(forPath: "mediaType").value as! String,
+                                      releaseDateInt: snapshot.childSnapshot(forPath: "releaseDate").value as! Int,
+                                      sentDateInt: snapshot.childSnapshot(forPath: "sentDate").value as! Int,
+                                      url: httpsReference,
+                                      openDate: -1)
+            
+            self.unopenedMediaArray.append(mediaInstance)
+            self.tableView.reloadData()
+            
+            
+        })
+
+    }
 
     
     func prepareMediaView() {
@@ -190,9 +260,12 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
                     view.bringSubview(toFront: mediaView)
                     mediaView.isHidden = false
                     
-                    DataService.instance.setOpened(key: unopenedMediaArray[indexPath.row].key, releaseDate: Int(unopenedMediaArray[indexPath.row].releaseDate.timeIntervalSince1970))
+                    let openDate = Int(Date().timeIntervalSince1970)
+                    
+                    DataService.instance.setOpened(key: unopenedMediaArray[indexPath.row].key, openDate: openDate)
+                    self.unopenedMediaArray[indexPath.row].openDate = openDate
                     self.openedMediaArray.append(self.unopenedMediaArray.remove(at: indexPath.row))
-
+                    self.tableView.reloadData()
                 } else if unopenedMediaArray[indexPath.row].loadState == .unloaded {
                     unopenedMediaArray[indexPath.row].load() {
                         //CODE TO EXECUTE WHEN DONE LOADING

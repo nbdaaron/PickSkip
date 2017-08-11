@@ -54,7 +54,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         let number = Auth.auth().currentUser!.providerData.first!.phoneNumber!
         
         //Listen for new unopened media. Insert if not already in list and falls within range.
-        dataService.usersRef.child(number).child("unopened").queryOrdered(byChild: "releaseDate").queryLimited(toLast: 1).observe(DataEventType.childAdded, with: { (snapshot) in
+        dataService.usersRef.child(number).child("unopened").queryOrderedByKey().queryLimited(toLast: 1).observe(DataEventType.childAdded, with: { (snapshot) in
             let releaseDate = snapshot.childSnapshot(forPath: "releaseDate").value as! Int
             
             if self.unopenedMediaArray.count == 0 || releaseDate > Int(self.unopenedMediaArray.last!.releaseDate.timeIntervalSince1970) {
@@ -78,7 +78,14 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                                       url: httpsReference,
                                       openDate: -1)
             
-            self.unopenedMediaArray.append(mediaInstance)
+            
+            //New media that should be in the list already are sorted in
+            for i in 0..<self.unopenedMediaArray.count {
+                if mediaInstance.releaseDate > self.unopenedMediaArray[i].releaseDate {
+                    self.unopenedMediaArray.insert(mediaInstance, at: i)
+                    break
+                }
+            }
             self.tableView.reloadData()
         })
 

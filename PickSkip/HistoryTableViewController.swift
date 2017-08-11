@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class HistoryTableViewController: UIViewController {
+class HistoryTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var mediaView: PreviewView!
@@ -21,6 +21,8 @@ class HistoryTableViewController: UIViewController {
     var date: Date!
     var listenerHandle: UInt?
     var uid: String?
+    
+    var loadingMore: Bool = false
     
     
     override func viewDidLoad() {
@@ -39,6 +41,7 @@ class HistoryTableViewController: UIViewController {
         let gesture = UITapGestureRecognizer(target: self, action: #selector(titlePressed(gesture:)))
         viewTitle.addGestureRecognizer(gesture)
         
+        setupLoadMore()
         
         loadContent()
     }
@@ -54,11 +57,8 @@ class HistoryTableViewController: UIViewController {
         dataService.usersRef.child(number).child("unopened").queryOrdered(byChild: "releaseDate").queryLimited(toLast: 1).observe(DataEventType.childAdded, with: { (snapshot) in
             let releaseDate = snapshot.childSnapshot(forPath: "releaseDate").value as! Int
             
-            if UInt(self.unopenedMediaArray.count) > Constants.loadCount {
-                //Don't add new media if too far back
-                if releaseDate > Int(self.unopenedMediaArray.last!.releaseDate.timeIntervalSince1970) {
-                    return
-                }
+            if self.unopenedMediaArray.count == 0 || releaseDate > Int(self.unopenedMediaArray.last!.releaseDate.timeIntervalSince1970) {
+                return
             }
             
             for media in self.unopenedMediaArray {
@@ -84,16 +84,23 @@ class HistoryTableViewController: UIViewController {
 
     }
 
-    func loadMoreOpened() {
+    func setupLoadMore() {
+        self.tableView.refreshControl = UIRefreshControl()
+        self.tableView.refreshControl!.attributedTitle = NSAttributedString(string: "Load more opened")
+        self.tableView.refreshControl!.addTarget(self, action: #selector(loadMoreOpened), for: UIControlEvents.valueChanged)
+    }
+    
+    public func loadMoreOpened() {
         
         let number = Auth.auth().currentUser!.providerData.first!.phoneNumber!
-        let startingPoint = openedMediaArray.first?.openDate ?? 0
-        print("Loading first opened")
+        let startingPoint = -(openedMediaArray.first?.openDate ?? Int.max)
+        print("Starting point: \(startingPoint)")
         //Load X opened.
-        dataService.usersRef.child(number).child("opened").queryOrderedByPriority().queryEnding(atValue: startingPoint).queryLimited(toFirst: Constants.loadCount).observe(DataEventType.childAdded, with: { (snapshot) in
-            print(snapshot)
+        dataService.usersRef.child(number).child("opened").queryOrderedByPriority().queryStarting(atValue: startingPoint).queryLimited(toFirst: Constants.loadCount).observe(DataEventType.childAdded, with: { (snapshot) in
+            print(snapshot.priority)
             for media in self.openedMediaArray {
                 if media.key == snapshot.key {
+                    self.tableView.refreshControl?.endRefreshing()
                     return
                 }
             }
@@ -110,7 +117,7 @@ class HistoryTableViewController: UIViewController {
             
             self.openedMediaArray.insert(mediaInstance, at: 0)
             self.tableView.reloadData()
-            
+            self.tableView.refreshControl?.endRefreshing()
             
         })
     }
@@ -139,10 +146,10 @@ class HistoryTableViewController: UIViewController {
                                       url: httpsReference,
                                       openDate: -1)
             
+            print("Appending value with releaseDate: \(snapshot.childSnapshot(forPath:"releaseDate").value as! Int)")
             self.unopenedMediaArray.append(mediaInstance)
             self.tableView.reloadData()
-            
-            
+            self.loadingMore = false
         })
 
     }
@@ -176,11 +183,6 @@ class HistoryTableViewController: UIViewController {
             tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .top, animated: true)
         }
     }
-    
-
-}
-
-extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -285,6 +287,13 @@ extension HistoryTableViewController: UITableViewDelegate, UITableViewDataSource
             return 70.0
         } else {
             return self.view.frame.height / 8
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if (indexPath.section == 1 && indexPath.row + 1 == tableView.numberOfRows(inSection: indexPath.section) && !self.loadingMore) {
+            self.loadingMore = true
+            self.loadMoreUnopened()
         }
     }
     /*

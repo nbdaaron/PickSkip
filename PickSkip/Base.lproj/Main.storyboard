@@ -247,6 +247,10 @@
                                     </tableViewCell>
                                 </prototypes>
                                 <sections/>
+                                <connections>
+                                    <outlet property="dataSource" destination="ysK-90-dgi" id="oIT-j4-5te"/>
+                                    <outlet property="delegate" destination="ysK-90-dgi" id="u47-8H-kzP"/>
+                                </connections>
                             </tableView>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="db5-gQ-UuW" customClass="PreviewView" customModule="PickSkip" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
@@ -626,7 +630,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="KFh-Ug-EV8" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="C8C-Cf-glK">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="C8C-Cf-glK">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.25277838908450706" colorSpace="calibratedRGB"/>

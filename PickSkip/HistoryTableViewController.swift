@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import QuartzCore
 
 class HistoryTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -280,6 +281,9 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         } else {
             date = Date()
             if date < unopenedMediaArray[indexPath.row].releaseDate {
+                if let cell = tableView.cellForRow(at: indexPath) {
+                    cell.shake()
+                }
                 print("current time is less")
             } else {
                 if unopenedMediaArray[indexPath.row].loadState == .loaded {

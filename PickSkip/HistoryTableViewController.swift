@@ -171,8 +171,14 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             }
             self.unopenedMediaArray.append(mediaInstance)
             self.tableView.reloadData()
-            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .middle, animated: true)
-            self.initialFetch = false
+            
+            if self.tableView.numberOfSections == 2 {
+                if self.tableView.numberOfRows(inSection: 0) == 5 {
+                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .middle, animated: true)
+                    self.initialFetch = false
+                }
+            }
+            
             self.loadingMore = false
         })
 

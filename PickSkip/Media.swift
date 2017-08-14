@@ -14,6 +14,7 @@ class Media {
     var senderNumber: String!
     var mediaType: String!
     var image: Data?
+    var thumbnailData: Data?
     var video: AVPlayer?
     var releaseDate: Date!
     var sentDate: Date!
@@ -27,6 +28,17 @@ class Media {
         self.mediaType = type
         self.url = url
         self.key = key
+        releaseDate = Date(timeIntervalSince1970: TimeInterval(releaseDateInt))
+        sentDate = Date(timeIntervalSince1970: TimeInterval(sentDateInt))
+        self.openDate = openDate
+    }
+    
+    init(senderNumber: String, key: String, type: String, releaseDateInt: Int!, sentDateInt: Int!, url: StorageReference!, openDate: Int, thumbnail: Data) {
+        self.senderNumber = senderNumber
+        self.mediaType = type
+        self.url = url
+        self.key = key
+        self.thumbnailData = thumbnail
         releaseDate = Date(timeIntervalSince1970: TimeInterval(releaseDateInt))
         sentDate = Date(timeIntervalSince1970: TimeInterval(sentDateInt))
         self.openDate = openDate

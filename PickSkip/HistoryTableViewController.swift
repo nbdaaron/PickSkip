@@ -31,7 +31,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        titlePanel.addBottomBorder(with: .black, andWidth: 1.0)
+        titlePanel.addBottomBorder(with: UIColor(colorLiteralRed: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1.0) , andWidth: 1.0)
         prepareMediaView()
         logoutButton.imageView?.contentMode = .scaleAspectFit
         cameraButton.imageView?.contentMode = .scaleAspectFit
@@ -47,7 +47,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(titlePressed(gesture:)))
         viewTitle.addGestureRecognizer(gesture)
-        print("parent + \(parent)")
         setupLoadMore()
         
         loadContent()
@@ -125,19 +124,26 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                 }
             }
             
-            let httpsReference = Storage.storage().reference(forURL: snapshot.childSnapshot(forPath: "mediaURL").value as! String)
+            let mediaReference = Storage.storage().reference(forURL: snapshot.childSnapshot(forPath: "mediaURL").value as! String)
+            let thumbnailReference = Storage.storage().reference(forURL: snapshot.childSnapshot(forPath: "thumbnail").value as! String)
+            thumbnailReference.getData(maxSize: Constants.maxDownloadSize, completion: {(data, error) in
+                if let error = error{
+                    print(error.localizedDescription)
+                } else {
+                    let mediaInstance = Media(senderNumber: snapshot.childSnapshot(forPath: "senderNumber").value as! String,
+                                              key: snapshot.key,
+                                              type: snapshot.childSnapshot(forPath: "mediaType").value as! String,
+                                              releaseDateInt: snapshot.childSnapshot(forPath: "releaseDate").value as! Int,
+                                              sentDateInt: snapshot.childSnapshot(forPath: "sentDate").value as! Int,
+                                              url: mediaReference,
+                                              openDate: snapshot.childSnapshot(forPath: "opened").value as! Int,
+                                              thumbnail: data!)
+                    self.openedMediaArray.insert(mediaInstance, at: 0)
+                    self.tableView.reloadData()
+                    self.tableView.refreshControl?.endRefreshing()
+                }
+            })
             
-            let mediaInstance = Media(senderNumber: snapshot.childSnapshot(forPath: "senderNumber").value as! String,
-                                      key: snapshot.key,
-                                      type: snapshot.childSnapshot(forPath: "mediaType").value as! String,
-                                      releaseDateInt: snapshot.childSnapshot(forPath: "releaseDate").value as! Int,
-                                      sentDateInt: snapshot.childSnapshot(forPath: "sentDate").value as! Int,
-                                      url: httpsReference,
-                                      openDate: snapshot.childSnapshot(forPath: "opened").value as! Int)
-            
-            self.openedMediaArray.insert(mediaInstance, at: 0)
-            self.tableView.reloadData()
-            self.tableView.refreshControl?.endRefreshing()
             
         })
     }
@@ -262,6 +268,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             //Cell Content
             cell.nameLabel.text = openedMediaArray[indexPath.row].senderNumber
             cell.dateLabel.text = Util.formatDateLabelDate(date: Date(timeIntervalSince1970: TimeInterval(openedMediaArray[indexPath.row].openDate)))
+            cell.thumbnail.image = UIImage(data: openedMediaArray[indexPath.row].thumbnailData!)
             
             //Format cell appearance based on state
             if openedMediaArray[indexPath.row].loadState == .loaded {
@@ -345,17 +352,38 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                     if unopenedMediaArray[indexPath.row].mediaType == "image" {
                         let image = UIImage(data: unopenedMediaArray[indexPath.row].image!)
                         mediaView.displayImage(image!)
+                        
+                        //start thumbnail upload
+                        let thumbnailRef = DataService.instance.imagesStorageRef.child("\(NSUUID().uuidString)_thumbnail.jpg")
+                        let thumbnailData = Util.getThumbnail(imageData: unopenedMediaArray[indexPath.row].image!, videoURL: nil)
+                        
+                        _ = thumbnailRef.putData(thumbnailData, metadata: nil, completion: { (metadata, error) in
+                            if let error = error {
+                                print("error: \(error.localizedDescription)")
+                            } else {
+                                let downloadURL = metadata?.downloadURL()
+                                let openDate = Int(Date().timeIntervalSince1970)
+                                self.unopenedMediaArray[indexPath.row].openDate = openDate
+                                self.unopenedMediaArray[indexPath.row].thumbnailData = thumbnailData
+                                DataService.instance.setOpened(key: self.unopenedMediaArray[indexPath.row].key, openDate: openDate, thumbnailURL: downloadURL!.absoluteString)
+                                
+                                self.openedMediaArray.append(self.unopenedMediaArray.remove(at: indexPath.row))
+                                self.tableView.reloadData()
+                                
+                                
+                                //update media to opened
+                                
+                            }
+                        })
+                        
+                        
                     } else {
                         mediaView.displayVideo(unopenedMediaArray[indexPath.row].video!)
                     }
                     view.bringSubview(toFront: mediaView)
                     mediaView.isHidden = false
                     
-                    let openDate = Int(Date().timeIntervalSince1970)
-                    DataService.instance.setOpened(key: unopenedMediaArray[indexPath.row].key, openDate: openDate)
-                    self.unopenedMediaArray[indexPath.row].openDate = openDate
-                    self.openedMediaArray.append(self.unopenedMediaArray.remove(at: indexPath.row))
-                    self.tableView.reloadData()
+
                 } else if unopenedMediaArray[indexPath.row].loadState == .unloaded {
                     unopenedMediaArray[indexPath.row].load() {
                         //CODE TO EXECUTE WHEN DONE LOADING
@@ -403,7 +431,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
-            return 60.0
+            return 70.0
         } else {
             return self.view.frame.height / 8
         }

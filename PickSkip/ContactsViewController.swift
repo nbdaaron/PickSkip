@@ -227,8 +227,7 @@ class ContactsViewController: UIViewController {
                     print("error: \(error.localizedDescription)")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "video", releaseDate: Int(self.releaseDate.timeIntervalSince1970), key: key)
-                    
+                    DataService.instance.sendMedia(senderNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "video", releaseDate: Int(self.releaseDate.timeIntervalSince1970))
                 }
             })
         } else if let image = image {
@@ -239,9 +238,10 @@ class ContactsViewController: UIViewController {
                     print("error: \(error.localizedDescription))")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: Int(self.releaseDate.timeIntervalSince1970), key: key)
+                    DataService.instance.sendMedia(senderNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: Int(self.releaseDate.timeIntervalSince1970))
                 }
             })
+            
         }
         let presentingVC = self.presentingViewController as! PreviewController
         self.dismiss(animated: false, completion: {

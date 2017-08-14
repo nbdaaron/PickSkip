@@ -269,8 +269,8 @@
                                             <action selector="logout:" destination="ysK-90-dgi" eventType="touchUpInside" id="yo9-xP-4z5"/>
                                         </connections>
                                     </button>
-                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PickSkipBW" translatesAutoresizingMaskIntoConstraints="NO" id="h3k-w3-tMn">
-                                        <rect key="frame" x="131.66666666666669" y="29.333333333333329" width="151.00000000000006" height="50"/>
+                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PickSkipColoredArrows" translatesAutoresizingMaskIntoConstraints="NO" id="h3k-w3-tMn">
+                                        <rect key="frame" x="107.66666666666669" y="29.333333333333329" width="200" height="50"/>
                                         <color key="tintColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="sb7-yf-VXk"/>
@@ -683,7 +683,7 @@
     </scenes>
     <resources>
         <image name="ForwardButton" width="100" height="100"/>
-        <image name="PickSkipBW" width="151" height="51"/>
+        <image name="PickSkipColoredArrows" width="200" height="67"/>
         <image name="backButton" width="120" height="199"/>
         <image name="backButton1" width="14" height="27"/>
         <image name="cameraButton" width="64" height="64"/>

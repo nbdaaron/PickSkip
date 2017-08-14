@@ -49,7 +49,7 @@ class DataService {
         return mainRef.childByAutoId().key
     }
     
-    func sendMedia(senderNumber: String, recipients: [String], mediaURL: URL, mediaType: String, releaseDate: Int, key: String) {
+    func sendMedia(senderNumber: String, recipients: [String], mediaURL: URL, mediaType: String, releaseDate: Int) {
         let date = Date()
         let pr: Dictionary<String, AnyObject> = ["mediaType": mediaType as AnyObject,
                                                 "mediaURL" : mediaURL.absoluteString as AnyObject,
@@ -59,9 +59,11 @@ class DataService {
                                                 "recipients": recipients as AnyObject,
                                                 "opened": -1 as AnyObject]
         
+        let key = mainRef.childByAutoId().key
+        
         for recipient in recipients {
             //Add to recipient's history
-            usersRef.child(recipient).child("unopened").child(key).setValue(pr) {
+            usersRef.child(recipient).child("unopened").child(key).updateChildValues(pr) {
                 error, databaseReference in
                 if let error = error  {
                     print("error sending message from DataService#sendMedia - History: \(error.localizedDescription)")
@@ -90,17 +92,16 @@ class DataService {
 
     }
     
-    func setOpened(key: String, openDate: Int) {
+    func setOpened(key: String, openDate: Int, thumbnailURL: String) {
         //Set opened to true
         usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("unopened").child(key).child("opened").setValue(openDate)
-        
+        usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("unopened").child(key).child("thumbnail").setValue(thumbnailURL)
         //Move to opened
         usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("unopened").child(key).observeSingleEvent(of: .value, with: { (snapshot) in
             self.usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("opened").child(key).setValue(snapshot.value)
             self.usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("opened").child(key).setPriority(-openDate)
             self.usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("unopened").child(key).removeValue()
         })
-        
         
     }
     

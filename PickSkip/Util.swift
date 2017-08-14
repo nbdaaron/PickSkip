@@ -9,6 +9,7 @@
 import Foundation
 import Contacts
 import Firebase
+import AVFoundation
 
 class Util {
     
@@ -74,6 +75,53 @@ class Util {
         else {
             return "Now"
         }
+    }
+    
+    //gets thumbnail
+    static func getThumbnail(imageData: Data?, videoURL: URL?) -> Data {
+        var image: UIImage? = nil
+        if let imageData = imageData {
+            image = UIImage(data: imageData)
+        } else if let videoURL = videoURL {
+            let asset = AVAsset(url: videoURL)
+            let imgGenerator = AVAssetImageGenerator(asset: asset)
+            do {
+                let cgImage = try imgGenerator.copyCGImage(at: CMTime(seconds: 0.0, preferredTimescale: 1), actualTime: nil)
+                image = UIImage(cgImage: cgImage)
+            } catch let error {
+                print(error.localizedDescription)
+            }
+        }
+        let imageSize = CGSize(width: image!.size.width / 6, height: image!.size.height / 6)
+        let rect = CGRect(x: 0.0, y: 0.0, width: image!.size.width / 6, height: image!.size.height / 6)
+        
+        UIGraphicsBeginImageContext(imageSize)
+        image!.draw(in: rect)
+        let thumbnailImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        let thumbnailData = UIImageJPEGRepresentation(thumbnailImage!, 1.0)
+        
+        return thumbnailData!
+        
+    }
+    
+    //format thumbnail
+    static func formatThumbnail(imageData: Data, radius: CGFloat) -> UIImage {
+        let image = UIImage(data: imageData)
+        let imageView: UIImageView = UIImageView(image: image)
+        var layer: CALayer = CALayer()
+        layer = imageView.layer
+        
+        layer.masksToBounds = true
+        layer.cornerRadius = radius
+        
+        UIGraphicsBeginImageContext(imageView.bounds.size)
+        layer.render(in: UIGraphicsGetCurrentContext()!)
+        let roundedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return roundedImage!
     }
     
     ///Removes the current Login Listener. Should be called from viewWillDisappear.

@@ -15,6 +15,9 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var mediaView: PreviewView!
     @IBOutlet weak var viewTitle: UIImageView!
+    @IBOutlet weak var cameraButton: UIButton!
+    @IBOutlet weak var titlePanel: UIView!
+    @IBOutlet weak var logoutButton: UIButton!
     
     var dataService = DataService.instance
     var openedMediaArray: [Media] = []
@@ -28,7 +31,10 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        titlePanel.addBottomBorder(with: .black, andWidth: 1.0)
         prepareMediaView()
+        logoutButton.imageView?.contentMode = .scaleAspectFit
+        cameraButton.imageView?.contentMode = .scaleAspectFit
         date = Date()
         tableView.tableHeaderView = UIView()
         tableView.delegate = self
@@ -41,7 +47,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(titlePressed(gesture:)))
         viewTitle.addGestureRecognizer(gesture)
-        
+        print("parent + \(parent)")
         setupLoadMore()
         
         loadContent()
@@ -200,13 +206,29 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     @IBAction func logout(_ sender: Any) {
-        do {
-            try Auth.auth().signOut()
-        } catch {
-            print("error signing out")
-        }
+        let alert = UIAlertController(title: "Logout", message: "Are you sure you want to logout?", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
+            alert.dismiss(animated: false, completion: nil)
+        })
+        let logoutAction = UIAlertAction(title: "Logout", style: .default, handler: { (action) in
+            do {
+                try Auth.auth().signOut()
+            } catch {
+                print("error signing out")
+            }
+        })
+        alert.addAction(cancelAction)
+        alert.addAction(logoutAction)
+        self.present(alert, animated: true, completion: nil)
+        
+        
     }
 
+    @IBAction func goToCamera(_ sender: Any) {
+        if let parentController = self.parent as? MainPagesViewController {
+           parentController.setViewControllers([parentController.pages[Constants.initialViewPosition]], direction: .forward, animated: true, completion: nil)
+        }
+    }
     
     
     func titlePressed(gesture: UITapGestureRecognizer) {
@@ -232,18 +254,52 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         
         if indexPath.section == 0 && openedMediaArray.count != 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "openedCell", for: indexPath) as! OpenedMediaCell
+            
+            //Default cell aspects
             cell.selectionStyle = .gray
             cell.backgroundColor = .white
+            
+            //Cell Content
             cell.nameLabel.text = openedMediaArray[indexPath.row].senderNumber
-            cell.dateLabel.text = Util.formateDateLabelDate(date: openedMediaArray[indexPath.row].sentDate)
+            cell.dateLabel.text = Util.formatDateLabelDate(date: Date(timeIntervalSince1970: TimeInterval(openedMediaArray[indexPath.row].openDate)))
+            
+            //Format cell appearance based on state
+            if openedMediaArray[indexPath.row].loadState == .loaded {
+                cell.cancelAnimation()
+            } else if openedMediaArray[indexPath.row].loadState == .loading{
+                cell.loadAnimation()
+            } else {
+                cell.dateLabel.font = UIFont(name: "Raleway-Light", size: 20)
+                cell.nameLabel.font = UIFont(name: "Raleway-Light", size: 20)
+                cell.layer.borderWidth = 0.0
+                cell.layer.borderColor = UIColor.clear.cgColor
+            }
+            
             return cell
         } else if indexPath.section == 1 && unopenedMediaArray.count != 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "unopenedCell", for: indexPath) as! UnopenedMediaCell
+            
+            //Default cell aspects
             cell.selectionStyle = .none
             cell.backgroundColor = .white
             cell.cellFrame.layer.borderWidth = 1
+            
+            //Cell content
             cell.nameLabel.text = unopenedMediaArray[indexPath.row].senderNumber
-
+            cell.dateLabel.text = Util.getBiggestComponenet(release: unopenedMediaArray[indexPath.row].releaseDate)
+            
+            //Check how to display cell
+            if unopenedMediaArray[indexPath.row].loadState == .loaded {
+                cell.cancelAnimation()
+            } else if unopenedMediaArray[indexPath.row].loadState == .loading{
+                cell.loadAnimation()
+            } else {
+                cell.dateLabel.font = UIFont(name: "Raleway-Light", size: 20)
+                cell.nameLabel.font = UIFont(name: "Raleway-Light", size: 20)
+                cell.cellFrame.layer.borderWidth = 1.0
+                cell.cellFrame.layer.borderColor = UIColor(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.4).cgColor
+            }
+            
             return cell
         } else {
             return UITableViewCell()
@@ -259,6 +315,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         print("current time: \(date)")
         
         if indexPath.section == 0 {
+            let cell = self.tableView.cellForRow(at: indexPath) as! OpenedMediaCell
             if openedMediaArray[indexPath.row].loadState == .loaded {
                 if openedMediaArray[indexPath.row].mediaType == "image" {
                     let image = UIImage(data: openedMediaArray[indexPath.row].image!)
@@ -270,20 +327,18 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                 mediaView.isHidden = false
                 
             } else if openedMediaArray[indexPath.row].loadState == .unloaded {
-                
                 openedMediaArray[indexPath.row].load() {
                     //CODE TO EXECUTE WHEN DONE LOADING
-                    self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.green
+                    cell.cancelAnimation()
                 }
                 //CODE TO EXECUTE WHILE LOADING
-                self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.blue
+                cell.loadAnimation()
             }
         } else {
             date = Date()
+            let cell = self.tableView.cellForRow(at: indexPath) as! UnopenedMediaCell
             if date < unopenedMediaArray[indexPath.row].releaseDate {
-                if let cell = tableView.cellForRow(at: indexPath) {
-                    cell.shake()
-                }
+                cell.shake()
                 print("current time is less")
             } else {
                 if unopenedMediaArray[indexPath.row].loadState == .loaded {
@@ -297,7 +352,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                     mediaView.isHidden = false
                     
                     let openDate = Int(Date().timeIntervalSince1970)
-                    
                     DataService.instance.setOpened(key: unopenedMediaArray[indexPath.row].key, openDate: openDate)
                     self.unopenedMediaArray[indexPath.row].openDate = openDate
                     self.openedMediaArray.append(self.unopenedMediaArray.remove(at: indexPath.row))
@@ -305,12 +359,43 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                 } else if unopenedMediaArray[indexPath.row].loadState == .unloaded {
                     unopenedMediaArray[indexPath.row].load() {
                         //CODE TO EXECUTE WHEN DONE LOADING
-                        self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.green
+                        cell.cancelAnimation()
                     }
                     //CODE TO EXECUTE WHILE LOADING
-                    self.tableView.cellForRow(at: indexPath)?.backgroundColor = UIColor.blue
+                    cell.loadAnimation()
                 }
             }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 25.0
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        // Checks if rows exist in each section before adding section header
+        if openedMediaArray.count > 0 && section == 0 {
+            let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 23))
+            let headerTitle = UILabel(frame: CGRect(x: 15, y: 5, width: tableView.frame.width, height: 23))
+            headerTitle.font = UIFont(name: "Raleway-SemiBold", size: 15.0)
+            headerTitle.text = "Opened"
+            headerTitle.textColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
+            headerView.backgroundColor = .white
+            headerView.addSubview(headerTitle)
+            return headerView
+        } else if unopenedMediaArray.count > 0 && section == 1 {
+            let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 23))
+            let headerTitle = UILabel(frame: CGRect(x: 15, y: 5, width: tableView.frame.width, height: 23))
+            headerTitle.text = "Upcoming"
+            headerTitle.textColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
+            headerTitle.font = UIFont(name: "Raleway-SemiBold", size: 15.0)
+            headerView.backgroundColor = .white
+            headerView.addSubview(headerTitle)
+            return headerView
+        } else {
+            let headerView = UIView()
+            return headerView
         }
     }
  

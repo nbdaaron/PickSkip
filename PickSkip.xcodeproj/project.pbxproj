@@ -11,6 +11,9 @@
 		1A435C741F1ECFE1007E5478 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A435C731F1ECFE1007E5478 /* DataService.swift */; };
 		1A46FE1F1F2FCB000096A0EF /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A46FE1E1F2FCB000096A0EF /* ContactsViewController.swift */; };
 		1A5C7B091F33D27300615EDD /* OpenedMediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5C7B081F33D27300615EDD /* OpenedMediaCell.swift */; };
+		1A63642E1F3FF42D00B1D844 /* Raleway-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AABB3A91F301B700092B639 /* Raleway-ExtraBold.ttf */; };
+		1A63642F1F3FF44D00B1D844 /* Raleway-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AABB3A71F301B700092B639 /* Raleway-Bold.ttf */; };
+		1A6364301F3FF4A700B1D844 /* Raleway-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AABB3B11F301B700092B639 /* Raleway-SemiBold.ttf */; };
 		1AA23D811F3253ED006A630D /* UnopenedMediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA23D801F3253ED006A630D /* UnopenedMediaCell.swift */; };
 		1AABB3B51F301B870092B639 /* Raleway-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AABB3AB1F301B700092B639 /* Raleway-ExtraLight.ttf */; };
 		1AC709091F28382100AEB3AB /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC709081F28382100AEB3AB /* ContactCell.swift */; };
@@ -347,6 +350,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A6364301F3FF4A700B1D844 /* Raleway-SemiBold.ttf in Resources */,
+				1A63642F1F3FF44D00B1D844 /* Raleway-Bold.ttf in Resources */,
+				1A63642E1F3FF42D00B1D844 /* Raleway-ExtraBold.ttf in Resources */,
 				1ADFF8421F2ECC9A003C2935 /* Lato-Light.ttf in Resources */,
 				1ADFF84E1F2ECE80003C2935 /* BebasNeue-Light.ttf in Resources */,
 				1AD2691E1F184633003C438B /* Raleway-Light.ttf in Resources */,

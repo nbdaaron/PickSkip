@@ -14,18 +14,25 @@ import Firebase
 class CameraViewController: UIViewController {
     @IBOutlet weak var cameraView: CameraView!
     @IBOutlet weak var recordButton: RecordButton!
+    @IBOutlet weak var feedButton: UIButton!
     
     var image: UIImage!
     var video: URL!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        feedButton.imageView?.contentMode = .scaleAspectFit
         //Set up Camera View
         
         cameraView.delegate = self
         cameraView.setupCameraView(recordButton)
         
+    }
+
+    @IBAction func goToFeed(_ sender: Any) {
+        if let parentController = self.parent as? MainPagesViewController {
+            parentController.setViewControllers([parentController.pages[0]], direction: .reverse, animated: true, completion: nil)
+        }
     }
 
 

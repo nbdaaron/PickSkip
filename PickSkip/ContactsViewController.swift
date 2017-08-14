@@ -51,6 +51,7 @@ class ContactsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         contactTableView.delegate = self
         contactTableView.dataSource = self
         tokenField.dataSource = self

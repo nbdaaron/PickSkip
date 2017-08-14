@@ -78,28 +78,13 @@ public extension Date {
     
 }
 
-public extension UITableViewCell {
-    func shake() {
-        let duration: CFTimeInterval = 0.3
-        let pathLength: CGFloat = 10
-        let position: CGPoint = self.center
-        
-        let path: UIBezierPath = UIBezierPath()
-        path.move(to: CGPoint(x: position.x, y: position.y))
-        path.addLine(to: CGPoint(x: position.x-pathLength,y: position.y))
-        path.addLine(to: CGPoint(x: position.x+pathLength,y: position.y))
-        path.addLine(to: CGPoint(x: position.x-pathLength,y: position.y))
-        path.addLine(to: CGPoint(x: position.x+pathLength,y: position.y))
-        path.addLine(to: CGPoint(x: position.x,y: position.y))
-        
-        let positionAnimation = CAKeyframeAnimation(keyPath: "position")
-        
-        positionAnimation.path = path.cgPath
-        positionAnimation.duration = duration
-        positionAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        
-        CATransaction.begin()
-        self.layer.add(positionAnimation, forKey: nil)
-        CATransaction.commit()
+public extension UIView {
+    func addBottomBorder(with color: UIColor, andWidth borderWidth: CGFloat) {
+        let border = UIView()
+        border.backgroundColor = color
+        border.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
+        border.frame = CGRect(x: 0, y: frame.size.height - borderWidth, width: frame.size.width, height: borderWidth)
+        addSubview(border)
     }
 }
+

@@ -33,11 +33,11 @@ class UnopenedMediaCell: UITableViewCell {
     var dateLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontSizeToFitWidth = true
-        label.font = UIFont(name: Constants.defaultFont, size: 15)
+        label.font = UIFont(name: Constants.defaultFont, size: 20)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .right
-        label.text = "January 20, 2017"
+        label.text = ""
         return label
     }()
     
@@ -46,7 +46,7 @@ class UnopenedMediaCell: UITableViewCell {
         selectionStyle = .none
         self.addSubview(cellFrame)
         self.addSubview(nameLabel)
-        //self.addSubview(dateLabel)
+        self.addSubview(dateLabel)
         setContraints()
         
     }
@@ -61,10 +61,10 @@ class UnopenedMediaCell: UITableViewCell {
             nameLabel.topAnchor.constraint(equalTo: cellFrame.topAnchor),
             nameLabel.bottomAnchor.constraint(equalTo: cellFrame.bottomAnchor),
             nameLabel.widthAnchor.constraint(equalTo: cellFrame.widthAnchor, multiplier: 0.5),
-//            dateLabel.topAnchor.constraint(equalTo: cellFrame.topAnchor),
-//            dateLabel.bottomAnchor.constraint(equalTo: cellFrame.bottomAnchor),
-//            dateLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-//            dateLabel.trailingAnchor.constraint(equalTo: cellFrame.trailingAnchor,constant: -self.bounds.height * 0.8 / 2)
+            dateLabel.topAnchor.constraint(equalTo: cellFrame.topAnchor),
+            dateLabel.bottomAnchor.constraint(equalTo: cellFrame.bottomAnchor),
+            dateLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+            dateLabel.trailingAnchor.constraint(equalTo: cellFrame.trailingAnchor,constant: -self.bounds.height * 0.8 / 2)
         ]
         NSLayoutConstraint.activate(constraints)
     }
@@ -77,7 +77,47 @@ class UnopenedMediaCell: UITableViewCell {
         
     }
     
+    func shake() {
+        let duration: CFTimeInterval = 0.3
+        let pathLength: CGFloat = 10
+        let position: CGPoint = self.center
+        
+        let path: UIBezierPath = UIBezierPath()
+        path.move(to: CGPoint(x: position.x, y: position.y))
+        path.addLine(to: CGPoint(x: position.x-pathLength,y: position.y))
+        path.addLine(to: CGPoint(x: position.x+pathLength,y: position.y))
+        path.addLine(to: CGPoint(x: position.x-pathLength,y: position.y))
+        path.addLine(to: CGPoint(x: position.x+pathLength,y: position.y))
+        path.addLine(to: CGPoint(x: position.x,y: position.y))
+        
+        let positionAnimation = CAKeyframeAnimation(keyPath: "position")
+        
+        positionAnimation.path = path.cgPath
+        positionAnimation.duration = duration
+        positionAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        
+        CATransaction.begin()
+        self.layer.add(positionAnimation, forKey: nil)
+        CATransaction.commit()
+    }
     
+    func loadAnimation() {
+        let color = CABasicAnimation(keyPath: "borderColor")
+        color.fromValue = UIColor.clear.cgColor
+        color.toValue = UIColor.gray.cgColor
+        color.duration = 1
+        color.repeatCount = Float.infinity
+        color.autoreverses = true
+        self.cellFrame.layer.add(color, forKey: "color")
+    }
+    
+    func cancelAnimation() {
+        self.dateLabel.font = UIFont(name: "Raleway-SemiBold", size: 20)
+        self.nameLabel.font = UIFont(name: "Raleway-SemiBold", size: 20)
+        self.cellFrame.layer.borderWidth = 1.0
+        self.cellFrame.layer.borderColor = UIColor(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.4).cgColor
+        self.cellFrame.layer.removeAllAnimations()
+    }
     
 }
 

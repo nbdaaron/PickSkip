@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="SgT-EH-hbB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="SgT-EH-hbB">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -258,10 +258,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="le9-2O-Wwo">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="88.333333333333329"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q6h-dE-DIh">
-                                        <rect key="frame" x="9" y="29" width="44" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="logout"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q6h-dE-DIh">
+                                        <rect key="frame" x="20" y="30" width="35" height="35"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="35" id="kJc-Ea-XNX"/>
+                                            <constraint firstAttribute="height" constant="35" id="vUT-b1-D9x"/>
+                                        </constraints>
+                                        <state key="normal" image="logout"/>
                                         <connections>
                                             <action selector="logout:" destination="ysK-90-dgi" eventType="touchUpInside" id="yo9-xP-4z5"/>
                                         </connections>
@@ -273,16 +276,26 @@
                                             <constraint firstAttribute="height" constant="50" id="sb7-yf-VXk"/>
                                         </constraints>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QJX-G5-Lbl">
-                                        <rect key="frame" x="324" y="39" width="66" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Forward"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QJX-G5-Lbl">
+                                        <rect key="frame" x="359" y="30" width="35" height="35"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="35" id="jbx-Xy-0MA"/>
+                                            <constraint firstAttribute="height" constant="35" id="nBi-JQ-3Bm"/>
+                                        </constraints>
+                                        <state key="normal" title="Forward" image="cameraButton"/>
+                                        <connections>
+                                            <action selector="goToCamera:" destination="ysK-90-dgi" eventType="touchUpInside" id="rj6-pP-z1D"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstItem="q6h-dE-DIh" firstAttribute="top" secondItem="le9-2O-Wwo" secondAttribute="top" constant="30" id="4jV-SR-xHK"/>
+                                    <constraint firstAttribute="trailing" secondItem="QJX-G5-Lbl" secondAttribute="trailing" constant="20" id="9Nd-Rw-aBG"/>
+                                    <constraint firstItem="q6h-dE-DIh" firstAttribute="leading" secondItem="le9-2O-Wwo" secondAttribute="leading" constant="20" id="Ldo-o5-X51"/>
                                     <constraint firstItem="h3k-w3-tMn" firstAttribute="centerY" secondItem="le9-2O-Wwo" secondAttribute="centerY" constant="10" id="OQc-HR-ieg"/>
                                     <constraint firstItem="h3k-w3-tMn" firstAttribute="centerX" secondItem="le9-2O-Wwo" secondAttribute="centerX" id="OWc-8K-v5W"/>
+                                    <constraint firstItem="QJX-G5-Lbl" firstAttribute="top" secondItem="le9-2O-Wwo" secondAttribute="top" constant="30" id="Wlt-8i-41x"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -305,8 +318,11 @@
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" id="T3g-ej-dtb"/>
                     <connections>
+                        <outlet property="cameraButton" destination="QJX-G5-Lbl" id="gIP-rZ-Yky"/>
+                        <outlet property="logoutButton" destination="q6h-dE-DIh" id="bJI-bI-KEs"/>
                         <outlet property="mediaView" destination="db5-gQ-UuW" id="MaO-C5-q2b"/>
                         <outlet property="tableView" destination="ZRE-iq-cwT" id="B1g-ss-35B"/>
+                        <outlet property="titlePanel" destination="le9-2O-Wwo" id="IpU-SL-gnR"/>
                         <outlet property="viewTitle" destination="h3k-w3-tMn" id="VeZ-Im-gxB"/>
                     </connections>
                 </viewController>
@@ -339,9 +355,22 @@
                                             <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HNy-8s-vj3">
+                                        <rect key="frame" x="25" y="30" width="35" height="35"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="35" id="0tb-Ej-rAm"/>
+                                            <constraint firstAttribute="height" constant="35" id="8lg-wX-d0W"/>
+                                        </constraints>
+                                        <state key="normal" image="hamburger"/>
+                                        <connections>
+                                            <action selector="goToFeed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Mmx-AD-Mno"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="HNy-8s-vj3" firstAttribute="leading" secondItem="4xV-Sk-QNJ" secondAttribute="leading" constant="25" id="O7T-GT-qbH"/>
+                                    <constraint firstItem="HNy-8s-vj3" firstAttribute="top" secondItem="4xV-Sk-QNJ" secondAttribute="top" constant="30" id="SNw-Cm-yet"/>
                                     <constraint firstItem="4Je-05-mJV" firstAttribute="centerX" secondItem="4xV-Sk-QNJ" secondAttribute="centerX" id="feX-Pn-2K7"/>
                                     <constraint firstAttribute="bottom" secondItem="4Je-05-mJV" secondAttribute="bottom" constant="80" id="tg5-S6-ttb"/>
                                 </constraints>
@@ -357,6 +386,7 @@
                     </view>
                     <connections>
                         <outlet property="cameraView" destination="4xV-Sk-QNJ" id="Ocb-VL-wgd"/>
+                        <outlet property="feedButton" destination="HNy-8s-vj3" id="tco-X1-DBK"/>
                         <outlet property="recordButton" destination="4Je-05-mJV" id="uXc-fU-y0b"/>
                         <segue destination="Q9z-fR-iZB" kind="presentation" identifier="showPreview" animates="NO" modalPresentationStyle="overCurrentContext" id="DNS-xZ-Auz"/>
                     </connections>
@@ -383,11 +413,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p6j-2z-XAR" userLabel="Options View">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zHE-Xy-kmC">
-                                        <rect key="frame" x="8" y="8" width="30" height="42"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                        <state key="normal" title="X"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zHE-Xy-kmC">
+                                        <rect key="frame" x="30" y="643.66666666666663" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="QCQ-78-oGh"/>
+                                            <constraint firstAttribute="width" constant="40" id="ptf-Y9-LS3"/>
+                                        </constraints>
+                                        <state key="normal" image="cancelButton2"/>
                                         <connections>
                                             <action selector="cancelPreview:" destination="Q9z-fR-iZB" eventType="touchUpInside" id="GIq-Sl-gwf"/>
                                             <action selector="closePreview:" destination="BYZ-38-t0r" eventType="touchUpInside" id="B3R-qq-Gmq"/>
@@ -410,7 +442,9 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="UVw-0k-MxP" secondAttribute="trailing" constant="20" id="bT4-OT-JLP"/>
+                                    <constraint firstItem="zHE-Xy-kmC" firstAttribute="leading" secondItem="p6j-2z-XAR" secondAttribute="leading" constant="30" id="ej3-bd-wL5"/>
                                     <constraint firstAttribute="bottom" secondItem="UVw-0k-MxP" secondAttribute="bottom" constant="40" id="f2t-LY-mHF"/>
+                                    <constraint firstItem="UVw-0k-MxP" firstAttribute="centerY" secondItem="zHE-Xy-kmC" secondAttribute="centerY" id="s5Y-Sn-QtG"/>
                                 </constraints>
                             </view>
                             <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZVv-yq-QRI">
@@ -527,6 +561,7 @@
                     <connections>
                         <outlet property="backButton" destination="GmM-ul-tvd" id="on7-6M-hwt"/>
                         <outlet property="buttonsView" destination="ZVv-yq-QRI" id="ayH-pV-sWi"/>
+                        <outlet property="cancelButton" destination="zHE-Xy-kmC" id="Yb1-DC-cNa"/>
                         <outlet property="dayCounter" destination="EjK-jS-gqX" id="cyt-Hh-nw9"/>
                         <outlet property="forwardButton" destination="XZg-df-JVN" id="r9T-Xv-lyx"/>
                         <outlet property="hourCounter" destination="xZX-l7-35h" id="9ak-Bs-34r"/>
@@ -606,7 +641,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="NhF-YU-jVj">
-                        <barButtonItem key="leftBarButtonItem" image="backButton" style="plain" id="TUv-XF-OEs">
+                        <barButtonItem key="leftBarButtonItem" image="backButton1" style="plain" id="TUv-XF-OEs">
                             <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.35780699823943662" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="cancel:" destination="caL-77-dvh" id="QEc-Sr-Wje"/>
@@ -630,7 +665,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="KFh-Ug-EV8" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="C8C-Cf-glK">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="C8C-Cf-glK">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.25277838908450706" colorSpace="calibratedRGB"/>
@@ -649,9 +684,14 @@
     <resources>
         <image name="ForwardButton" width="100" height="100"/>
         <image name="PickSkipBW" width="151" height="51"/>
-        <image name="backButton" width="22" height="33"/>
+        <image name="backButton" width="120" height="199"/>
+        <image name="backButton1" width="14" height="27"/>
+        <image name="cameraButton" width="64" height="64"/>
+        <image name="cancelButton2" width="288" height="288"/>
+        <image name="hamburger" width="325" height="228"/>
         <image name="logoPanel" width="375" height="368"/>
         <image name="logopanelflipped" width="375" height="368"/>
+        <image name="logout" width="64" height="64"/>
         <image name="pickskiplogo" width="269" height="67"/>
     </resources>
 </document>

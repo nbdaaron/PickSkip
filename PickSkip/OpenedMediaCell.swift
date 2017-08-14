@@ -36,6 +36,7 @@ class OpenedMediaCell: UITableViewCell {
         return label
     }()
     
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -57,6 +58,25 @@ class OpenedMediaCell: UITableViewCell {
             dateLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -self.bounds.height * 0.8 / 2)
         ]
         NSLayoutConstraint.activate(constraints)
+    }
+    
+    func loadAnimation() {
+        self.layer.borderWidth = 1.0
+        let color = CABasicAnimation(keyPath: "borderColor")
+        color.fromValue = UIColor.clear.cgColor
+        color.toValue = UIColor.gray.cgColor
+        color.duration = 1
+        color.repeatCount = Float.infinity
+        color.autoreverses = true
+        self.layer.add(color, forKey: "color")
+    }
+    
+    func cancelAnimation() {
+        self.dateLabel.font = UIFont(name: "Raleway-SemiBold", size: 20)
+        self.nameLabel.font = UIFont(name: "Raleway-SemiBold", size: 20)
+        self.layer.borderWidth = 0.0
+        self.layer.borderColor = UIColor.clear.cgColor
+        self.layer.removeAllAnimations()
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -38,7 +38,8 @@ class Util {
         }
     }
     
-    static func formateDateLabelDate(date: Date) -> String {
+    //Formats date on selecting contacts page
+    static func formatDateLabelDate(date: Date) -> String {
         let today = Date()
         let dateFormatter = DateFormatter()
         if date.day == today.day {
@@ -48,6 +49,30 @@ class Util {
         } else {
             dateFormatter.dateFormat = "MMMM d, Y \n h:mm a"
             return dateFormatter.string(from: date)
+        }
+    }
+    
+    //gets biggest date component of difference between dates
+    static func getBiggestComponenet(release: Date) -> String {
+        let now = Date()
+        let componenets = Calendar.current.dateComponents([.minute,.hour, .day, .month, .year], from: now, to: release)
+        if let year = componenets.year, year > 0 {
+            return (year == 1) ? "\(year) year" : "\(year) years"
+        }
+        if let month = componenets.month, month > 0 {
+            return (month == 1) ? "\(month) month" : "\(month) months"
+        }
+        if let day = componenets.day, day > 0 {
+            return (day == 1) ? "\(day) day" : "\(day) days"
+        }
+        if let hour = componenets.hour, hour > 0 {
+            return (hour == 1) ? "\(hour) hour" : "\(hour) hours"
+        }
+        if let minute = componenets.minute, minute > 0 {
+            return (minute == 1) ? "\(minute) hour" : "\(minute) hours"
+        }
+        else {
+            return "Now"
         }
     }
     

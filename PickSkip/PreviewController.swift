@@ -25,6 +25,7 @@ class PreviewController: UIViewController {
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var forwardButton: UIButton!
     @IBOutlet weak var showCountersButton: UIButton!
+    @IBOutlet weak var cancelButton: UIButton!
     
     var dateComponents = DateComponents()
     var sendtoDate = Date()
@@ -32,7 +33,7 @@ class PreviewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateLabels(with: sendtoDate)
-        
+        cancelButton.imageView?.contentMode = .scaleAspectFit
         backButton.imageView?.contentMode = .scaleAspectFit
         forwardButton.imageView?.contentMode = .scaleAspectFit
         forwardButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor

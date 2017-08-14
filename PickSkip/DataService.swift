@@ -7,9 +7,7 @@
 //
 
 import Foundation
-import FirebaseDatabase
-import FirebaseStorage
-import FirebaseAuth
+import Firebase
 
 class DataService {
     private static let _instance = DataService()
@@ -39,7 +37,7 @@ class DataService {
     }
     
     func saveUser() {
-        let profile: Dictionary<String, AnyObject> = ["firstname": "" as AnyObject, "lastname": "" as AnyObject]
+        let profile: Dictionary<String, AnyObject> = ["firstname": "" as AnyObject, "lastname": "" as AnyObject, "NotificationToken": Messaging.messaging().fcmToken as AnyObject]
         
         mainRef.child("users").child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("profile").setValue(profile)
         

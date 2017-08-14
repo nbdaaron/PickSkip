@@ -45,7 +45,11 @@ class DataService {
         
     }
     
-    func sendMedia(senderNumber: String, recipients: [String], mediaURL: URL, mediaType: String, releaseDate: Int) {
+    func createKey() -> String {
+        return mainRef.childByAutoId().key
+    }
+    
+    func sendMedia(senderNumber: String, recipients: [String], mediaURL: URL, mediaType: String, releaseDate: Int, key: String) {
         let date = Date()
         let pr: Dictionary<String, AnyObject> = ["mediaType": mediaType as AnyObject,
                                                 "mediaURL" : mediaURL.absoluteString as AnyObject,
@@ -54,8 +58,6 @@ class DataService {
                                                 "senderNumber": senderNumber as AnyObject,
                                                 "recipients": recipients as AnyObject,
                                                 "opened": -1 as AnyObject]
-        
-        let key = mainRef.childByAutoId().key
         
         for recipient in recipients {
             //Add to recipient's history

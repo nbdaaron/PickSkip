@@ -52,8 +52,8 @@ class OpenedMediaCell: UITableViewCell {
             nameLabel.topAnchor.constraint(equalTo: self.topAnchor),
             nameLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             nameLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.5),
-            dateLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 15.0),
-            dateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -15.0),
+            dateLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10.0),
+            dateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10.0),
             dateLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 10.0),
             dateLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -self.bounds.height * 0.8 / 2)
         ]

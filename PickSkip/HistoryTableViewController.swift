@@ -376,8 +376,8 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         
         // Checks if rows exist in each section before adding section header
         if openedMediaArray.count > 0 && section == 0 {
-            let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 23))
-            let headerTitle = UILabel(frame: CGRect(x: 15, y: 5, width: tableView.frame.width, height: 23))
+            let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 25))
+            let headerTitle = UILabel(frame: CGRect(x: 15, y: 3, width: tableView.frame.width, height: 23))
             headerTitle.font = UIFont(name: "Raleway-SemiBold", size: 15.0)
             headerTitle.text = "Opened"
             headerTitle.textColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
@@ -403,7 +403,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 0 {
-            return 70.0
+            return 60.0
         } else {
             return self.view.frame.height / 8
         }

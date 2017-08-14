@@ -217,6 +217,7 @@ class ContactsViewController: UIViewController {
             
         }
 
+        let key = DataService.instance.createKey()
         
         if let videoURL = video {
             let videoName = "\(NSUUID().uuidString)\(videoURL)"
@@ -226,18 +227,19 @@ class ContactsViewController: UIViewController {
                     print("error: \(error.localizedDescription)")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "video", releaseDate: Int(self.releaseDate.timeIntervalSince1970))
+                    DataService.instance.sendMedia(senderNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "video", releaseDate: Int(self.releaseDate.timeIntervalSince1970), key: key)
                     
                 }
             })
         } else if let image = image {
-            let ref = DataService.instance.imagesStorageRef.child("\(NSUUID().uuidString).jpg")
+            let uid = NSUUID().uuidString
+            let ref = DataService.instance.imagesStorageRef.child("\(uid).jpg")
             _ = ref.putData(image, metadata: nil, completion: {(metadata, error) in
                 if let error  = error {
                     print("error: \(error.localizedDescription))")
                 } else {
                     let downloadURL = metadata?.downloadURL()
-                    DataService.instance.sendMedia(senderNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: Int(self.releaseDate.timeIntervalSince1970))
+                    DataService.instance.sendMedia(senderNumber: Auth.auth().currentUser!.providerData[0].phoneNumber!, recipients: recipients, mediaURL: downloadURL!, mediaType: "image", releaseDate: Int(self.releaseDate.timeIntervalSince1970), key: key)
                 }
             })
         }

@@ -70,7 +70,11 @@ class Util {
             return (hour == 1) ? "\(hour) hour" : "\(hour) hours"
         }
         if let minute = componenets.minute, minute > 0 {
-            return (minute == 1) ? "\(minute) hour" : "\(minute) hours"
+            if minute < 0 {
+                return "Soon"
+            } else {
+                return (minute == 1) ? "\(minute) minute" : "\(minute) minutes"
+            }
         }
         else {
             return "Now"

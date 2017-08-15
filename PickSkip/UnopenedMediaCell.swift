@@ -11,6 +11,20 @@ import UIKit
 
 class UnopenedMediaCell: UITableViewCell {
     
+    var _media: Media!
+    
+    var media: Media! {
+        set (newMedia){
+            _media = newMedia
+            self.nameLabel.text = newMedia.senderNumber
+            self.dateLabel.text = Util.getBiggestComponenet(release: newMedia.releaseDate)
+            self.cellFrame.layer.borderWidth = 1.0
+        }
+        get {
+            return _media
+        }
+    }
+    
     var cellFrame: CellFrameView = {
         let view = CellFrameView()
         view.backgroundColor = .white
@@ -43,7 +57,8 @@ class UnopenedMediaCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .none
+        self.selectionStyle = .none
+        self.backgroundColor = .white
         self.addSubview(cellFrame)
         self.addSubview(nameLabel)
         self.addSubview(dateLabel)

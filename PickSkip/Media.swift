@@ -19,6 +19,7 @@ class Media {
     var releaseDate: Date!
     var sentDate: Date!
     var url: StorageReference!
+    var thumbnailRef: StorageReference!
     var loadState: LoadState = .unloaded
     var key: String!
     var openDate: Int!
@@ -33,16 +34,30 @@ class Media {
         self.openDate = openDate
     }
     
-    init(senderNumber: String, key: String, type: String, releaseDateInt: Int!, sentDateInt: Int!, url: StorageReference!, openDate: Int, thumbnail: Data) {
+    init(senderNumber: String, key: String, type: String, releaseDateInt: Int!, sentDateInt: Int!, url: StorageReference!, openDate: Int, thumbnailReference: StorageReference!) {
         self.senderNumber = senderNumber
         self.mediaType = type
         self.url = url
         self.key = key
-        self.thumbnailData = thumbnail
+        self.thumbnailRef = thumbnailReference
         releaseDate = Date(timeIntervalSince1970: TimeInterval(releaseDateInt))
         sentDate = Date(timeIntervalSince1970: TimeInterval(sentDateInt))
         self.openDate = openDate
+        
     }
+    
+//    func loadThumbnail(completion: @escaping () -> Void) {
+//        thumbnailRef.getData(maxSize: Constants.maxDownloadSize, completion: {(data, error) in
+//            if let error = error{
+//                print(error.localizedDescription)
+//            } else {
+//                if let data = data {
+//                    self.thumbnailData = data
+//                    completion()
+//                }
+//            }
+//        })
+//    }
     
     func load(completion: @escaping () -> Void) {
         self.loadState = .loading

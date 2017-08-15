@@ -54,7 +54,10 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     
     override func viewDidAppear(_ animated: Bool) {
         if initialFetch == false {
-            self.tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .middle, animated: true)
+            if self.tableView.numberOfSections == 2 {
+                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .middle, animated: true)
+            }
+            
         }
     }
     
@@ -124,25 +127,22 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                 }
             }
             
-            let mediaReference = Storage.storage().reference(forURL: snapshot.childSnapshot(forPath: "mediaURL").value as! String)
+            
+            let httpsReference = Storage.storage().reference(forURL: snapshot.childSnapshot(forPath: "mediaURL").value as! String)
             let thumbnailReference = Storage.storage().reference(forURL: snapshot.childSnapshot(forPath: "thumbnail").value as! String)
-            thumbnailReference.getData(maxSize: Constants.maxDownloadSize, completion: {(data, error) in
-                if let error = error{
-                    print(error.localizedDescription)
-                } else {
-                    let mediaInstance = Media(senderNumber: snapshot.childSnapshot(forPath: "senderNumber").value as! String,
-                                              key: snapshot.key,
-                                              type: snapshot.childSnapshot(forPath: "mediaType").value as! String,
-                                              releaseDateInt: snapshot.childSnapshot(forPath: "releaseDate").value as! Int,
-                                              sentDateInt: snapshot.childSnapshot(forPath: "sentDate").value as! Int,
-                                              url: mediaReference,
-                                              openDate: snapshot.childSnapshot(forPath: "opened").value as! Int,
-                                              thumbnail: data!)
-                    self.openedMediaArray.insert(mediaInstance, at: 0)
-                    self.tableView.reloadData()
-                    self.tableView.refreshControl?.endRefreshing()
-                }
-            })
+            
+            let mediaInstance = Media(senderNumber: snapshot.childSnapshot(forPath: "senderNumber").value as! String,
+                                      key: snapshot.key,
+                                      type: snapshot.childSnapshot(forPath: "mediaType").value as! String,
+                                      releaseDateInt: snapshot.childSnapshot(forPath: "releaseDate").value as! Int,
+                                      sentDateInt: snapshot.childSnapshot(forPath: "sentDate").value as! Int,
+                                      url: httpsReference,
+                                      openDate: snapshot.childSnapshot(forPath: "opened").value as! Int,
+                                      thumbnailReference: thumbnailReference)
+            
+            self.openedMediaArray.insert(mediaInstance, at: 0)
+            self.tableView.reloadData()
+            self.tableView.refreshControl?.endRefreshing()
             
             
         })
@@ -260,45 +260,28 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         
         if indexPath.section == 0 && openedMediaArray.count != 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "openedCell", for: indexPath) as! OpenedMediaCell
-            
+            cell.media = self.openedMediaArray[indexPath.row]
             //Default cell aspects
-            cell.selectionStyle = .gray
-            cell.backgroundColor = .white
-            
-            //Cell Content
-            cell.nameLabel.text = openedMediaArray[indexPath.row].senderNumber
-            cell.dateLabel.text = Util.formatDateLabelDate(date: Date(timeIntervalSince1970: TimeInterval(openedMediaArray[indexPath.row].openDate)))
-            cell.thumbnail.imageView.image = UIImage(data: openedMediaArray[indexPath.row].thumbnailData!)
             
             //Format cell appearance based on state
-            if openedMediaArray[indexPath.row].loadState == .loaded {
+            if cell.media.loadState == .loaded {
                 cell.cancelAnimation()
-            } else if openedMediaArray[indexPath.row].loadState == .loading{
+            } else if cell.media.loadState == .loading{
                 cell.loadAnimation()
             } else {
-                cell.dateLabel.font = UIFont(name: "Raleway-Light", size: 20)
-                cell.nameLabel.font = UIFont(name: "Raleway-Light", size: 20)
-                cell.layer.borderWidth = 0.0
-                cell.layer.borderColor = UIColor.clear.cgColor
+                cell.dateLabel.textColor = .black
+                cell.nameLabel.textColor = .black
             }
             
             return cell
         } else if indexPath.section == 1 && unopenedMediaArray.count != 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "unopenedCell", for: indexPath) as! UnopenedMediaCell
-            
-            //Default cell aspects
-            cell.selectionStyle = .none
-            cell.backgroundColor = .white
-            cell.cellFrame.layer.borderWidth = 1
-            
-            //Cell content
-            cell.nameLabel.text = unopenedMediaArray[indexPath.row].senderNumber
-            cell.dateLabel.text = Util.getBiggestComponenet(release: unopenedMediaArray[indexPath.row].releaseDate)
-            
+            cell.media = self.unopenedMediaArray[indexPath.row]
+
             //Check how to display cell
-            if unopenedMediaArray[indexPath.row].loadState == .loaded {
+            if cell.media.loadState == .loaded {
                 cell.cancelAnimation()
-            } else if unopenedMediaArray[indexPath.row].loadState == .loading{
+            } else if cell.media.loadState == .loading{
                 cell.loadAnimation()
             } else {
                 cell.dateLabel.font = UIFont(name: "Raleway-Light", size: 20)
@@ -323,8 +306,8 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         
         if indexPath.section == 0 {
             let cell = self.tableView.cellForRow(at: indexPath) as! OpenedMediaCell
-            if openedMediaArray[indexPath.row].loadState == .loaded {
-                if openedMediaArray[indexPath.row].mediaType == "image" {
+            if cell.media.loadState == .loaded {
+                if cell.media.mediaType == "image" {
                     let image = UIImage(data: openedMediaArray[indexPath.row].image!)
                     mediaView.displayImage(image!)
                 } else {
@@ -333,8 +316,8 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                 view.bringSubview(toFront: mediaView)
                 mediaView.isHidden = false
                 
-            } else if openedMediaArray[indexPath.row].loadState == .unloaded {
-                openedMediaArray[indexPath.row].load() {
+            } else if cell.media.loadState == .unloaded {
+                cell.media.load() {
                     //CODE TO EXECUTE WHEN DONE LOADING
                     cell.cancelAnimation()
                 }
@@ -344,18 +327,18 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         } else {
             date = Date()
             let cell = self.tableView.cellForRow(at: indexPath) as! UnopenedMediaCell
-            if date < unopenedMediaArray[indexPath.row].releaseDate {
+            if date < cell.media.releaseDate {
                 cell.shake()
                 print("current time is less")
             } else {
-                if unopenedMediaArray[indexPath.row].loadState == .loaded {
-                    if unopenedMediaArray[indexPath.row].mediaType == "image" {
-                        let image = UIImage(data: unopenedMediaArray[indexPath.row].image!)
+                if cell.media.loadState == .loaded {
+                    if cell.media.mediaType == "image" {
+                        let image = UIImage(data: cell.media.image!)
                         mediaView.displayImage(image!)
                         
                         //start thumbnail upload
                         let thumbnailRef = DataService.instance.imagesStorageRef.child("\(NSUUID().uuidString)_thumbnail.jpg")
-                        let thumbnailData = Util.getThumbnail(imageData: unopenedMediaArray[indexPath.row].image!, videoURL: nil)
+                        let thumbnailData = Util.getThumbnail(imageData: cell.media.image!, videoURL: nil)
                         
                         _ = thumbnailRef.putData(thumbnailData, metadata: nil, completion: { (metadata, error) in
                             if let error = error {
@@ -364,28 +347,28 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                                 let downloadURL = metadata?.downloadURL()
                                 let openDate = Int(Date().timeIntervalSince1970)
                                 self.unopenedMediaArray[indexPath.row].openDate = openDate
+                                cell.media.openDate = openDate
                                 self.unopenedMediaArray[indexPath.row].thumbnailData = thumbnailData
+                                cell.media.thumbnailData = thumbnailData
                                 DataService.instance.setOpened(key: self.unopenedMediaArray[indexPath.row].key, openDate: openDate, thumbnailURL: downloadURL!.absoluteString)
                                 
                                 self.openedMediaArray.append(self.unopenedMediaArray.remove(at: indexPath.row))
+                                print(self.openedMediaArray)
                                 self.tableView.reloadData()
-                                
-                                
-                                //update media to opened
-                                
+
                             }
                         })
                         
                         
                     } else {
-                        mediaView.displayVideo(unopenedMediaArray[indexPath.row].video!)
+                        mediaView.displayVideo(cell.media.video!)
                     }
                     view.bringSubview(toFront: mediaView)
                     mediaView.isHidden = false
                     
 
-                } else if unopenedMediaArray[indexPath.row].loadState == .unloaded {
-                    unopenedMediaArray[indexPath.row].load() {
+                } else if cell.media.loadState == .unloaded {
+                    cell.media.load() {
                         //CODE TO EXECUTE WHEN DONE LOADING
                         cell.cancelAnimation()
                     }

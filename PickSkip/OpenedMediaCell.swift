@@ -11,6 +11,32 @@ import UIKit
 
 class OpenedMediaCell: UITableViewCell {
     
+    var _media: Media!
+    
+    var media: Media! {
+        set (newMedia) {
+            _media = newMedia
+            self.nameLabel.text = newMedia.senderNumber
+            self.dateLabel.text = Util.formatDateLabelDate(date: Date(timeIntervalSince1970: TimeInterval(newMedia.openDate)))
+            if let thumbnailData = newMedia.thumbnailData {
+                self.thumbnail.imageView.image = UIImage(data: thumbnailData)
+            } else {
+                newMedia.thumbnailRef.getData(maxSize: Constants.maxDownloadSize, completion: { (data,error) in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    } else {
+                        self._media.thumbnailData = data
+                        self.thumbnail.imageView.image = UIImage(data: data!)
+                    }
+                })
+            }
+            
+        }
+        get {
+            return _media
+        }
+    }
+    
     
     var nameLabel: UILabel = {
         let label = UILabel()
@@ -41,7 +67,8 @@ class OpenedMediaCell: UITableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        selectionStyle = .none
+        self.selectionStyle = .gray
+        self.backgroundColor = .white
         
         thumbnail = TestView()
         thumbnail.translatesAutoresizingMaskIntoConstraints = false
@@ -130,11 +157,13 @@ class TestView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         imageView = UIImageView()
+        circleLayer = CAShapeLayer()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         imageView = UIImageView()
+        circleLayer = CAShapeLayer()
     }
     
     override func layoutSubviews() {
@@ -143,8 +172,6 @@ class TestView: UIView {
         
         let circlePath = UIBezierPath(arcCenter: CGPoint(x: self.frame.size.width / 2.0, y: self.frame.size.height / 2.0), radius: (frame.size.width - 5)/2, startAngle: 0.0, endAngle: CGFloat(.pi * 2.0), clockwise: false)
         
-
-        circleLayer = CAShapeLayer()
         circleLayer.path = circlePath.cgPath
         circleLayer.fillColor = UIColor.clear.cgColor
         circleLayer.strokeColor = UIColor(colorLiteralRed: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1.0).cgColor
@@ -155,7 +182,7 @@ class TestView: UIView {
         layer.addSublayer(circleLayer)
         imageView.frame = CGRect(x: 0.0, y: 0.0, width: self.frame.width * 0.8, height: self.frame.height * 0.8)
         imageView.center = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
-        imageView.backgroundColor = .blue
+        imageView.backgroundColor = .clear
         imageView.layer.cornerRadius = (frame.size.width * 0.8)/2
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true

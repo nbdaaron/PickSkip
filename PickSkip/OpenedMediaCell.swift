@@ -36,21 +36,16 @@ class OpenedMediaCell: UITableViewCell {
         return label
     }()
     
-    var thumbnail: ThumbnailView = {
-        let imageView = ThumbnailView()
-        imageView.layer.borderColor = UIColor(colorLiteralRed: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1.0).cgColor
-        imageView.layer.borderWidth = 1.5
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .black
-        return imageView
-    }()
+    var thumbnail: TestView!
     
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
+        
+        thumbnail = TestView()
+        thumbnail.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(thumbnail)
         self.addSubview(nameLabel)
         self.addSubview(dateLabel)
         self.addSubview(thumbnail)
@@ -76,23 +71,48 @@ class OpenedMediaCell: UITableViewCell {
         NSLayoutConstraint.activate(constraints)
     }
     
+//    func loadAnimation() {
+//        self.layer.borderWidth = 1.0
+//        let color = CABasicAnimation(keyPath: "borderColor")
+//        color.fromValue = UIColor.clear.cgColor
+//        color.toValue = UIColor.gray.cgColor
+//        color.duration = 1
+//        color.repeatCount = Float.infinity
+//        color.autoreverses = true
+//        self.layer.add(color, forKey: "color")
+//    }
+    
     func loadAnimation() {
-        self.layer.borderWidth = 1.0
-        let color = CABasicAnimation(keyPath: "borderColor")
-        color.fromValue = UIColor.clear.cgColor
-        color.toValue = UIColor.gray.cgColor
-        color.duration = 1
-        color.repeatCount = Float.infinity
-        color.autoreverses = true
-        self.layer.add(color, forKey: "color")
+        let borderDraw = CABasicAnimation(keyPath: "strokeEnd")
+        borderDraw.fromValue = 0
+        borderDraw.toValue = 1
+        borderDraw.duration = 1
+        borderDraw.beginTime = 1
+        borderDraw.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        
+        let borderErase = CABasicAnimation(keyPath: "strokeEnd")
+        
+        borderErase.fromValue = 1
+        borderErase.toValue = 0
+        borderErase.duration = 1
+        borderErase.beginTime = 0
+        borderErase.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        
+        
+        let animationGroup = CAAnimationGroup()
+        animationGroup.repeatCount = Float.infinity
+        animationGroup.duration = 2
+        
+        animationGroup.animations = [borderErase, borderDraw]
+        thumbnail.circleLayer.add(animationGroup, forKey: "borderAnimations")
     }
     
     func cancelAnimation() {
-        self.dateLabel.font = UIFont(name: "Raleway-SemiBold", size: 20)
-        self.nameLabel.font = UIFont(name: "Raleway-SemiBold", size: 20)
-        self.layer.borderWidth = 0.0
-        self.layer.borderColor = UIColor.clear.cgColor
-        self.layer.removeAllAnimations()
+        self.dateLabel.textColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
+
+        self.nameLabel.textColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
+
+        thumbnail.circleLayer.removeAllAnimations()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -101,6 +121,46 @@ class OpenedMediaCell: UITableViewCell {
     
     
     
+}
+
+class TestView: UIView {
+    var circleLayer: CAShapeLayer!
+    var imageView: UIImageView!
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        imageView = UIImageView()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        imageView = UIImageView()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.backgroundColor = UIColor.clear
+        
+        let circlePath = UIBezierPath(arcCenter: CGPoint(x: self.frame.size.width / 2.0, y: self.frame.size.height / 2.0), radius: (frame.size.width - 5)/2, startAngle: 0.0, endAngle: CGFloat(.pi * 2.0), clockwise: false)
+        
+
+        circleLayer = CAShapeLayer()
+        circleLayer.path = circlePath.cgPath
+        circleLayer.fillColor = UIColor.clear.cgColor
+        circleLayer.strokeColor = UIColor(colorLiteralRed: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1.0).cgColor
+        circleLayer.lineWidth = 2.0;
+        circleLayer.strokeEnd = 1.0
+        
+
+        layer.addSublayer(circleLayer)
+        imageView.frame = CGRect(x: 0.0, y: 0.0, width: self.frame.width * 0.8, height: self.frame.height * 0.8)
+        imageView.center = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
+        imageView.backgroundColor = .blue
+        imageView.layer.cornerRadius = (frame.size.width * 0.8)/2
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        self.addSubview(imageView)
+    }
 }
 
 class ThumbnailView: UIImageView {

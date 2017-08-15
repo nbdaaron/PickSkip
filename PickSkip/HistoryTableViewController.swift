@@ -268,7 +268,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             //Cell Content
             cell.nameLabel.text = openedMediaArray[indexPath.row].senderNumber
             cell.dateLabel.text = Util.formatDateLabelDate(date: Date(timeIntervalSince1970: TimeInterval(openedMediaArray[indexPath.row].openDate)))
-            cell.thumbnail.image = UIImage(data: openedMediaArray[indexPath.row].thumbnailData!)
+            cell.thumbnail.imageView.image = UIImage(data: openedMediaArray[indexPath.row].thumbnailData!)
             
             //Format cell appearance based on state
             if openedMediaArray[indexPath.row].loadState == .loaded {

@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Contacts
 import Firebase
 
 @UIApplicationMain
@@ -20,6 +21,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //Firebase setup
         FirebaseApp.configure()
+        
+        
+        //load Contacts
+        let store = CNContactStore()
+        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactOrganizationNameKey]
+        
+        var allContainers : [CNContainer] = []
+        do {
+            allContainers = try store.containers(matching: nil)
+        } catch {
+            print("Error fetching containers from ComposeViewController#loadContacts: \(error)")
+        }
+        
+        for container in allContainers {
+            let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
+            
+            do {
+                let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
+                for contact in containerResults {
+                    if !contact.phoneNumbers.isEmpty && !Constants.contacts.contains(contact) {
+                        Constants.contacts.append(contact)
+                    }
+                }
+                
+            } catch {
+                print("Error fetching results for container from ComposeViewController#loadContacts: \(error)")
+            }
+        }
         
         return true
     }

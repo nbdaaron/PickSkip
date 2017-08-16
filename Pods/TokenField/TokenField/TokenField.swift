@@ -47,7 +47,7 @@ public class TokenField: UIView {
         /// Default maximum height = 150.0
         public static let defaultMaxHeight: CGFloat          = 150.0
         /// Default vertical inset = 7.0
-        public static let defaultVerticalInset: CGFloat      = 0
+        public static let defaultVerticalInset: CGFloat      = 7.0
         /// Default horizontal inset = 15.0
         public static let defaultHorizontalInset: CGFloat    = 15.0
         /// Default token padding = 2.0
@@ -59,7 +59,7 @@ public class TokenField: UIView {
         /// Default token height = 30.0
         public static let defaultTokenHeight: CGFloat        = 30.0
         /// Default vertical padding = 2.0
-        public static let defaultVeritcalPadding: CGFloat    = 2.0
+        public static let defaultVeritcalPadding: CGFloat    = 0.0
     }
     
     /// TokenField's maximum height value.
@@ -116,7 +116,7 @@ public class TokenField: UIView {
         }
     }
     /// TokenField color scheme, initial value = .blue
-    public var colorScheme: UIColor = .blue {
+    public var colorScheme: UIColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0) {
         didSet {
             collapsedLabel?.textColor = colorScheme
             inputTextView.textColor = colorScheme
@@ -136,7 +136,7 @@ public class TokenField: UIView {
     public lazy var toLabel: UILabel = {
         let toLabel = UILabel(frame: CGRect.zero)
         toLabel.textColor = self.toLabelTextColor
-        toLabel.font = UIFont(name: "HelveticaNeue", size: 15.0)
+        toLabel.font = UIFont(name: "Raleway-Light", size: 15.0)
         toLabel.frame.origin.x = 0.0
         toLabel.text = self.toLabelText
         toLabel.sizeToFit()
@@ -150,7 +150,7 @@ public class TokenField: UIView {
         inputTextView.backgroundColor = .white
         inputTextView.keyboardType = self.inputTextViewKeyboardType
         inputTextView.textColor = self.inputTextViewTextColor
-        inputTextView.font = UIFont(name: "HelveticaNeue", size: 15.5)
+        inputTextView.font = UIFont(name: "Raleway-Light", size: 15.5)
         inputTextView.autocorrectionType = self.autocorrectionType
         inputTextView.autocapitalizationType = self.autocapitalizationType
         inputTextView.tintColor = self.colorScheme
@@ -261,7 +261,7 @@ public class TokenField: UIView {
         var currentX: CGFloat = 0.0
         var currentY: CGFloat = 0.0
         
-        layoutToLabelInView(scrollView, origin: CGPoint.zero, currentX: &currentX)
+        layoutToLabelInView(scrollView, origin: CGPoint(x: 0.0, y: 2.0), currentX: &currentX)
         layoutTokensWith(currentX: &currentX, currentY: &currentY)
         layoutInputTextViewWith(currentX: &currentX, currentY: &currentY, clearInput: shouldAdjustFrame)
         
@@ -463,14 +463,14 @@ public class TokenField: UIView {
             x: 0.0,
             y: currentY,
             width: scrollView.contentSize.width,
-            height: inputHeight
+            height: inputHeight + 2
         )
     
         var exclusionPaths: [UIBezierPath] = []
         
-        if inputTextView.frame.origin.y == toLabel.frame.origin.y {
-            exclusionPaths.append(UIBezierPath(rect: toLabel.frame))
-        }
+
+        exclusionPaths.append(UIBezierPath(rect: toLabel.frame))
+        
         
         for token in tokens {
             if inputTextView.frame.origin.y == token.frame.origin.y {

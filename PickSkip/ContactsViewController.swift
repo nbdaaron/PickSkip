@@ -27,7 +27,7 @@ class ContactsViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .white
         button.layer.borderWidth = 1.5
-        button.layer.borderColor = UIColor(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.6).cgColor
+        button.layer.borderColor = UIColor(colorLiteralRed:33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0).cgColor
         button.titleLabel?.textAlignment = .center
         button.setTitle("Send", for: .normal)
         button.setTitleColor(.black, for: .normal)
@@ -38,7 +38,6 @@ class ContactsViewController: UIViewController {
     }()
     
     var selectedContacts: [CNContact] = []
-    var contacts : [CNContact] = []
     var filtered : [CNContact] = []
     var searchActive = false
     var keyboardIsActive = false
@@ -56,7 +55,6 @@ class ContactsViewController: UIViewController {
         contactTableView.dataSource = self
         tokenField.dataSource = self
         tokenField.delegate = self
-        loadContacts()
         setupSendButton()
         
         timeLabel.adjustsFontSizeToFitWidth = true
@@ -67,7 +65,10 @@ class ContactsViewController: UIViewController {
         timeLabel.text = dateToString(dateComponents: dateComponenets)
         timeLabel.sizeToFit()
         
-        
+        self.navigationItem.titleView?.tintColor = .blue
+        self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([
+            NSFontAttributeName: UIFont(name: "Raleway-Light", size: 15.0)
+            ], for: .normal)
         
         setupKeyboardObserver()
         // Do any additional setup after loading the view.
@@ -80,19 +81,19 @@ class ContactsViewController: UIViewController {
             return "now"
         }
         if let year = dateComponents.year, year != 0 {
-            timeString += String(describing: year) + " year" + "\n"
+            timeString += (year == 1) ? String(describing: year) + " year" + "\n" : String(describing: year) + " years" + "\n"
         }
         if let month = dateComponents.month, month != 0 {
-            timeString += String(describing: month) + " month " + "\n"
+            timeString += (month == 1) ? String(describing: month) + " month" + "\n" : String(describing: month) + " months" + "\n"
         }
         if let day = dateComponents.day, day != 0 {
-            timeString += String(describing: day) + " day " + "\n"
+            timeString += (day == 1) ? String(describing: day) + " day" + "\n" : String(describing: day) + " days" + "\n"
         }
         if let hour = dateComponents.hour, hour != 0 {
-            timeString += String(describing: hour) + " hour " + "\n"
+            timeString += (hour == 1) ? String(describing: hour) + " hour" + "\n" : String(describing: hour) + " hours" + "\n"
         }
         if let minute = dateComponents.minute, minute != 0 {
-            timeString += String(describing: minute) + " minute"
+            timeString += (minute == 1) ? String(describing: minute) + " minute" + "\n" : String(describing: minute) + " minutes" + "\n"
         }
         return timeString
         
@@ -116,34 +117,34 @@ class ContactsViewController: UIViewController {
         
     }
     
-    private func loadContacts() {
-        let store = CNContactStore()
-        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactOrganizationNameKey]
-        
-        var allContainers : [CNContainer] = []
-        do {
-            allContainers = try store.containers(matching: nil)
-        } catch {
-            print("Error fetching containers from ComposeViewController#loadContacts: \(error)")
-        }
-        
-        for container in allContainers {
-            let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
-            
-            do {
-                let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
-                for contact in containerResults {
-                    if !contact.phoneNumbers.isEmpty && !contacts.contains(contact) {
-                        contacts.append(contact)
-                    }
-                }
-                
-            } catch {
-                print("Error fetching results for container from ComposeViewController#loadContacts: \(error)")
-            }
-        }
-        
-    }
+//    private func loadContacts() {
+//        let store = CNContactStore()
+//        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactOrganizationNameKey]
+//        
+//        var allContainers : [CNContainer] = []
+//        do {
+//            allContainers = try store.containers(matching: nil)
+//        } catch {
+//            print("Error fetching containers from ComposeViewController#loadContacts: \(error)")
+//        }
+//        
+//        for container in allContainers {
+//            let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
+//            
+//            do {
+//                let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
+//                for contact in containerResults {
+//                    if !contact.phoneNumbers.isEmpty && !contacts.contains(contact) {
+//                        contacts.append(contact)
+//                    }
+//                }
+//                
+//            } catch {
+//                print("Error fetching results for container from ComposeViewController#loadContacts: \(error)")
+//            }
+//        }
+//        
+//    }
     
     func setupKeyboardObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -268,7 +269,7 @@ extension ContactsViewController: UITableViewDataSource {
             infoLabel.isHidden = true
             timeLabel.isHidden = true
             if selectedContacts.contains(filtered[indexPath.row]) {
-                cell.backgroundColor = .gray
+                cell.backgroundColor = UIColor(colorLiteralRed:33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
             } else {
                 cell.backgroundColor = .white
             }
@@ -292,7 +293,7 @@ extension ContactsViewController: UITableViewDataSource {
         if searchActive {
             return filtered.count
         } else {
-            return contacts.count
+            return Constants.contacts.count
         }
     }
     
@@ -314,7 +315,7 @@ extension ContactsViewController: UITableViewDelegate {
                 selectedContacts.append(cell.contact)
                 tokenField.reloadData()
                 updateSendButton()
-                cell.backgroundColor = .gray
+                cell.backgroundColor = UIColor(colorLiteralRed:33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
             }
         }
         print(selectedContacts)
@@ -349,7 +350,7 @@ extension ContactsViewController: TokenFieldDataSource {
     }
     
     func tokenField(_ tokenField: TokenField, colorSchemedForTokenAtIndex index: Int) -> UIColor {
-        return .gray
+        return UIColor(colorLiteralRed:33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
     }
     
     func tokenFieldCollapsedText(_ tokenField: TokenField) -> String {
@@ -395,12 +396,12 @@ extension ContactsViewController: TokenFieldDelegate {
         
         if text.characters.count == 0 {
             filtered.removeAll()
-            filtered = contacts
+            filtered = Constants.contacts
             searchActive = false
         } else {
             filtered.removeAll()
             searchActive = true
-            for contact in contacts {
+            for contact in Constants.contacts {
                 let nameRange: NSRange = (Util.getNameFromContact(contact) as NSString).range(of: text, options: ([.caseInsensitive, .diacriticInsensitive]))
                 if nameRange.location != NSNotFound {
                     filtered.append(contact)

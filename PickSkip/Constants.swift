@@ -10,10 +10,14 @@ import Foundation
 import AVKit
 import AVFoundation
 import Firebase
+import Contacts
+import PhoneNumberKit
 
 class Constants {
     
     //TODO: lower this...
+    
+    static var contacts: [CNContact] = []
     
     static let defaultFont: String = "Raleway-Light"
     
@@ -66,6 +70,8 @@ class CellFrameView: UIView {
         self.layer.cornerRadius = self.bounds.height / 2
     }
 }
+
+
 
 public extension Date {
     

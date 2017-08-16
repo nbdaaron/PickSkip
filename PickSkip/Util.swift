@@ -40,15 +40,15 @@ class Util {
     }
     
     //Formats date on selecting contacts page
-    static func formatDateLabelDate(date: Date) -> String {
+    static func formatDateLabelDate(date: Date, split: Bool) -> String {
         let today = Date()
         let dateFormatter = DateFormatter()
         if date.day == today.day {
             dateFormatter.dateFormat = "h:mm a"
             let dateString = dateFormatter.string(from: date)
-            return "Today \n \(dateString)"
+            return split ? "Today \n \(dateString)" : "Today \(dateString)"
         } else {
-            dateFormatter.dateFormat = "MMMM d, Y \n h:mm a"
+            dateFormatter.dateFormat = split ? "MMMM d, Y \n h:mm a" : "MMMM d, Y h:mm a"
             return dateFormatter.string(from: date)
         }
     }

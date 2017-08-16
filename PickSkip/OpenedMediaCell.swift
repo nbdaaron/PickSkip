@@ -11,31 +11,8 @@ import UIKit
 
 class OpenedMediaCell: UITableViewCell {
     
-    var _media: Media!
-    
-    var media: Media! {
-        set (newMedia) {
-            _media = newMedia
-            self.nameLabel.text = newMedia.senderNumber
-            self.dateLabel.text = Util.formatDateLabelDate(date: Date(timeIntervalSince1970: TimeInterval(newMedia.openDate)))
-            if let thumbnailData = newMedia.thumbnailData {
-                self.thumbnail.imageView.image = UIImage(data: thumbnailData)
-            } else {
-                newMedia.thumbnailRef.getData(maxSize: Constants.maxDownloadSize, completion: { (data,error) in
-                    if let error = error {
-                        print(error.localizedDescription)
-                    } else {
-                        self._media.thumbnailData = data
-                        self.thumbnail.imageView.image = UIImage(data: data!)
-                    }
-                })
-            }
-            
-        }
-        get {
-            return _media
-        }
-    }
+    var media: Media!
+
     
     
     var nameLabel: UILabel = {

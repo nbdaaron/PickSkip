@@ -100,15 +100,15 @@ class CounterButton : UIButton {
     func updateCounter(to count: Int) {
         switch self.tag {
         case 1:
-            setTitle("\(count)" + "\n" + "hour", for: .normal)
+            (count == 1) ? setTitle("\(count)" + "\n" + "hour", for: .normal) : setTitle("\(count)" + "\n" + "hours", for: .normal)
         case 2:
-            setTitle("\(count)" + "\n" + "minute", for: .normal)
+            (count == 1) ? setTitle("\(count)" + "\n" + "minute", for: .normal) : setTitle("\(count)" + "\n" + "minutes", for: .normal)
         case 3:
-            setTitle("\(count)" + "\n" + "month", for: .normal)
+            (count == 1) ? setTitle("\(count)" + "\n" + "month", for: .normal) : setTitle("\(count)" + "\n" + "months", for: .normal)
         case 4:
-            setTitle("\(count)" + "\n" + "day", for: .normal)
+            (count == 1) ? setTitle("\(count)" + "\n" + "day", for: .normal) : setTitle("\(count)" + "\n" + "days", for: .normal)
         case 5:
-            setTitle("\(count)" + "\n" + "year", for: .normal)
+            (count == 1) ? setTitle("\(count)" + "\n" + "year", for: .normal) : setTitle("\(count)" + "\n" + "years", for: .normal)
         default:
             print("error updating buttons")
         }

@@ -11,7 +11,7 @@ import AVFoundation
 
 class PreviewView: UIImageView {
 
-    fileprivate var playerLayer: AVPlayerLayer?
+     var playerLayer: AVPlayerLayer?
     fileprivate var repeatObserver: NSObjectProtocol?
     
     ///Accepts a video and play it on repeat.

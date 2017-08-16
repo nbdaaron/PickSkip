@@ -9,6 +9,9 @@
 import UIKit
 import Firebase
 import QuartzCore
+import AVFoundation
+import PhoneNumberKit
+import Photos
 
 class HistoryTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -18,6 +21,10 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var titlePanel: UIView!
     @IBOutlet weak var logoutButton: UIButton!
+    @IBOutlet weak var optionsView: UIView!
+    @IBOutlet weak var downloadMediaButton: UIButton!
+    @IBOutlet weak var hideMediaButton: UIButton!
+    @IBOutlet weak var mediaDateLabel: UILabel!
     
     var dataService = DataService.instance
     var openedMediaArray: [Media] = []
@@ -30,8 +37,14 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     var loadingMore: Bool = false
     var initialFetch: Bool = true
     
+    let phoneNumberKit = PhoneNumberKit()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        mediaDateLabel.adjustsFontSizeToFitWidth = true
+        mediaDateLabel.layer.cornerRadius = 10
+        mediaDateLabel.clipsToBounds = true
         
         //refreshes table every minute 
         self.timerRefresh = Timer(timeInterval: 60.0, repeats: true, block: {_ in
@@ -40,9 +53,12 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         RunLoop.main.add(timerRefresh, forMode: .defaultRunLoopMode)
         
         titlePanel.addBottomBorder(with: UIColor(colorLiteralRed: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1.0) , andWidth: 1.0)
-        prepareMediaView()
+
+        downloadMediaButton.imageView?.contentMode = .scaleAspectFit
+        hideMediaButton.imageView?.contentMode = .scaleAspectFit
         logoutButton.imageView?.contentMode = .scaleAspectFit
         cameraButton.imageView?.contentMode = .scaleAspectFit
+        
         date = Date()
         tableView.tableHeaderView = UIView()
         tableView.delegate = self
@@ -154,6 +170,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             
             
         })
+        self.tableView.refreshControl?.endRefreshing()
     }
     
     func loadMoreUnopened() {
@@ -205,19 +222,14 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
 
     }
 
-    
-    func prepareMediaView() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideMedia))
-        tapGesture.numberOfTapsRequired = 1
-        mediaView.isUserInteractionEnabled = true
-        mediaView.addGestureRecognizer(tapGesture)
-    }
-    
-    func hideMedia() {
+    @IBAction func hideMedia(_ sender: Any) {
         mediaView.isHidden = true
+        optionsView.isHidden = true
+        mediaDateLabel.text = ""
         mediaView.removeExistingContent()
         tableView.reloadData()
     }
+
     
     @IBAction func logout(_ sender: Any) {
         let alert = UIAlertController(title: "Logout", message: "Are you sure you want to logout?", preferredStyle: .alert)
@@ -251,6 +263,60 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
+    func getCorrespondingName(of number: String) -> String {
+        if number == Auth.auth().currentUser?.providerData[0].phoneNumber! {
+            return "Me"
+        } else {
+            for contact in Constants.contacts {
+                do {
+                    let phoneNumber = try phoneNumberKit.parse(contact.phoneNumbers[0].value.stringValue)
+                    let parsedNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
+                    if number == parsedNumber {
+                        return Util.getNameFromContact(contact)
+                    }
+                } catch {
+                    print("error trying to parse phone number")
+                }
+            }
+            return number
+        }
+    }
+    
+    @IBAction func downloadMedia(_ sender: Any) {
+        if let image = mediaView.image {
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        } else if let videoPlayer = mediaView.playerLayer?.player {
+            let url = (videoPlayer.currentItem?.asset as! AVURLAsset).url
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetCreationRequest.creationRequestForAssetFromVideo(atFileURL: url)
+            }, completionHandler: { (saved, error) in
+                if let error = error {
+                    print("Error downloading video: \(error.localizedDescription)")
+                } else {
+                    let alertController = UIAlertController(title: "Your video was successfully saved", message: nil, preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
+                }
+            })
+        }
+        
+    }
+    
+    func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            // we got back an error!
+            let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+        } else {
+            let ac = UIAlertController(title: "Saved!", message: "Your image has been saved to your photos.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+        }
+    }
+    
+    //tableView datasource methods
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
@@ -268,7 +334,28 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         
         if indexPath.section == 0 && openedMediaArray.count != 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "openedCell", for: indexPath) as! OpenedMediaCell
+            cell.thumbnail.imageView.image = nil
+            // cell data
             cell.media = self.openedMediaArray[indexPath.row]
+            cell.nameLabel.text = getCorrespondingName(of: cell.media.senderNumber)
+            cell.dateLabel.text = Util.formatDateLabelDate(date: Date(timeIntervalSince1970: TimeInterval(cell.media.openDate)), split: true)
+            
+            if let thumbnailData = cell.media.thumbnailData{
+                cell.thumbnail.imageView.image = UIImage(data: thumbnailData)
+            } else {
+                cell.media.thumbnailRef.getData(maxSize: Constants.maxDownloadSize, completion: { (data,error) in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    } else {
+                        cell.media.thumbnailData = data
+                        if let celltoUpdate = tableView.cellForRow(at: indexPath) as? OpenedMediaCell {
+                            celltoUpdate.thumbnail.imageView.image = UIImage(data: data!)
+                            self.tableView.reloadData()
+                        }
+                    }
+                })
+
+            }
             //Default cell aspects
             
             //Format cell appearance based on state
@@ -284,7 +371,12 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             return cell
         } else if indexPath.section == 1 && unopenedMediaArray.count != 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "unopenedCell", for: indexPath) as! UnopenedMediaCell
+            
+            //cell data
             cell.media = self.unopenedMediaArray[indexPath.row]
+            cell.nameLabel.text = getCorrespondingName(of: cell.media.senderNumber)
+            cell.dateLabel.text = Util.getBiggestComponenet(release: cell.media.releaseDate)
+            cell.cellFrame.layer.borderWidth = 1.0
 
             //Check how to display cell
             if cell.media.loadState == .loaded {
@@ -322,7 +414,10 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                     mediaView.displayVideo(openedMediaArray[indexPath.row].video!)
                 }
                 view.bringSubview(toFront: mediaView)
+                view.bringSubview(toFront: optionsView)
                 mediaView.isHidden = false
+                optionsView.isHidden = false
+                mediaDateLabel.text = "Sent " + Util.formatDateLabelDate(date: cell.media.sentDate, split: false)
                 
             } else if cell.media.loadState == .unloaded {
                 cell.media.load() {
@@ -361,7 +456,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                                 DataService.instance.setOpened(key: self.unopenedMediaArray[indexPath.row].key, openDate: openDate, thumbnailURL: downloadURL!.absoluteString)
                                 
                                 self.openedMediaArray.append(self.unopenedMediaArray.remove(at: indexPath.row))
-                                print(self.openedMediaArray)
                                 self.tableView.reloadData()
 
                             }
@@ -370,10 +464,35 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                         
                     } else {
                         mediaView.displayVideo(cell.media.video!)
+                        let url = (cell.media.video?.currentItem?.asset as! AVURLAsset).url
+                        
+                        
+                        let thumbnailRef = DataService.instance.imagesStorageRef.child("\(NSUUID().uuidString)_thumbnail.jpg")
+                        let thumbnailData = Util.getThumbnail(imageData: nil, videoURL: url)
+                        
+                        _ = thumbnailRef.putData(thumbnailData, metadata: nil, completion: { (metadata, error) in
+                            if let error = error {
+                                print("error: \(error.localizedDescription)")
+                            } else {
+                                let downloadURL = metadata?.downloadURL()
+                                let openDate = Int(Date().timeIntervalSince1970)
+                                self.unopenedMediaArray[indexPath.row].openDate = openDate
+                                cell.media.openDate = openDate
+                                self.unopenedMediaArray[indexPath.row].thumbnailData = thumbnailData
+                                cell.media.thumbnailData = thumbnailData
+                                DataService.instance.setOpened(key: self.unopenedMediaArray[indexPath.row].key, openDate: openDate, thumbnailURL: downloadURL!.absoluteString)
+                                
+                                self.openedMediaArray.append(self.unopenedMediaArray.remove(at: indexPath.row))
+                                self.tableView.reloadData()
+                                
+                            }
+                        })
                     }
                     view.bringSubview(toFront: mediaView)
+                    view.bringSubview(toFront: optionsView)
                     mediaView.isHidden = false
-                    
+                    optionsView.isHidden = false
+                    mediaDateLabel.text = "Sent " + Util.formatDateLabelDate(date: cell.media.sentDate, split: false)
 
                 } else if cell.media.loadState == .unloaded {
                     cell.media.load() {

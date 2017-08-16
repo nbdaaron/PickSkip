@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import Photos
 
 class PreviewController: UIViewController {
     
@@ -26,6 +27,7 @@ class PreviewController: UIViewController {
     @IBOutlet weak var forwardButton: UIButton!
     @IBOutlet weak var showCountersButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var downloadCurrentMediaButton: UIButton!
     
     var dateComponents = DateComponents()
     var sendtoDate = Date()
@@ -33,6 +35,9 @@ class PreviewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateLabels(with: sendtoDate)
+        
+    
+        downloadCurrentMediaButton.imageView?.contentMode = .scaleAspectFit
         cancelButton.imageView?.contentMode = .scaleAspectFit
         backButton.imageView?.contentMode = .scaleAspectFit
         forwardButton.imageView?.contentMode = .scaleAspectFit
@@ -123,6 +128,43 @@ class PreviewController: UIViewController {
         
     }
 
+    @IBAction func downloadCurrentMedia(_ sender: Any) {
+        if let image = image {
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        } else if let videoURL = video {
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetCreationRequest.creationRequestForAssetFromVideo(atFileURL: videoURL)
+            }, completionHandler: { (saved, error) in
+                if let error = error {
+                    print("Error downloading video: \(error.localizedDescription)")
+                } else {
+                    let alertController = UIAlertController(title: "Your video was successfully saved", message: nil, preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
+                }
+            })
+        } else {
+            let alertController = UIAlertController(title: "Error downloading media", message: "Please try again", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            // we got back an error!
+            let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+        } else {
+            let ac = UIAlertController(title: "Saved!", message: "Your image has been saved to your photos.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            present(ac, animated: true)
+        }
+    }
+    
     
     @IBAction func cancelPreview(_ sender: Any) {
         previewContent.removeExistingContent()
@@ -173,8 +215,14 @@ class PreviewController: UIViewController {
     }
     
     func updateLabels(with updateDate: Date) {
+        let calendar    = NSCalendar(identifier: NSCalendar.Identifier.gregorian)!
+        let components  = calendar.components([.year, .month, .day, .hour, .minute], from: updateDate)
         hourCounter.dateLabel.text = updateDate.hour
-        minCounter.dateLabel.text = updateDate.minute + " " + updateDate.amPM
+        if components.minute! < 10 {
+            minCounter.dateLabel.text = "0" + updateDate.minute + " " + updateDate.amPM
+        } else {
+            minCounter.dateLabel.text = updateDate.minute + " " + updateDate.amPM
+        }
         monthCounter.dateLabel.text = updateDate.month
         yearCounter.dateLabel.text = updateDate.year
         dayCounter.dateLabel.text = updateDate.day

@@ -25,12 +25,20 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     var date: Date!
     var listenerHandle: UInt?
     var uid: String?
+    var timerRefresh: Timer!
     
     var loadingMore: Bool = false
     var initialFetch: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //refreshes table every minute 
+        self.timerRefresh = Timer(timeInterval: 60.0, repeats: true, block: {_ in
+            self.tableView.reloadData()
+        })
+        RunLoop.main.add(timerRefresh, forMode: .defaultRunLoopMode)
+        
         titlePanel.addBottomBorder(with: UIColor(colorLiteralRed: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1.0) , andWidth: 1.0)
         prepareMediaView()
         logoutButton.imageView?.contentMode = .scaleAspectFit

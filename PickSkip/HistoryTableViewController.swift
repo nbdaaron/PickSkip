@@ -490,7 +490,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                                 DataService.instance.setOpened(key: self.unopenedMediaArray[indexPath.row].key, openDate: openDate, thumbnailURL: downloadURL!.absoluteString)
                                 
                                 self.openedMediaArray.append(self.unopenedMediaArray.remove(at: indexPath.row))
-                                UIApplication.shared.applicationIconBadgeNumber  -= 1
                                 self.tableView.reloadData()
                                 
                             }
@@ -501,7 +500,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                     mediaView.isHidden = false
                     optionsView.isHidden = false
                     mediaDateLabel.text = "Sent " + Util.formatDateLabelDate(date: cell.media.sentDate, split: false)
-
+                    UIApplication.shared.applicationIconBadgeNumber  -= 1
                 } else if cell.media.loadState == .unloaded {
                     cell.media.load() {
                         //CODE TO EXECUTE WHEN DONE LOADING

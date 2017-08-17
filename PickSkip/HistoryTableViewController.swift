@@ -334,14 +334,14 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         
         if indexPath.section == 0 && openedMediaArray.count != 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "openedCell", for: indexPath) as! OpenedMediaCell
-            cell.thumbnail.imageView.image = nil
+            cell.thumbnailImageView.image = nil
             // cell data
             cell.media = self.openedMediaArray[indexPath.row]
             cell.nameLabel.text = getCorrespondingName(of: cell.media.senderNumber)
             cell.dateLabel.text = Util.formatDateLabelDate(date: Date(timeIntervalSince1970: TimeInterval(cell.media.openDate)), split: true)
             
             if let thumbnailData = cell.media.thumbnailData{
-                cell.thumbnail.imageView.image = UIImage(data: thumbnailData)
+                cell.thumbnailImageView.image = UIImage(data: thumbnailData)
             } else {
                 cell.media.thumbnailRef.getData(maxSize: Constants.maxDownloadSize, completion: { (data,error) in
                     if let error = error {
@@ -349,7 +349,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                     } else {
                         cell.media.thumbnailData = data
                         if let celltoUpdate = tableView.cellForRow(at: indexPath) as? OpenedMediaCell {
-                            celltoUpdate.thumbnail.imageView.image = UIImage(data: data!)
+                            celltoUpdate.thumbnailImageView.image = UIImage(data: data!)
                             self.tableView.reloadData()
                         }
                     }

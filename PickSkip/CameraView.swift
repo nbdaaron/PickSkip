@@ -100,6 +100,22 @@ class CameraView: UIView {
         let photoRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapRecordButton))
         recordButton.addGestureRecognizer(photoRecognizer)
     }
+
+    
+    public func flipCamera() {
+        let input = getCameraType()
+        self.captureSession.beginConfiguration()
+        if input == backCameraInput {
+            captureSession.removeInput(backCameraInput)
+            captureSession.addInput(frontCameraInput)
+        } else if input == frontCameraInput {
+            captureSession.removeInput(frontCameraInput)
+            captureSession.addInput(backCameraInput)
+        } else {
+            print("No camera found from CameraView#didDoubleTapScreen!!!")
+        }
+        captureSession.commitConfiguration()
+    }
     
     ///This method is called when the double-tap gesture recognizer recognizes the action. It switches the capture session between front and back cameras.
     public func didDoubleTapScreen(gesture: UIGestureRecognizer) {
@@ -115,7 +131,6 @@ class CameraView: UIView {
             print("No camera found from CameraView#didDoubleTapScreen!!!")
         }
         captureSession.commitConfiguration()
-
     }
     
     ///Returns the current camera type associated with the Capture Session

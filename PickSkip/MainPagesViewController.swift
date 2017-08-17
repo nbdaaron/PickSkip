@@ -17,15 +17,13 @@ class MainPagesViewController: UIPageViewController {
         super.viewDidLoad()
 
         dataSource = self
-        
         //Appends the View Controllers from the Constants class
         for id in Constants.mainPagesViews {
             pages.append(storyboard!.instantiateViewController(withIdentifier: id))
         }
         
         //Prepares the first view controller to be displayed.
-
-        setViewControllers([pages[Constants.initialViewPosition]], direction: .forward, animated: true, completion: nil)
+    
 
     }
 
@@ -38,7 +36,11 @@ class MainPagesViewController: UIPageViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Util.addLoginCheckListener(self)
+        if Auth.auth().currentUser != nil {
+            setViewControllers([pages[Constants.initialViewPosition]], direction: .forward, animated: true, completion: nil)
+        }
     }
+    
     
     ///Removes login listener when the view disappears.
     override func viewWillDisappear(_ animated: Bool) {

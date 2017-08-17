@@ -22,6 +22,10 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loginButton.layer.cornerRadius = 20
+        loginButton.layer.borderWidth = 2
+        loginButton.layer.borderColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0).cgColor
+        
+        phoneNumberTextField.textColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
         
         promptLabel.minimumScaleFactor = 0.2
         promptLabel.adjustsFontSizeToFitWidth = true

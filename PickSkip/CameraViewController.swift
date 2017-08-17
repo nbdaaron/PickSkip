@@ -15,6 +15,7 @@ class CameraViewController: UIViewController {
     @IBOutlet weak var cameraView: CameraView!
     @IBOutlet weak var recordButton: RecordButton!
     @IBOutlet weak var feedButton: UIButton!
+    @IBOutlet weak var flipCameraButton: UIButton!
     
     var image: UIImage!
     var video: URL!
@@ -24,10 +25,15 @@ class CameraViewController: UIViewController {
         feedButton.imageView?.contentMode = .scaleAspectFit
         //Set up Camera View
         
+        flipCameraButton.imageView?.contentMode = .scaleAspectFit
         cameraView.delegate = self
         cameraView.setupCameraView(recordButton)
         
     }
+    @IBAction func flipCamera(_ sender: Any) {
+        cameraView.flipCamera()
+    }
+
 
     @IBAction func goToFeed(_ sender: Any) {
         if let parentController = self.parent as? MainPagesViewController {

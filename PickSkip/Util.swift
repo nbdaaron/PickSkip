@@ -32,7 +32,7 @@ class Util {
         currentLoginCheckListener = Auth.auth().addStateDidChangeListener { (auth, user) in
             if user == nil {
                 let loginViewController = vc.storyboard!.instantiateViewController(withIdentifier: "LoginViewController")
-                vc.present(loginViewController, animated: true, completion: nil)
+                vc.present(loginViewController, animated: false, completion: nil)
             } else {
                 
             }

@@ -39,7 +39,8 @@ class OpenedMediaCell: UITableViewCell {
         return label
     }()
     
-    var thumbnail: TestView!
+    var thumbnailSpinner: SpinnerView!
+    var thumbnailImageView: ThumbnailImageView!
     
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -47,23 +48,30 @@ class OpenedMediaCell: UITableViewCell {
         self.selectionStyle = .gray
         self.backgroundColor = .white
         
-        thumbnail = TestView()
-        thumbnail.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(thumbnail)
+        thumbnailSpinner = SpinnerView()
+        thumbnailSpinner.translatesAutoresizingMaskIntoConstraints = false
+        thumbnailImageView = ThumbnailImageView()
+        thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(thumbnailImageView)
         self.addSubview(nameLabel)
         self.addSubview(dateLabel)
-        self.addSubview(thumbnail)
+        self.addSubview(thumbnailSpinner)
         setContraints()
         
     }
     
     func setContraints() {
         let constraints = [
-            thumbnail.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: self.bounds.height * 0.8 / 2),
-            thumbnail.topAnchor.constraint(equalTo: self.topAnchor, constant: 3.0),
-            thumbnail.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -3.0),
-            thumbnail.widthAnchor.constraint(equalTo: thumbnail.heightAnchor),
-            nameLabel.leadingAnchor.constraint(equalTo: thumbnail.trailingAnchor, constant: 15),
+            thumbnailSpinner.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: self.bounds.height * 0.8 / 2),
+            thumbnailSpinner.topAnchor.constraint(equalTo: self.topAnchor, constant: 3.0),
+            thumbnailSpinner.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -3.0),
+            thumbnailSpinner.widthAnchor.constraint(equalTo: thumbnailSpinner.heightAnchor),
+            thumbnailImageView.centerXAnchor.constraint(equalTo: thumbnailSpinner.centerXAnchor),
+            thumbnailImageView.centerYAnchor.constraint(equalTo: thumbnailSpinner.centerYAnchor),
+            thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailSpinner.heightAnchor, multiplier: 0.85),
+            thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailSpinner.widthAnchor, multiplier: 0.85),
+            nameLabel.leadingAnchor.constraint(equalTo: thumbnailSpinner.trailingAnchor, constant: 15),
             nameLabel.topAnchor.constraint(equalTo: self.topAnchor),
             nameLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             nameLabel.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.4),
@@ -86,29 +94,33 @@ class OpenedMediaCell: UITableViewCell {
 //        self.layer.add(color, forKey: "color")
 //    }
     
+//    func loadAnimation() {
+//        let borderDraw = CABasicAnimation(keyPath: "strokeEnd")
+//        borderDraw.fromValue = 0
+//        borderDraw.toValue = 1
+//        borderDraw.duration = 1
+//        borderDraw.beginTime = 1
+//        borderDraw.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+//        
+//        let borderErase = CABasicAnimation(keyPath: "strokeEnd")
+//        
+//        borderErase.fromValue = 1
+//        borderErase.toValue = 0
+//        borderErase.duration = 1
+//        borderErase.beginTime = 0
+//        borderErase.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+//        
+//        
+//        let animationGroup = CAAnimationGroup()
+//        animationGroup.repeatCount = Float.infinity
+//        animationGroup.duration = 2
+//        
+//        animationGroup.animations = [borderErase, borderDraw]
+//        thumbnail.circleLayer.add(animationGroup, forKey: "borderAnimations")
+//    }
+    
     func loadAnimation() {
-        let borderDraw = CABasicAnimation(keyPath: "strokeEnd")
-        borderDraw.fromValue = 0
-        borderDraw.toValue = 1
-        borderDraw.duration = 1
-        borderDraw.beginTime = 1
-        borderDraw.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        
-        let borderErase = CABasicAnimation(keyPath: "strokeEnd")
-        
-        borderErase.fromValue = 1
-        borderErase.toValue = 0
-        borderErase.duration = 1
-        borderErase.beginTime = 0
-        borderErase.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        
-        
-        let animationGroup = CAAnimationGroup()
-        animationGroup.repeatCount = Float.infinity
-        animationGroup.duration = 2
-        
-        animationGroup.animations = [borderErase, borderDraw]
-        thumbnail.circleLayer.add(animationGroup, forKey: "borderAnimations")
+        thumbnailSpinner.animate()
     }
     
     func cancelAnimation() {
@@ -116,7 +128,7 @@ class OpenedMediaCell: UITableViewCell {
 
         self.nameLabel.textColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
 
-        thumbnail.circleLayer.removeAllAnimations()
+        thumbnailSpinner.layer.removeAllAnimations()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -167,13 +179,14 @@ class TestView: UIView {
     }
 }
 
-class ThumbnailView: UIImageView {
+class ThumbnailImageView: UIImageView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let radius: CGFloat = self.bounds.size.width / 2.0
-        
-        self.layer.cornerRadius = radius
+        self.backgroundColor = .clear
+        self.layer.cornerRadius = frame.size.width / 2
+        self.contentMode = .scaleAspectFill
+        self.clipsToBounds = true
     }
 }
 

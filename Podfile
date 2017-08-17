@@ -13,5 +13,6 @@ target 'PickSkip' do
     pod 'Firebase/Messaging'
     pod 'PhoneNumberKit'
     pod 'TokenField', '~> 0.1.2'
+    pod 'Sparrow/Modules/RequestPermission', :git => 'https://github.com/IvanVorobei/Sparrow.git'
 end
 

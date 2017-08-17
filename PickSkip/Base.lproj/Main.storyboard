@@ -106,7 +106,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oJ4-dS-Ds5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1213.0434782608697" y="-740.21739130434787"/>
+            <point key="canvasLocation" x="-1303" y="-740"/>
         </scene>
         <!--Phone Number Verification View Controller-->
         <scene sceneID="Oi2-ri-BBZ">
@@ -736,7 +736,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="KFh-Ug-EV8" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="C8C-Cf-glK">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="C8C-Cf-glK">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.25277838908450706" colorSpace="calibratedRGB"/>

@@ -20,42 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        UNUserNotificationCenter.current().delegate = self
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: {_,_ in})
-        
-        application.registerForRemoteNotifications()
         
         //Firebase setup
         FirebaseApp.configure()
         
         
-        //load Contacts
-        let store = CNContactStore()
-        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactOrganizationNameKey]
         
-        var allContainers : [CNContainer] = []
-        do {
-            allContainers = try store.containers(matching: nil)
-        } catch {
-            print("Error fetching containers from ComposeViewController#loadContacts: \(error)")
-        }
-        
-        for container in allContainers {
-            let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
-            
-            do {
-                let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
-                for contact in containerResults {
-                    if !contact.phoneNumbers.isEmpty && !Constants.contacts.contains(contact) {
-                        Constants.contacts.append(contact)
-                    }
-                }
-                
-            } catch {
-                print("Error fetching results for container from ComposeViewController#loadContacts: \(error)")
-            }
-        }
         
         return true
     }
@@ -86,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         // Pass device token to auth
-        Auth.auth().setAPNSToken(deviceToken, type: AuthAPNSTokenType.prod)
+        Auth.auth().setAPNSToken(deviceToken, type: AuthAPNSTokenType.sandbox)
         
         // Further handling of the device token if needed by the app
         // ...

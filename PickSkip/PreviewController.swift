@@ -67,7 +67,6 @@ class PreviewController: UIViewController {
         } else if let image = image {
             previewContent.isHidden = false
             previewContent.displayImage(image)
-            print(image)
         }
         setupResetGesuture(button: yearCounter.resetButton)
         setupResetGesuture(button: monthCounter.resetButton)

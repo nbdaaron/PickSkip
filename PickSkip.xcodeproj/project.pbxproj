@@ -18,6 +18,7 @@
 		1AABB3B51F301B870092B639 /* Raleway-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AABB3AB1F301B700092B639 /* Raleway-ExtraLight.ttf */; };
 		1AC709091F28382100AEB3AB /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC709081F28382100AEB3AB /* ContactCell.swift */; };
 		1AD0C2CA1F4509C0005BF092 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD0C2C91F4509C0005BF092 /* SpinnerView.swift */; };
+		1AD0C2CC1F45E5F8005BF092 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1AD0C2CB1F45E5F8005BF092 /* GoogleService-Info.plist */; };
 		1AD269191F184360003C438B /* CounterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD269181F184360003C438B /* CounterButton.swift */; };
 		1AD2691E1F184633003C438B /* Raleway-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AD2691D1F18462E003C438B /* Raleway-Light.ttf */; };
 		1ADFF8241F2EBDC5003C2935 /* PreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ADFF8231F2EBDC5003C2935 /* PreviewController.swift */; };
@@ -37,7 +38,6 @@
 		1ADFF84E1F2ECE80003C2935 /* BebasNeue-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1ADFF8491F2ECE80003C2935 /* BebasNeue-Light.ttf */; };
 		1ADFF84F1F2ECE80003C2935 /* BebasNeue-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1ADFF84A1F2ECE80003C2935 /* BebasNeue-Regular.ttf */; };
 		1ADFF8501F2ECE80003C2935 /* BebasNeue-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1ADFF84B1F2ECE80003C2935 /* BebasNeue-Thin.ttf */; };
-		278180731F1999EA00E63CB3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 278180721F1999EA00E63CB3 /* GoogleService-Info.plist */; };
 		278180761F19A14600E63CB3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278180751F19A14600E63CB3 /* LoginViewController.swift */; };
 		278180781F19A1F500E63CB3 /* PhoneNumberVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278180771F19A1F500E63CB3 /* PhoneNumberVerificationViewController.swift */; };
 		2781807A1F1A971700E63CB3 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278180791F1A971700E63CB3 /* HistoryTableViewController.swift */; };
@@ -80,6 +80,7 @@
 		1AABB3B41F301B700092B639 /* Raleway-ThinItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-ThinItalic.ttf"; sourceTree = "<group>"; };
 		1AC709081F28382100AEB3AB /* ContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactCell.swift; sourceTree = "<group>"; };
 		1AD0C2C91F4509C0005BF092 /* SpinnerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpinnerView.swift; sourceTree = "<group>"; };
+		1AD0C2CB1F45E5F8005BF092 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1AD269181F184360003C438B /* CounterButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CounterButton.swift; sourceTree = "<group>"; };
 		1AD2691D1F18462E003C438B /* Raleway-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Light.ttf"; sourceTree = "<group>"; };
 		1ADFF8231F2EBDC5003C2935 /* PreviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewController.swift; sourceTree = "<group>"; };
@@ -99,7 +100,6 @@
 		1ADFF8491F2ECE80003C2935 /* BebasNeue-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BebasNeue-Light.ttf"; sourceTree = "<group>"; };
 		1ADFF84A1F2ECE80003C2935 /* BebasNeue-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BebasNeue-Regular.ttf"; sourceTree = "<group>"; };
 		1ADFF84B1F2ECE80003C2935 /* BebasNeue-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BebasNeue-Thin.ttf"; sourceTree = "<group>"; };
-		278180721F1999EA00E63CB3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		278180741F199E3A00E63CB3 /* PickSkip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PickSkip.entitlements; sourceTree = "<group>"; };
 		278180751F19A14600E63CB3 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		278180771F19A1F500E63CB3 /* PhoneNumberVerificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberVerificationViewController.swift; sourceTree = "<group>"; };
@@ -222,8 +222,8 @@
 				27C7D9BF1F15AC7B00A5737F /* Views */,
 				27C7D9BE1F15AC6100A5737F /* ViewControllers */,
 				27C7D9981F14805800A5737F /* AppDelegate.swift */,
-				278180721F1999EA00E63CB3 /* GoogleService-Info.plist */,
 				27C7D99C1F14805800A5737F /* Main.storyboard */,
+				1AD0C2CB1F45E5F8005BF092 /* GoogleService-Info.plist */,
 				27C7D9A21F14805800A5737F /* Assets.xcassets */,
 				27C7D9A41F14805800A5737F /* LaunchScreen.storyboard */,
 				27C7D9A71F14805800A5737F /* Info.plist */,
@@ -320,7 +320,7 @@
 				TargetAttributes = {
 					27C7D9941F14805800A5737F = {
 						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = JZZ4Q5EUJ9;
+						DevelopmentTeam = S59K556BAM;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Push = {
@@ -368,9 +368,9 @@
 				1ADFF83C1F2ECC9A003C2935 /* Lato-BlackItalic.ttf in Resources */,
 				1ADFF8501F2ECE80003C2935 /* BebasNeue-Thin.ttf in Resources */,
 				1ADFF83F1F2ECC9A003C2935 /* Lato-Hairline.ttf in Resources */,
-				278180731F1999EA00E63CB3 /* GoogleService-Info.plist in Resources */,
 				1ADFF83D1F2ECC9A003C2935 /* Lato-Bold.ttf in Resources */,
 				27C7D9A31F14805800A5737F /* Assets.xcassets in Resources */,
+				1AD0C2CC1F45E5F8005BF092 /* GoogleService-Info.plist in Resources */,
 				1ADFF8431F2ECC9A003C2935 /* Lato-LightItalic.ttf in Resources */,
 				1ADFF83E1F2ECC9A003C2935 /* Lato-BoldItalic.ttf in Resources */,
 				27C7D99E1F14805800A5737F /* Main.storyboard in Resources */,
@@ -399,7 +399,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		0F969C70F5609445D5DD98D7 /* [CP] Copy Pods Resources */ = {
@@ -597,12 +597,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = PickSkip/PickSkip.entitlements;
-				DEVELOPMENT_TEAM = JZZ4Q5EUJ9;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = S59K556BAM;
 				INFOPLIST_FILE = PickSkip/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.pickskip.pickskip;
+				PRODUCT_BUNDLE_IDENTIFIER = com.PickSkip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -613,12 +615,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = PickSkip/PickSkip.entitlements;
-				DEVELOPMENT_TEAM = JZZ4Q5EUJ9;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = S59K556BAM;
 				INFOPLIST_FILE = PickSkip/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.pickskip.pickskip;
+				PRODUCT_BUNDLE_IDENTIFIER = com.PickSkip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

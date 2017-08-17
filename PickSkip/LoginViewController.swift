@@ -9,6 +9,9 @@
 import UIKit
 import Firebase
 import PhoneNumberKit
+import Sparrow
+import Contacts
+import AVFoundation
 
 class LoginViewController: UIViewController {
 
@@ -18,9 +21,12 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var promptLabel: UILabel!
     @IBOutlet weak var loginButton: UIButton!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        
+        
         loginButton.layer.cornerRadius = 20
         loginButton.layer.borderWidth = 2
         loginButton.layer.borderColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0).cgColor
@@ -33,6 +39,15 @@ class LoginViewController: UIViewController {
         
         
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if (AVAudioSession.sharedInstance().recordPermission() != AVAudioSessionRecordPermission.granted) && (AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != AVAuthorizationStatus.authorized) || (CNContactStore.authorizationStatus(for: .contacts) != .authorized) || UIApplication.shared.isRegisteredForRemoteNotifications != true {
+            SPRequestPermission.dialog.interactive.present(on: self, with: [.camera, .contacts, .notification, .microphone])
+        }
+        
+        
+        
     }
     
     
@@ -61,7 +76,7 @@ class LoginViewController: UIViewController {
                 self.activityIndicatorSpinner.stopAnimating()
                 //If response received is an error, print the error.
                 if let error = error {
-                    self.errorMessage.text = "Phone Number Verification Error: \(error)"
+                    self.errorMessage.text = "Phone Number Verification Error: \(error.localizedDescription)"
                     self.errorMessage.isHidden = false
                     return
                 }
@@ -91,6 +106,36 @@ class LoginViewController: UIViewController {
         if Auth.auth().currentUser != nil {
             DataService.instance.saveUser()
             dismiss(animated: true, completion: nil)
+            loadContacts()
+        }
+    }
+    
+    func loadContacts() {
+        //load Contacts
+        let store = CNContactStore()
+        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactOrganizationNameKey]
+        
+        var allContainers : [CNContainer] = []
+        do {
+            allContainers = try store.containers(matching: nil)
+        } catch {
+            print("Error fetching containers from ComposeViewController#loadContacts: \(error)")
+        }
+        
+        for container in allContainers {
+            let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
+            
+            do {
+                let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
+                for contact in containerResults {
+                    if !contact.phoneNumbers.isEmpty && !Constants.contacts.contains(contact) {
+                        Constants.contacts.append(contact)
+                    }
+                }
+                
+            } catch {
+                print("Error fetching results for container from ComposeViewController#loadContacts: \(error)")
+            }
         }
     }
     

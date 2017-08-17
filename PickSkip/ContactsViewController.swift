@@ -117,35 +117,6 @@ class ContactsViewController: UIViewController {
         
     }
     
-//    private func loadContacts() {
-//        let store = CNContactStore()
-//        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactOrganizationNameKey]
-//        
-//        var allContainers : [CNContainer] = []
-//        do {
-//            allContainers = try store.containers(matching: nil)
-//        } catch {
-//            print("Error fetching containers from ComposeViewController#loadContacts: \(error)")
-//        }
-//        
-//        for container in allContainers {
-//            let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
-//            
-//            do {
-//                let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
-//                for contact in containerResults {
-//                    if !contact.phoneNumbers.isEmpty && !contacts.contains(contact) {
-//                        contacts.append(contact)
-//                    }
-//                }
-//                
-//            } catch {
-//                print("Error fetching results for container from ComposeViewController#loadContacts: \(error)")
-//            }
-//        }
-//        
-//    }
-    
     func setupKeyboardObserver() {
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -318,7 +289,6 @@ extension ContactsViewController: UITableViewDelegate {
                 cell.backgroundColor = UIColor(colorLiteralRed:33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
             }
         }
-        print(selectedContacts)
     }
     
     
@@ -333,7 +303,6 @@ extension ContactsViewController: UITableViewDelegate {
             updateSendButton()
             cell.backgroundColor = .clear
         }
-        print(selectedContacts)
     }
     
 }

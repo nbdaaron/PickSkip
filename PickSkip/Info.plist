@@ -2,12 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSContactsUsageDescription</key>
-	<string>PickSkip needs to use your contacts</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>PickSkip needs access to your photo albums to download media</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>PickSkip</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -26,20 +24,12 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Pickskip needs the camera to record your clips.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>PickSkip needs to use your contacts</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Pickskip needs the microphone to record your clips.</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>remote-notification</string>
-	</array>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>PickSkip needs access to your photo albums to download media</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Raleway-Light.ttf</string>
@@ -63,6 +53,18 @@
 		<string>Lato-Light.ttf</string>
 		<string>Lato-LightItalic.ttf</string>
 		<string>Lato-Regular.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>

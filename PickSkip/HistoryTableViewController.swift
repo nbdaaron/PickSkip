@@ -122,7 +122,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             //New media that should be in the list already are sorted in
             for i in 0..<self.unopenedMediaArray.count {
                 if mediaInstance.releaseDate < self.unopenedMediaArray[i].releaseDate {
-                    print("Inserting at position \(i)")
+                    
                     self.unopenedMediaArray.insert(mediaInstance, at: i)
                     break
                 }
@@ -143,7 +143,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         
         let number = Auth.auth().currentUser!.providerData.first!.phoneNumber!
         let startingPoint = -(openedMediaArray.first?.openDate ?? Int.max)
-        print("Starting point: \(startingPoint)")
+        
         //Load X opened.
         dataService.usersRef.child(number).child("opened").queryOrderedByPriority().queryStarting(atValue: startingPoint).queryLimited(toFirst: Constants.loadCount).observe(DataEventType.childAdded, with: { (snapshot) in
             for media in self.openedMediaArray {
@@ -204,10 +204,8 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                 UIApplication.shared.applicationIconBadgeNumber += 1
             }
             
-            print("Appending value with releaseDate: \(snapshot.childSnapshot(forPath:"releaseDate").value as! Int)")
             for i in 0..<self.unopenedMediaArray.count {
                 if mediaInstance.releaseDate < self.unopenedMediaArray[i].releaseDate {
-                    print("Inserting at position \(i)")
                     self.unopenedMediaArray.insert(mediaInstance, at: i)
                     self.tableView.reloadData()
                     self.loadingMore = false
@@ -409,8 +407,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         
-        print("current time: \(date)")
-        
         if indexPath.section == 0 {
             let cell = self.tableView.cellForRow(at: indexPath) as! OpenedMediaCell
             if cell.media.loadState == .loaded {
@@ -439,7 +435,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             let cell = self.tableView.cellForRow(at: indexPath) as! UnopenedMediaCell
             if date < cell.media.releaseDate {
                 cell.shake()
-                print("current time is less")
             } else {
                 if cell.media.loadState == .loaded {
                     if cell.media.mediaType == "image" {

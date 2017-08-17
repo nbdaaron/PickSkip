@@ -22,14 +22,22 @@ class CameraViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         feedButton.imageView?.contentMode = .scaleAspectFit
         //Set up Camera View
-        
+
         flipCameraButton.imageView?.contentMode = .scaleAspectFit
         cameraView.delegate = self
         cameraView.setupCameraView(recordButton)
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+//        print((AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) == AVAuthorizationStatus.authorized))
+//        print((AVAudioSession.sharedInstance().recordPermission() == AVAudioSessionRecordPermission.granted))
+
+    }
+    
     @IBAction func flipCamera(_ sender: Any) {
         cameraView.flipCamera()
     }
@@ -47,11 +55,9 @@ class CameraViewController: UIViewController {
             let destination = segue.destination as? PreviewController
             if let image = image {
                 destination?.image = image
-                print("sent pic")
                 self.image = nil
             } else if let video = video {
                 destination?.video = video
-                print("sent vid")
                 self.video = nil
             }
         }

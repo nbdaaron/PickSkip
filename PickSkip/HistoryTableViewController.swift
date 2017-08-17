@@ -134,7 +134,8 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
 
     func setupLoadMore() {
         self.tableView.refreshControl = UIRefreshControl()
-        self.tableView.refreshControl!.attributedTitle = NSAttributedString(string: "Load more opened")
+        
+        self.tableView.refreshControl!.attributedTitle = NSAttributedString(string: "Load more opened media", attributes: [NSForegroundColorAttributeName: UIColor.black, NSFontAttributeName: UIFont(name: "Raleway-Light", size: 15.0)])
         self.tableView.refreshControl!.addTarget(self, action: #selector(loadMoreOpened), for: UIControlEvents.valueChanged)
     }
     
@@ -148,6 +149,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             for media in self.openedMediaArray {
                 if media.key == snapshot.key {
                     self.tableView.refreshControl?.endRefreshing()
+                    self.tableView.reloadData()
                     return
                 }
             }

@@ -23,7 +23,7 @@ class MainPagesViewController: UIPageViewController {
         }
         
         //Prepares the first view controller to be displayed.
-    
+        setViewControllers([pages[Constants.initialViewPosition]], direction: .forward, animated: true, completion: nil)
 
     }
 
@@ -36,9 +36,7 @@ class MainPagesViewController: UIPageViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Util.addLoginCheckListener(self)
-        if Auth.auth().currentUser != nil {
-            setViewControllers([pages[Constants.initialViewPosition]], direction: .forward, animated: true, completion: nil)
-        }
+
     }
     
     

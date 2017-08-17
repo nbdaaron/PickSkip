@@ -46,6 +46,14 @@ class MainPagesViewController: UIPageViewController {
     override func viewWillDisappear(_ animated: Bool) {
         Util.removeCurrentLoginCheckListener()
     }
+    
+    public func sendToCamera() {
+        pages[1].dismiss(animated: false, completion: nil)
+    }
+    
+    public func showHistory() {
+        setViewControllers([pages[0]], direction: .forward, animated: true, completion: nil)
+    }
 
 }
 

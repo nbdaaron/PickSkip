@@ -9,15 +9,22 @@
 import UIKit
 import CoreData
 import Contacts
+import UserNotifications
 import Firebase
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        
+        UNUserNotificationCenter.current().delegate = self
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: {_,_ in})
+        
+        application.registerForRemoteNotifications()
         
         //Firebase setup
         FirebaseApp.configure()
@@ -93,6 +100,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
         // This notification is not auth related, developer should handle it.
+        
+        let vc = self.window?.rootViewController as! MainPagesViewController
+        vc.sendToCamera()
+        vc.showHistory()
+    
+        
     }
 
     // MARK: - Core Data stack

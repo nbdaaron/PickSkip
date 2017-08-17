@@ -87,6 +87,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     
     func loadContent() {
         
+        UIApplication.shared.applicationIconBadgeNumber = 0
         loadMoreOpened()
         loadMoreUnopened()
         
@@ -196,6 +197,10 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                                       sentDateInt: snapshot.childSnapshot(forPath: "sentDate").value as! Int,
                                       url: httpsReference,
                                       openDate: -1)
+            
+            if mediaInstance.releaseDate < Date() {
+                UIApplication.shared.applicationIconBadgeNumber += 1
+            }
             
             print("Appending value with releaseDate: \(snapshot.childSnapshot(forPath:"releaseDate").value as! Int)")
             for i in 0..<self.unopenedMediaArray.count {
@@ -483,6 +488,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                                 DataService.instance.setOpened(key: self.unopenedMediaArray[indexPath.row].key, openDate: openDate, thumbnailURL: downloadURL!.absoluteString)
                                 
                                 self.openedMediaArray.append(self.unopenedMediaArray.remove(at: indexPath.row))
+                                UIApplication.shared.applicationIconBadgeNumber  -= 1
                                 self.tableView.reloadData()
                                 
                             }

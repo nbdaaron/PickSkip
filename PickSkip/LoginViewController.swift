@@ -106,38 +106,10 @@ class LoginViewController: UIViewController {
         if Auth.auth().currentUser != nil {
             DataService.instance.saveUser()
             dismiss(animated: true, completion: nil)
-            loadContacts()
+            Util.loadContacts()
         }
     }
     
-    func loadContacts() {
-        //load Contacts
-        let store = CNContactStore()
-        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactOrganizationNameKey]
-        
-        var allContainers : [CNContainer] = []
-        do {
-            allContainers = try store.containers(matching: nil)
-        } catch {
-            print("Error fetching containers from ComposeViewController#loadContacts: \(error)")
-        }
-        
-        for container in allContainers {
-            let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
-            
-            do {
-                let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
-                for contact in containerResults {
-                    if !contact.phoneNumbers.isEmpty && !Constants.contacts.contains(contact) {
-                        Constants.contacts.append(contact)
-                    }
-                }
-                
-            } catch {
-                print("Error fetching results for container from ComposeViewController#loadContacts: \(error)")
-            }
-        }
-    }
     
     ///Force keyboard to close when tapping on the view.
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

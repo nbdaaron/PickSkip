@@ -103,4 +103,10 @@ class DataService {
         
     }
     
+    func remove(key: String, thumbnailRef: StorageReference, mediaRef: StorageReference) {
+        usersRef.child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("opened").child(key).removeValue()
+        thumbnailRef.delete(completion: nil)
+        mediaRef.delete(completion: nil)
+    }
+    
 }

@@ -34,7 +34,6 @@ class CameraView: UIView {
     public func setupCameraView(_ recordButton: RecordButton) {
         //Add Camera Button
         self.recordButton = recordButton
-        
         createCaptureSession()
         preparePreviewLayer()
         addSwitchCameraGestureRecognizer()
@@ -47,7 +46,6 @@ class CameraView: UIView {
     ///Creates the Capture Session, connecting the camera and the microphone as the input, and linking the output to AVCapturePhotoOutput and AVCaptureMovieFileOutput instances
     private func createCaptureSession() {
         captureSession = AVCaptureSession()
-        
         //Creates and links the Photo/Video Output
         photoOutput = AVCapturePhotoOutput()
         videoOutput = AVCaptureMovieFileOutput()

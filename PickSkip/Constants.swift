@@ -46,7 +46,7 @@ class Constants {
     static let videoFileName: String = "temp.mp4"
 
     ///Default camera/playback video gravity (determines how to stretch/distort images to fit in screen)
-    static let videoGravity: String = AVLayerVideoGravityResize
+    static let videoGravity: String = AVLayerVideoGravityResizeAspectFill
     
     ///Default camera focusing mode
     static let focusMode: AVCaptureFocusMode = .autoFocus
@@ -57,6 +57,7 @@ class Constants {
     ///The constants above may be modified to modify application functionality. Please do not alter the constants below.
     
     static let backCamera: AVCaptureDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .back)
+    
 
     static let frontCamera: AVCaptureDevice = AVCaptureDevice.defaultDevice(withDeviceType: .builtInWideAngleCamera, mediaType: AVMediaTypeVideo, position: .front)
 

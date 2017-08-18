@@ -36,7 +36,7 @@ class PreviewController: UIViewController {
         super.viewDidLoad()
         updateLabels(with: sendtoDate)
         
-    
+        previewContent.contentMode = .scaleToFill
         downloadCurrentMediaButton.imageView?.contentMode = .scaleAspectFit
         cancelButton.imageView?.contentMode = .scaleAspectFit
         backButton.imageView?.contentMode = .scaleAspectFit

@@ -51,6 +51,10 @@ class ContactsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if Constants.contacts.count == 0 {
+            Util.loadContacts()
+        }
+        
         contactTableView.delegate = self
         contactTableView.dataSource = self
         tokenField.dataSource = self
@@ -67,7 +71,7 @@ class ContactsViewController: UIViewController {
         
         self.navigationItem.titleView?.tintColor = .blue
         self.navigationItem.leftBarButtonItem?.setTitleTextAttributes([
-            NSFontAttributeName: UIFont(name: "Raleway-Light", size: 15.0)
+            NSFontAttributeName: UIFont(name: "Raleway-Light", size: 15.0)!
             ], for: .normal)
         
         setupKeyboardObserver()
@@ -189,7 +193,6 @@ class ContactsViewController: UIViewController {
             
         }
 
-        let key = DataService.instance.createKey()
         
         if let videoURL = video {
             let videoName = "\(NSUUID().uuidString)\(videoURL)"

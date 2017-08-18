@@ -23,7 +23,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var logoutButton: UIButton!
     @IBOutlet weak var optionsView: UIView!
     @IBOutlet weak var downloadMediaButton: UIButton!
-    @IBOutlet weak var hideMediaButton: UIButton!
     @IBOutlet weak var mediaDateLabel: UILabel!
     
     var dataService = DataService.instance
@@ -42,6 +41,11 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if Constants.contacts.count == 0 {
+            Util.loadContacts()
+        }
+        
+        self.definesPresentationContext = true
         mediaDateLabel.adjustsFontSizeToFitWidth = true
         mediaDateLabel.layer.cornerRadius = 10
         mediaDateLabel.clipsToBounds = true
@@ -55,7 +59,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         titlePanel.addBottomBorder(with: UIColor(colorLiteralRed: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1.0) , andWidth: 1.0)
 
         downloadMediaButton.imageView?.contentMode = .scaleAspectFit
-        hideMediaButton.imageView?.contentMode = .scaleAspectFit
         logoutButton.imageView?.contentMode = .scaleAspectFit
         cameraButton.imageView?.contentMode = .scaleAspectFit
         
@@ -67,10 +70,14 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         tableView.register(UnopenedMediaCell.self, forCellReuseIdentifier: "unopenedCell")
         tableView.register(OpenedMediaCell.self, forCellReuseIdentifier: "openedCell")
         tableView.separatorColor = .clear
-        tableView.reloadData()
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(titlePressed(gesture:)))
         viewTitle.addGestureRecognizer(gesture)
+        
+        let closeMediaGesture = UITapGestureRecognizer(target: self, action: #selector(hideMedia(gesture:)))
+        optionsView.addGestureRecognizer(closeMediaGesture)
+        
+        
         setupLoadMore()
         
         loadContent()
@@ -135,7 +142,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     func setupLoadMore() {
         self.tableView.refreshControl = UIRefreshControl()
         
-        self.tableView.refreshControl!.attributedTitle = NSAttributedString(string: "Load more opened media", attributes: [NSForegroundColorAttributeName: UIColor.black, NSFontAttributeName: UIFont(name: "Raleway-Light", size: 15.0)])
+        self.tableView.refreshControl!.attributedTitle = NSAttributedString(string: "Load more opened media", attributes: [NSForegroundColorAttributeName: UIColor.black, NSFontAttributeName: UIFont(name: "Raleway-Light", size: 15.0)!])
         self.tableView.refreshControl!.addTarget(self, action: #selector(loadMoreOpened), for: UIControlEvents.valueChanged)
     }
     
@@ -227,7 +234,15 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
 
     }
 
-    @IBAction func hideMedia(_ sender: Any) {
+//    @IBAction func hideMedia(_ sender: Any) {
+//        mediaView.isHidden = true
+//        optionsView.isHidden = true
+//        mediaDateLabel.text = ""
+//        mediaView.removeExistingContent()
+//        tableView.reloadData()
+//    }
+    
+    func hideMedia(gesture: UITapGestureRecognizer) {
         mediaView.isHidden = true
         optionsView.isHidden = true
         mediaDateLabel.text = ""
@@ -266,6 +281,30 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         if tableView.numberOfRows(inSection: 1) > 1 {
             tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .middle, animated: true)
         }
+    }
+    
+    //delete cell on long press
+    func deleteCell(gesture: UILongPressGestureRecognizer) {
+        print(self.openedMediaArray)
+        let point: CGPoint = gesture.location(in: self.tableView)
+        let indexPath = self.tableView.indexPathForRow(at: point)
+        let alert = UIAlertController(title: "Delete media", message: "Are you sure you want to delete this picture or video?", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: {
+            (action) in
+            alert.dismiss(animated: false, completion: nil)
+        })
+        let confirmAction = UIAlertAction(title: "Confirm", style: .default, handler: {
+            (action) in
+            if let indexPath = indexPath {
+                DataService.instance.remove(key: self.openedMediaArray[indexPath.row].key, thumbnailRef: self.openedMediaArray[indexPath.row].thumbnailRef, mediaRef: self.openedMediaArray[indexPath.row].url)
+                self.openedMediaArray.remove(at: indexPath.row)
+            }
+            
+            self.tableView.reloadData()
+        })
+        alert.addAction(cancelAction)
+        alert.addAction(confirmAction)
+        self.present(alert, animated: true, completion: nil)
     }
     
     func getCorrespondingName(of number: String) -> String {
@@ -339,7 +378,11 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         
         if indexPath.section == 0 && openedMediaArray.count != 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "openedCell", for: indexPath) as! OpenedMediaCell
-            cell.thumbnailImageView.image = nil
+            
+            let cancelGesture = UILongPressGestureRecognizer(target: self, action: #selector(deleteCell(gesture:)))
+            cancelGesture.minimumPressDuration = 1.0
+            cell.addGestureRecognizer(cancelGesture)
+
             // cell data
             cell.media = self.openedMediaArray[indexPath.row]
             cell.nameLabel.text = getCorrespondingName(of: cell.media.senderNumber)
@@ -590,3 +633,4 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
      }
      */
 }
+

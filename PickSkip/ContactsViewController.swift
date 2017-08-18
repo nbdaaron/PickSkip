@@ -342,6 +342,7 @@ extension ContactsViewController: TokenFieldDelegate {
     }
     
     func tokenField(_ tokenField: TokenField, didEnterText text: String) {
+        
         searchActive = false
         tokenField.endEditing(true)
     }

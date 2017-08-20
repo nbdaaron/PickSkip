@@ -27,7 +27,7 @@ class ContactsViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .white
         button.layer.borderWidth = 1.5
-        button.layer.borderColor = UIColor(colorLiteralRed:33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0).cgColor
+        button.layer.borderColor = Constants.defaultBlueColor.cgColor
         button.titleLabel?.textAlignment = .center
         button.setTitle("Send", for: .normal)
         button.setTitleColor(.black, for: .normal)
@@ -51,9 +51,8 @@ class ContactsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if Constants.contacts.count == 0 {
-            Util.loadContacts()
-        }
+        //get contacts
+        Util.loadContacts()
         
         contactTableView.delegate = self
         contactTableView.dataSource = self
@@ -184,7 +183,7 @@ class ContactsViewController: UIViewController {
         var recipients: [String] = []
         for selectedContact in selectedContacts {
             do {
-                let phoneNumber = try phoneNumberKit.parse(selectedContact.phoneNumbers[0].value.stringValue)
+                let phoneNumber = try phoneNumberKit.parse(Util.getMobileNumber(contact: selectedContact)!)
                 let parsedNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
                 recipients.append(parsedNumber)
             } catch {
@@ -236,19 +235,23 @@ extension ContactsViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ContactCell
         cell.textLabel?.font = UIFont(name: Constants.defaultFont, size: 20)
         cell.textLabel?.isUserInteractionEnabled = false
+        cell.detailTextLabel?.textColor = .gray
         cell.selectionStyle = .none
         
         if searchActive {
             contactTableView.isHidden = false
             infoLabel.isHidden = true
             timeLabel.isHidden = true
+            
             if selectedContacts.contains(filtered[indexPath.row]) {
-                cell.backgroundColor = UIColor(colorLiteralRed:33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
+                cell.backgroundColor = Constants.defaultBlueColor
             } else {
                 cell.backgroundColor = .white
             }
+            //cell data 
             cell.contact = filtered[indexPath.row]
             cell.textLabel?.text = Util.getNameFromContact(filtered[indexPath.row])
+            cell.detailTextLabel?.text = Util.getMobileNumber(contact: cell.contact)
         } else {
             contactTableView.isHidden = true
             infoLabel.isHidden = false
@@ -256,6 +259,10 @@ extension ContactsViewController: UITableViewDataSource {
         }
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60.0
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -285,11 +292,13 @@ extension ContactsViewController: UITableViewDelegate {
                 tokenField.reloadData()
                 updateSendButton()
                 cell.backgroundColor = .clear
+                cell.detailTextLabel?.textColor = .gray
             } else {
                 selectedContacts.append(cell.contact)
                 tokenField.reloadData()
                 updateSendButton()
-                cell.backgroundColor = UIColor(colorLiteralRed:33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
+                cell.backgroundColor = Constants.defaultBlueColor
+                cell.detailTextLabel?.textColor = .white
             }
         }
     }

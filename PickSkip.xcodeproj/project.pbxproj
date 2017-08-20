@@ -238,12 +238,12 @@
 			children = (
 				278180751F19A14600E63CB3 /* LoginViewController.swift */,
 				278180771F19A1F500E63CB3 /* PhoneNumberVerificationViewController.swift */,
+				1AA4851E1F49FBB50045B70C /* SettingsTableViewController.swift */,
 				27C7D9B71F158CFE00A5737F /* MainPagesViewController.swift */,
 				278180791F1A971700E63CB3 /* HistoryTableViewController.swift */,
 				27C7D9AD1F14825A00A5737F /* CameraViewController.swift */,
 				1ADFF8231F2EBDC5003C2935 /* PreviewController.swift */,
 				1A46FE1E1F2FCB000096A0EF /* ContactsViewController.swift */,
-				1AA4851E1F49FBB50045B70C /* SettingsTableViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";

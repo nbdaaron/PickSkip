@@ -58,7 +58,17 @@ class Util {
                 let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
                 for contact in containerResults {
                     if !contact.phoneNumbers.isEmpty && !Constants.contacts.contains(contact) {
-                        Constants.contacts.append(contact)
+                        for number in contact.phoneNumbers {
+                            //Only store the number if it has a mobile value
+                            if number.label == "_$!<Mobile>!$_" {
+                                Constants.contacts.append(contact)
+                            } else if number.label == CNLabelPhoneNumberiPhone {
+                                Constants.contacts.append(contact)
+                            } else {
+                                continue
+                            }
+                        }
+                        
                     }
                 }
                 
@@ -66,6 +76,18 @@ class Util {
                 print("Error fetching results for container from ComposeViewController#loadContacts: \(error)")
             }
         }
+    }
+    
+    //Return the mobile number of the contact
+    static func getMobileNumber(contact: CNContact) -> String? {
+        for number in contact.phoneNumbers {
+            if number.label == "_$!<Mobile>!$_" {
+                return number.value.stringValue
+            } else if number.label == CNLabelPhoneNumberiPhone {
+                return number.value.stringValue
+            }
+        }
+        return nil
     }
     
     //Formats date on selecting contacts page

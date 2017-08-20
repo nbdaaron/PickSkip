@@ -39,9 +39,9 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if Constants.contacts.count == 0 {
-            Util.loadContacts()
-        }
+
+        Util.loadContacts()
+        
         
         mediaDateLabel.adjustsFontSizeToFitWidth = true
         mediaDateLabel.layer.cornerRadius = 10
@@ -312,7 +312,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         } else {
             for contact in Constants.contacts {
                 do {
-                    let phoneNumber = try phoneNumberKit.parse(contact.phoneNumbers[0].value.stringValue)
+                    let phoneNumber = try phoneNumberKit.parse(Util.getMobileNumber(contact: contact)!)
                     let parsedNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
                     if number == parsedNumber {
                         return Util.getNameFromContact(contact)

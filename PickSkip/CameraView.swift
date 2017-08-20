@@ -213,26 +213,6 @@ extension CameraView: AVCapturePhotoCaptureDelegate {
         let dataProvider = CGDataProvider(data: imageData! as CFData)
         
         let cgImageRef = CGImage(jpegDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
-        //        let dataProvider = CGDataProvider(data: imageData! as CFData)
-        //
-        //        let cgImageRef = CGImage(jpegDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
-        //
-        
-        //        var jpegData: Data? = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(imageDataSampleBuffer)
-        //        var takenImage = UIImage(data: jpegData!)
-        //        var outputRect: CGRect = previewLayer.metadataOutputRectOfInterest(for: previewLayer.bounds)
-        //        var takenCGImage: CGImageRef? = takenImage?.cgImage
-        //        var width: size_t = CGImageGetWidth(takenCGImage)
-        //        var height: size_t = CGImageGetHeight(takenCGImage)
-        //        var cropRect = CGRect(x: outputRect.origin.x * width, y: outputRect.origin.y * height, width: outputRect.size.width * width, height: outputRect.size.height * height)
-        //
-        //
-        //        var cropCGImage: CGImageRef = takenCGImage.cropping(to: cropRect)
-        //        takenImage = UIImage(cgImage: cropCGImage as? CGImage ?? CGImage(), scale: 1, orientation: takenImage.imageOrientation)
-        //        CGImageRelease(cropCGImage)
-        
-        
-        
         
         if getCameraType() == frontCameraInput {
             //Fixed mirrored videos for back camera.

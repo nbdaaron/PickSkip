@@ -43,7 +43,6 @@ class MainPagesViewController: UIPageViewController {
 
     }
     
-    
     ///Removes login listener when the view disappears.
     override func viewWillDisappear(_ animated: Bool) {
         Util.removeCurrentLoginCheckListener()

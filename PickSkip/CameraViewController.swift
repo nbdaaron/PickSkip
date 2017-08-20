@@ -32,12 +32,6 @@ class CameraViewController: UIViewController {
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-//        print((AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) == AVAuthorizationStatus.authorized))
-//        print((AVAudioSession.sharedInstance().recordPermission() == AVAudioSessionRecordPermission.granted))
-
-    }
-    
     @IBAction func flipCamera(_ sender: Any) {
         cameraView.flipCamera()
     }

@@ -36,18 +36,19 @@ class PreviewController: UIViewController {
         super.viewDidLoad()
         updateLabels(with: sendtoDate)
         
-//        previewContent.autoresizingMask = [.flexibleTopMargin, .flexibleHeight, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin, .flexibleWidth]
+        //Additional settings for button images
         previewContent.contentMode = .scaleAspectFill
         downloadCurrentMediaButton.imageView?.contentMode = .scaleAspectFit
         cancelButton.imageView?.contentMode = .scaleAspectFit
         backButton.imageView?.contentMode = .scaleAspectFit
         forwardButton.imageView?.contentMode = .scaleAspectFit
+        
+        // Shadow and Radius for buttons
         forwardButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
         forwardButton.layer.shadowOffset = CGSize(width: 0.0, height: 4.0)
         forwardButton.layer.shadowOpacity = 0.7
         forwardButton.layer.shadowRadius = 0.0
         forwardButton.layer.masksToBounds = false
-        // Shadow and Radius
         showCountersButton.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
         showCountersButton.layer.shadowOffset = CGSize(width: 0.0, height: 4.0)
         showCountersButton.layer.shadowOpacity = 0.7

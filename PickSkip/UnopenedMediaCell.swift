@@ -52,7 +52,6 @@ class UnopenedMediaCell: UITableViewCell {
         self.addSubview(nameLabel)
         self.addSubview(dateLabel)
         setContraints()
-        
     }
     
     func setContraints() {

@@ -19,8 +19,8 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     @IBOutlet weak var mediaView: PreviewView!
     @IBOutlet weak var viewTitle: UIImageView!
     @IBOutlet weak var cameraButton: UIButton!
+    @IBOutlet weak var showSettingsButton: UIButton!
     @IBOutlet weak var titlePanel: UIView!
-    @IBOutlet weak var logoutButton: UIButton!
     @IBOutlet weak var optionsView: UIView!
     @IBOutlet weak var downloadMediaButton: UIButton!
     @IBOutlet weak var mediaDateLabel: UILabel!
@@ -28,8 +28,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     var dataService = DataService.instance
     var openedMediaArray: [Media] = []
     var unopenedMediaArray: [Media] = []
-    var date: Date!
-    var listenerHandle: UInt?
     var uid: String?
     var timerRefresh: Timer!
     
@@ -45,7 +43,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             Util.loadContacts()
         }
         
-        self.definesPresentationContext = true
         mediaDateLabel.adjustsFontSizeToFitWidth = true
         mediaDateLabel.layer.cornerRadius = 10
         mediaDateLabel.clipsToBounds = true
@@ -56,13 +53,28 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         })
         RunLoop.main.add(timerRefresh, forMode: .defaultRunLoopMode)
         
+        additionalLayout()
+        setupGestures()
+        setupLoadMore()
+        loadContent()
+    }
+    
+    func setupGestures() {
+        //gesture setup for when title pressed scroll to upcoming
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(titlePressed(gesture:)))
+        viewTitle.addGestureRecognizer(gesture)
+        //gesture setup for when presented media is pressed to hide media
+        let closeMediaGesture = UITapGestureRecognizer(target: self, action: #selector(hideMedia(gesture:)))
+        optionsView.addGestureRecognizer(closeMediaGesture)
+    }
+    
+    func additionalLayout() {
         titlePanel.addBottomBorder(with: UIColor(colorLiteralRed: 50.0/255.0, green: 50.0/255.0, blue: 50.0/255.0, alpha: 1.0) , andWidth: 1.0)
-
+        
         downloadMediaButton.imageView?.contentMode = .scaleAspectFit
-        logoutButton.imageView?.contentMode = .scaleAspectFit
+        showSettingsButton.imageView?.contentMode = .scaleAspectFit
         cameraButton.imageView?.contentMode = .scaleAspectFit
         
-        date = Date()
         tableView.tableHeaderView = UIView()
         tableView.delegate = self
         tableView.dataSource = self
@@ -70,17 +82,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         tableView.register(UnopenedMediaCell.self, forCellReuseIdentifier: "unopenedCell")
         tableView.register(OpenedMediaCell.self, forCellReuseIdentifier: "openedCell")
         tableView.separatorColor = .clear
-        
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(titlePressed(gesture:)))
-        viewTitle.addGestureRecognizer(gesture)
-        
-        let closeMediaGesture = UITapGestureRecognizer(target: self, action: #selector(hideMedia(gesture:)))
-        optionsView.addGestureRecognizer(closeMediaGesture)
-        
-        
-        setupLoadMore()
-        
-        loadContent()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -230,6 +231,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                     return
                 }
             }
+            
             self.unopenedMediaArray.append(mediaInstance)
             self.tableView.reloadData()
             
@@ -244,14 +246,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         })
 
     }
-
-//    @IBAction func hideMedia(_ sender: Any) {
-//        mediaView.isHidden = true
-//        optionsView.isHidden = true
-//        mediaDateLabel.text = ""
-//        mediaView.removeExistingContent()
-//        tableView.reloadData()
-//    }
     
     func hideMedia(gesture: UITapGestureRecognizer) {
         mediaView.isHidden = true
@@ -262,22 +256,8 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     }
 
     
-    @IBAction func logout(_ sender: Any) {
-        let alert = UIAlertController(title: "Logout", message: "Are you sure you want to logout?", preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: { (action) in
-            alert.dismiss(animated: false, completion: nil)
-        })
-        let logoutAction = UIAlertAction(title: "Logout", style: .default, handler: { (action) in
-            do {
-                try Auth.auth().signOut()
-            } catch {
-                print("error signing out")
-            }
-        })
-        alert.addAction(cancelAction)
-        alert.addAction(logoutAction)
-        self.present(alert, animated: true, completion: nil)
-        
+    @IBAction func showSettings(_ sender: Any) {
+        performSegue(withIdentifier: "showSettings", sender: self)
         
     }
 
@@ -287,7 +267,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
-    
+    //Gesture that scrolls to Upcoming if title is pressed
     func titlePressed(gesture: UITapGestureRecognizer) {
         if tableView.numberOfRows(inSection: 1) > 1 {
             tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .middle, animated: true)
@@ -318,6 +298,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         self.present(alert, animated: true, completion: nil)
     }
     
+    //Gets the name of contact correpsonding to number if possible
     func getCorrespondingName(of number: String) -> String {
         if number == Auth.auth().currentUser?.providerData[0].phoneNumber! {
             return "Me"
@@ -337,6 +318,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         }
     }
     
+    //Download media to photo library
     @IBAction func downloadMedia(_ sender: Any) {
         if let image = mediaView.image {
             UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
@@ -473,71 +455,39 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                 cell.loadAnimation()
             }
         } else {
-            date = Date()
+            
             let cell = self.tableView.cellForRow(at: indexPath) as! UnopenedMediaCell
-            if date < cell.media.releaseDate {
+            if Date() < cell.media.releaseDate {
                 cell.shake()
             } else {
                 if cell.media.loadState == .loaded {
                     if cell.media.mediaType == "image" {
+                        
                         let image = UIImage(data: cell.media.image!)
                         mediaView.displayImage(image!)
-                        
-                        //start thumbnail upload
                         let thumbnailRef = DataService.instance.imagesStorageRef.child("\(NSUUID().uuidString)_thumbnail.jpg")
                         let thumbnailData = Util.getThumbnail(imageData: cell.media.image!, videoURL: nil)
-                        
-                        _ = thumbnailRef.putData(thumbnailData, metadata: nil, completion: { (metadata, error) in
-                            if let error = error {
-                                print("error: \(error.localizedDescription)")
-                            } else {
-                                let downloadURL = metadata?.downloadURL()
-                                let openDate = Int(Date().timeIntervalSince1970)
-                                self.unopenedMediaArray[indexPath.row].openDate = openDate
-                                cell.media.openDate = openDate
-                                self.unopenedMediaArray[indexPath.row].thumbnailData = thumbnailData
-                                cell.media.thumbnailData = thumbnailData
-                                DataService.instance.setOpened(key: self.unopenedMediaArray[indexPath.row].key, openDate: openDate, thumbnailURL: downloadURL!.absoluteString)
-                                
-                                self.openedMediaArray.append(self.unopenedMediaArray.remove(at: indexPath.row))
-                                self.tableView.reloadData()
-
-                            }
-                        })
-                        
+                        //start thumbnail upload
+                        createThumbnail(cell: cell, indexPath: indexPath, thumbnailData: thumbnailData, thumbnailRef: thumbnailRef)
                         
                     } else {
                         mediaView.displayVideo(cell.media.video!)
+                        
+                        //get image from video
                         let url = (cell.media.video?.currentItem?.asset as! AVURLAsset).url
-                        
-                        
                         let thumbnailRef = DataService.instance.imagesStorageRef.child("\(NSUUID().uuidString)_thumbnail.jpg")
                         let thumbnailData = Util.getThumbnail(imageData: nil, videoURL: url)
-                        
-                        _ = thumbnailRef.putData(thumbnailData, metadata: nil, completion: { (metadata, error) in
-                            if let error = error {
-                                print("error: \(error.localizedDescription)")
-                            } else {
-                                let downloadURL = metadata?.downloadURL()
-                                let openDate = Int(Date().timeIntervalSince1970)
-                                self.unopenedMediaArray[indexPath.row].openDate = openDate
-                                cell.media.openDate = openDate
-                                self.unopenedMediaArray[indexPath.row].thumbnailData = thumbnailData
-                                cell.media.thumbnailData = thumbnailData
-                                DataService.instance.setOpened(key: self.unopenedMediaArray[indexPath.row].key, openDate: openDate, thumbnailURL: downloadURL!.absoluteString)
-                                
-                                self.openedMediaArray.append(self.unopenedMediaArray.remove(at: indexPath.row))
-                                self.tableView.reloadData()
-                                
-                            }
-                        })
+                        //start thumbnail upload
+                        createThumbnail(cell: cell, indexPath: indexPath, thumbnailData: thumbnailData, thumbnailRef: thumbnailRef)
                     }
+                    
                     view.bringSubview(toFront: mediaView)
                     view.bringSubview(toFront: optionsView)
                     mediaView.isHidden = false
                     optionsView.isHidden = false
                     mediaDateLabel.text = "Sent " + Util.formatDateLabelDate(date: cell.media.sentDate, split: false)
                     UIApplication.shared.applicationIconBadgeNumber  -= 1
+                    
                 } else if cell.media.loadState == .unloaded {
                     cell.media.load() {
                         //CODE TO EXECUTE WHEN DONE LOADING
@@ -548,6 +498,27 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                 }
             }
         }
+    }
+    
+    //uploads thumbnail data and sets the media to opened
+    func createThumbnail(cell: UnopenedMediaCell, indexPath: IndexPath, thumbnailData: Data, thumbnailRef: StorageReference) {
+        _ = thumbnailRef.putData(thumbnailData, metadata: nil, completion: { (metadata, error) in
+            if let error = error {
+                print("error: \(error.localizedDescription)")
+            } else {
+                let downloadURL = metadata?.downloadURL()
+                let openDate = Int(Date().timeIntervalSince1970)
+                self.unopenedMediaArray[indexPath.row].openDate = openDate
+                cell.media.openDate = openDate
+                self.unopenedMediaArray[indexPath.row].thumbnailData = thumbnailData
+                cell.media.thumbnailData = thumbnailData
+                DataService.instance.setOpened(key: self.unopenedMediaArray[indexPath.row].key, openDate: openDate, thumbnailURL: downloadURL!.absoluteString)
+                
+                self.openedMediaArray.append(self.unopenedMediaArray.remove(at: indexPath.row))
+                self.tableView.reloadData()
+                
+            }
+        })
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -562,7 +533,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             let headerTitle = UILabel(frame: CGRect(x: 15, y: 3, width: tableView.frame.width, height: 23))
             headerTitle.font = UIFont(name: "Raleway-SemiBold", size: 15.0)
             headerTitle.text = "Opened"
-            headerTitle.textColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
+            headerTitle.textColor = Constants.defaultBlueColor
             headerView.backgroundColor = .white
             headerView.addSubview(headerTitle)
             return headerView
@@ -570,7 +541,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 23))
             let headerTitle = UILabel(frame: CGRect(x: 15, y: 5, width: tableView.frame.width, height: 23))
             headerTitle.text = "Upcoming"
-            headerTitle.textColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
+            headerTitle.textColor = Constants.defaultBlueColor
             headerTitle.font = UIFont(name: "Raleway-SemiBold", size: 15.0)
             headerView.backgroundColor = .white
             headerView.addSubview(headerTitle)

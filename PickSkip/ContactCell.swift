@@ -12,5 +12,4 @@ import Contacts
 
 class ContactCell: UITableViewCell {
     var contact: CNContact!
-    
 }

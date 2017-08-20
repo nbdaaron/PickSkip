@@ -13,8 +13,6 @@ class OpenedMediaCell: UITableViewCell {
     
     var media: Media!
 
-    
-    
     var nameLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontSizeToFitWidth = true

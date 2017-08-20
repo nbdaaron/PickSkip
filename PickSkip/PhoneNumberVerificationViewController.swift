@@ -20,9 +20,8 @@ class PhoneNumberVerificationViewController: UIViewController {
         super.viewDidLoad()
         verifyButton.layer.cornerRadius = 20
         verifyButton.layer.borderWidth = 2
-        verifyButton.layer.borderColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0).cgColor
-        
-        verificationCodeTextField.textColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
+        verifyButton.layer.borderColor = Constants.defaultBlueColor.cgColor
+        verificationCodeTextField.textColor = Constants.defaultBlueColor
         
         verifyPrompt.minimumScaleFactor = 0.2
         verifyPrompt.adjustsFontSizeToFitWidth = true

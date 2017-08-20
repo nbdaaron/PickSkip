@@ -19,6 +19,8 @@ class Constants {
     
     static var contacts: [CNContact] = []
     
+    static let defaultBlueColor: UIColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
+    
     static let defaultFont: String = "Raleway-Light"
     
     ///Maximum allowed media to be loaded at once.

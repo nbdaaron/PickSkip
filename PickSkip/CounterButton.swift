@@ -55,7 +55,7 @@ class CounterButton : UIButton {
 
         self.addSubview(dateLabel)
         
-        if self.tag == 2 {
+        if self.tag == 2 || self.tag == 4 {
             dateLabel.textAlignment = .left
             let constraints = [
                 resetButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
@@ -63,6 +63,19 @@ class CounterButton : UIButton {
                 resetButton.heightAnchor.constraint(equalToConstant: 30.0),
                 resetButton.widthAnchor.constraint(equalToConstant: 30.0),
                 dateLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10.0),
+                dateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+                dateLabel.widthAnchor.constraint(equalToConstant: 100),
+                dateLabel.heightAnchor.constraint(equalToConstant: 40)
+            ]
+            NSLayoutConstraint.activate(constraints)
+        } else if self.tag == 5 {
+            dateLabel.textAlignment = .center
+            let constraints = [
+                resetButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
+                resetButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5),
+                resetButton.heightAnchor.constraint(equalToConstant: 30.0),
+                resetButton.widthAnchor.constraint(equalToConstant: 30.0),
+                dateLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
                 dateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor),
                 dateLabel.widthAnchor.constraint(equalToConstant: 100),
                 dateLabel.heightAnchor.constraint(equalToConstant: 40)

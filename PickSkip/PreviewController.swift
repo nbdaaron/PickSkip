@@ -36,7 +36,8 @@ class PreviewController: UIViewController {
         super.viewDidLoad()
         updateLabels(with: sendtoDate)
         
-        previewContent.contentMode = .scaleToFill
+//        previewContent.autoresizingMask = [.flexibleTopMargin, .flexibleHeight, .flexibleRightMargin, .flexibleLeftMargin, .flexibleTopMargin, .flexibleWidth]
+        previewContent.contentMode = .scaleAspectFill
         downloadCurrentMediaButton.imageView?.contentMode = .scaleAspectFit
         cancelButton.imageView?.contentMode = .scaleAspectFit
         backButton.imageView?.contentMode = .scaleAspectFit

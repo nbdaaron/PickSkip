@@ -173,8 +173,19 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                                       url: httpsReference,
                                       openDate: snapshot.childSnapshot(forPath: "opened").value as! Int,
                                       thumbnailReference: thumbnailReference)
-            
             self.openedMediaArray.insert(mediaInstance, at: 0)
+            
+            thumbnailReference.getData(maxSize: Constants.maxDownloadSize, completion: { (data,error) in
+                if let error = error {
+                    print(error.localizedDescription)
+                } else {
+                    if let index = self.openedMediaArray.index(where: {$0.key == snapshot.key}) {
+                        self.openedMediaArray[index].thumbnailData = data!
+                        self.tableView.reloadData()
+                    }
+                }
+            })
+            
             self.tableView.reloadData()
             self.tableView.refreshControl?.endRefreshing()
             
@@ -388,21 +399,9 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             cell.nameLabel.text = getCorrespondingName(of: cell.media.senderNumber)
             cell.dateLabel.text = Util.formatDateLabelDate(date: Date(timeIntervalSince1970: TimeInterval(cell.media.openDate)), split: true)
             
+            cell.thumbnailImageView.image = nil
             if let thumbnailData = cell.media.thumbnailData{
                 cell.thumbnailImageView.image = UIImage(data: thumbnailData)
-            } else {
-                cell.media.thumbnailRef.getData(maxSize: Constants.maxDownloadSize, completion: { (data,error) in
-                    if let error = error {
-                        print(error.localizedDescription)
-                    } else {
-                        cell.media.thumbnailData = data
-                        if let celltoUpdate = tableView.cellForRow(at: indexPath) as? OpenedMediaCell {
-                            celltoUpdate.thumbnailImageView.image = UIImage(data: data!)
-                            self.tableView.reloadData()
-                        }
-                    }
-                })
-
             }
             //Default cell aspects
             

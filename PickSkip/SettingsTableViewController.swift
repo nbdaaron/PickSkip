@@ -105,7 +105,11 @@ class SettingsTableViewController: UITableViewController {
             alert.addAction(logoutAction)
             self.present(alert, animated: true, completion: nil)
         }
+        // todo: implement webview for support/privacy policy/terms of use
+        
+        tableView.deselectRow(at: indexPath, animated: false)
     }
+    
  
     @IBAction func dismissView(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)

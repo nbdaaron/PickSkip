@@ -1,5 +1,5 @@
 //
-//  MyButton.swift
+//  RecordButton.swift
 //  PickSkip
 //
 //  Created by Eric Duong on 7/9/17.
@@ -25,14 +25,13 @@ class RecordButton: UIButton {
     var circleBorder: CALayer!
     var progressLayer: CAShapeLayer!
     var currentProgress: CGFloat! = 0
+    var closeWhenFinished: Bool = false
     
-    var buttonColor: UIColor! = .white{
+    var buttonColor: UIColor! = .white {
         didSet {
             circleBorder.borderColor = buttonColor.cgColor
         }
     }
-    
-    var closeWhenFinished: Bool = false
     
     var buttonState : RecordButtonState = .idle {
         didSet {
@@ -52,14 +51,6 @@ class RecordButton: UIButton {
             }
         }
         
-    }
-    
-    public func updateProgress(timer: Timer) {
-        if progressLayer.strokeEnd >= 1 || buttonState != .recording {
-            self.buttonState = .idle
-            delegate.maxRecordProgressReached()
-        }
-        progressLayer.strokeEnd += CGFloat(Constants.updateInterval) / Constants.maxVideoDuration
     }
     
     override public init(frame: CGRect) {
@@ -163,6 +154,14 @@ class RecordButton: UIButton {
      */
     open func setProgress(_ newProgress: CGFloat) {
         progressLayer.strokeEnd = newProgress
+    }
+    
+    public func updateProgress(timer: Timer) {
+        if progressLayer.strokeEnd >= 1 || buttonState != .recording {
+            self.buttonState = .idle
+            delegate.maxRecordProgressReached()
+        }
+        progressLayer.strokeEnd += CGFloat(Constants.updateInterval) / Constants.maxVideoDuration
     }
     
 }

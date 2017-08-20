@@ -253,7 +253,7 @@
                                             <constraint firstAttribute="width" constant="35" id="kJc-Ea-XNX"/>
                                             <constraint firstAttribute="height" constant="35" id="vUT-b1-D9x"/>
                                         </constraints>
-                                        <state key="normal" image="logout"/>
+                                        <state key="normal" image="settings"/>
                                         <connections>
                                             <action selector="showSettings:" destination="ysK-90-dgi" eventType="touchUpInside" id="Wzr-ie-sU6"/>
                                         </connections>
@@ -813,6 +813,6 @@
         <image name="downloadMedia" width="381" height="354"/>
         <image name="flipCamera" width="497" height="380"/>
         <image name="hamburger" width="325" height="228"/>
-        <image name="logout" width="64" height="64"/>
+        <image name="settings" width="64" height="64"/>
     </resources>
 </document>

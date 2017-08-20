@@ -254,6 +254,13 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         mediaView.removeExistingContent()
         tableView.reloadData()
     }
+    
+    func showMedia() {
+        view.bringSubview(toFront: mediaView)
+        view.bringSubview(toFront: optionsView)
+        mediaView.isHidden = false
+        optionsView.isHidden = false
+    }
 
     
     @IBAction func showSettings(_ sender: Any) {
@@ -434,16 +441,15 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         if indexPath.section == 0 {
             let cell = self.tableView.cellForRow(at: indexPath) as! OpenedMediaCell
             if cell.media.loadState == .loaded {
+                
                 if cell.media.mediaType == "image" {
                     let image = UIImage(data: openedMediaArray[indexPath.row].image!)
                     mediaView.displayImage(image!)
                 } else {
                     mediaView.displayVideo(openedMediaArray[indexPath.row].video!)
                 }
-                view.bringSubview(toFront: mediaView)
-                view.bringSubview(toFront: optionsView)
-                mediaView.isHidden = false
-                optionsView.isHidden = false
+                
+                showMedia()
                 mediaDateLabel.text = "Sent " + Util.formatDateLabelDate(date: cell.media.sentDate, split: false)
                 
             } else if cell.media.loadState == .unloaded {
@@ -480,11 +486,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                         //start thumbnail upload
                         createThumbnail(cell: cell, indexPath: indexPath, thumbnailData: thumbnailData, thumbnailRef: thumbnailRef)
                     }
-                    
-                    view.bringSubview(toFront: mediaView)
-                    view.bringSubview(toFront: optionsView)
-                    mediaView.isHidden = false
-                    optionsView.isHidden = false
+                    showMedia()
                     mediaDateLabel.text = "Sent " + Util.formatDateLabelDate(date: cell.media.sentDate, split: false)
                     UIApplication.shared.applicationIconBadgeNumber  -= 1
                     
@@ -527,29 +529,22 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 25))
+        let headerTitle = UILabel(frame: CGRect(x: 15, y: 3, width: tableView.frame.width, height: 23))
+        headerTitle.font = UIFont(name: "Raleway-SemiBold", size: 15.0)
+        headerTitle.textColor = Constants.defaultBlueColor
+        headerView.backgroundColor = .white
+        
         // Checks if rows exist in each section before adding section header
         if openedMediaArray.count > 0 && section == 0 {
-            let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 25))
-            let headerTitle = UILabel(frame: CGRect(x: 15, y: 3, width: tableView.frame.width, height: 23))
-            headerTitle.font = UIFont(name: "Raleway-SemiBold", size: 15.0)
             headerTitle.text = "Opened"
-            headerTitle.textColor = Constants.defaultBlueColor
-            headerView.backgroundColor = .white
-            headerView.addSubview(headerTitle)
-            return headerView
         } else if unopenedMediaArray.count > 0 && section == 1 {
-            let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 23))
-            let headerTitle = UILabel(frame: CGRect(x: 15, y: 5, width: tableView.frame.width, height: 23))
             headerTitle.text = "Upcoming"
-            headerTitle.textColor = Constants.defaultBlueColor
-            headerTitle.font = UIFont(name: "Raleway-SemiBold", size: 15.0)
-            headerView.backgroundColor = .white
-            headerView.addSubview(headerTitle)
-            return headerView
-        } else {
-            let headerView = UIView()
-            return headerView
         }
+        
+        headerView.addSubview(headerTitle)
+        return headerView
+        
     }
  
     

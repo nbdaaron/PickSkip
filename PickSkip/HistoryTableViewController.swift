@@ -512,6 +512,7 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
                 let openDate = Int(Date().timeIntervalSince1970)
                 self.unopenedMediaArray[indexPath.row].openDate = openDate
                 cell.media.openDate = openDate
+                self.unopenedMediaArray[indexPath.row].thumbnailRef = thumbnailRef
                 self.unopenedMediaArray[indexPath.row].thumbnailData = thumbnailData
                 cell.media.thumbnailData = thumbnailData
                 DataService.instance.setOpened(key: self.unopenedMediaArray[indexPath.row].key, openDate: openDate, thumbnailURL: downloadURL!.absoluteString)

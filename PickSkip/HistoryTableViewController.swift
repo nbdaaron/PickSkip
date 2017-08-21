@@ -276,14 +276,13 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
     
     //Gesture that scrolls to Upcoming if title is pressed
     func titlePressed(gesture: UITapGestureRecognizer) {
-        if tableView.numberOfRows(inSection: 1) > 1 {
+        if tableView.numberOfRows(inSection: 1) > 0 {
             tableView.scrollToRow(at: IndexPath(row: 0, section: 1), at: .middle, animated: true)
         }
     }
     
     //delete cell on long press
     func deleteCell(gesture: UILongPressGestureRecognizer) {
-        print(self.openedMediaArray)
         let point: CGPoint = gesture.location(in: self.tableView)
         let indexPath = self.tableView.indexPathForRow(at: point)
         let alert = UIAlertController(title: "Delete media", message: "Are you sure you want to delete this picture or video?", preferredStyle: .alert)

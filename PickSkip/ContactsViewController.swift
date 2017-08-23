@@ -22,8 +22,8 @@ class ContactsViewController: UIViewController {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var infoLabel: UILabel!
     
-    var sendButton: UIButton = {
-        let button = UIButton()
+    var sendButton: SendButton = {
+        let button = SendButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .white
         button.layer.borderWidth = 1.5
@@ -31,6 +31,7 @@ class ContactsViewController: UIViewController {
         button.titleLabel?.textAlignment = .center
         button.setTitle("Send", for: .normal)
         button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.white, for: .highlighted)
         button.titleLabel?.font = UIFont(name: Constants.defaultFont, size: 30)
         button.layer.cornerRadius = 20
         button.isHidden = true
@@ -400,5 +401,14 @@ extension ContactsViewController: TokenFieldDelegate {
             //self.view.layoutIfNeeded()
         })
 
+    }
+}
+
+//sets button fill to blue when pressed
+class SendButton: UIButton {
+    override var isHighlighted: Bool {
+        didSet {
+            backgroundColor = isHighlighted ? Constants.defaultBlueColor : .white
+        }
     }
 }

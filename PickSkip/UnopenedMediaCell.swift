@@ -115,10 +115,10 @@ class UnopenedMediaCell: UITableViewCell {
     }
     
     func cancelAnimation() {
-        self.dateLabel.font = UIFont(name: "Raleway-SemiBold", size: 20)
-        self.nameLabel.font = UIFont(name: "Raleway-SemiBold", size: 20)
+        self.dateLabel.textColor = .black
+        self.nameLabel.textColor = .black
         self.cellFrame.layer.borderWidth = 1.0
-        self.cellFrame.layer.borderColor = UIColor(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.4).cgColor
+        self.cellFrame.layer.borderColor = UIColor.black.cgColor
         self.cellFrame.layer.removeAllAnimations()
     }
     

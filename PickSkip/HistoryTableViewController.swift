@@ -399,8 +399,8 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             } else if cell.media.loadState == .loading{
                 cell.loadAnimation()
             } else {
-                cell.dateLabel.textColor = .black
-                cell.nameLabel.textColor = .black
+                cell.dateLabel.textColor = UIColor(colorLiteralRed: 100.0/255.0, green: 100.0/255.0, blue: 100.0/255.0, alpha: 1.0)
+                cell.nameLabel.textColor = UIColor(colorLiteralRed: 100.0/255.0, green: 100.0/255.0, blue: 100.0/255.0, alpha: 1.0)
             }
             
             return cell
@@ -421,8 +421,10 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             } else {
                 cell.dateLabel.font = UIFont(name: "Raleway-Light", size: 20)
                 cell.nameLabel.font = UIFont(name: "Raleway-Light", size: 20)
+                cell.nameLabel.textColor = UIColor(colorLiteralRed: 100.0/255.0, green: 100.0/255.0, blue: 100.0/255.0, alpha: 1.0)
+                cell.dateLabel.textColor = UIColor(colorLiteralRed: 100.0/255.0, green: 100.0/255.0, blue: 100.0/255.0, alpha: 1.0)
                 cell.cellFrame.layer.borderWidth = 1.0
-                cell.cellFrame.layer.borderColor = UIColor(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.4).cgColor
+                cell.cellFrame.layer.borderColor = UIColor(colorLiteralRed: 150.0/255.0, green: 150.0/255.0, blue: 150.0/255.0, alpha: 1.0).cgColor
             }
             
             return cell

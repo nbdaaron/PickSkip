@@ -389,10 +389,46 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="v8v-Df-37E" kind="show" identifier="showWebView" id="wgp-c6-F3Y"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uGU-fA-dGB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="423" y="1827"/>
+        </scene>
+        <!--Web View Controller-->
+        <scene sceneID="eji-XA-eEy">
+            <objects>
+                <viewController id="v8v-Df-37E" customClass="WebViewController" customModule="PickSkip" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="3uA-ab-c7M"/>
+                        <viewControllerLayoutGuide type="bottom" id="yfI-Dd-asl"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="IWW-Nh-0UB">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" scalesPageToFit="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Whb-ck-zSF">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Whb-ck-zSF" secondAttribute="trailing" id="4n6-3M-o8D"/>
+                            <constraint firstItem="Whb-ck-zSF" firstAttribute="leading" secondItem="IWW-Nh-0UB" secondAttribute="leading" id="DAg-XN-cMF"/>
+                            <constraint firstItem="Whb-ck-zSF" firstAttribute="top" secondItem="3uA-ab-c7M" secondAttribute="bottom" id="ebQ-5v-XxC"/>
+                            <constraint firstItem="yfI-Dd-asl" firstAttribute="top" secondItem="Whb-ck-zSF" secondAttribute="bottom" id="gDR-fH-TCt"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="Whb-ck-zSF" id="xIc-iz-AtD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pmW-jQ-Uy0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1292" y="1826.5367316341831"/>
         </scene>
         <!--Camera View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -550,7 +586,7 @@
                                         <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
-                                            <action selector="count:" destination="Q9z-fR-iZB" eventType="touchUpInside" id="XMd-e4-QZ0"/>
+                                            <action selector="count:" destination="Q9z-fR-iZB" eventType="touchDown" id="R1S-9j-ZXL"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="czD-h2-AzC" userLabel="MonthCounter" customClass="CounterButton" customModule="PickSkip" customModuleProvider="target">
@@ -558,7 +594,7 @@
                                         <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
-                                            <action selector="count:" destination="Q9z-fR-iZB" eventType="touchUpInside" id="nj4-1j-Xh1"/>
+                                            <action selector="count:" destination="Q9z-fR-iZB" eventType="touchDown" id="5T3-r4-MCb"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EjK-jS-gqX" userLabel="DayCounter" customClass="CounterButton" customModule="PickSkip" customModuleProvider="target">
@@ -566,7 +602,7 @@
                                         <color key="backgroundColor" red="1" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
-                                            <action selector="count:" destination="Q9z-fR-iZB" eventType="touchUpInside" id="ZmU-hy-eZp"/>
+                                            <action selector="count:" destination="Q9z-fR-iZB" eventType="touchDown" id="eMq-mm-YGN"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dge-RW-fsJ" userLabel="MinCounter" customClass="CounterButton" customModule="PickSkip" customModuleProvider="target">
@@ -574,7 +610,7 @@
                                         <color key="backgroundColor" red="0.5" green="0.0" blue="0.5" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
-                                            <action selector="count:" destination="Q9z-fR-iZB" eventType="touchUpInside" id="VTY-Ru-oHf"/>
+                                            <action selector="count:" destination="Q9z-fR-iZB" eventType="touchDown" id="v9e-e3-d7o"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GmM-ul-tvd">
@@ -593,7 +629,7 @@
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
-                                            <action selector="count:" destination="Q9z-fR-iZB" eventType="touchUpInside" id="7vj-sm-75s"/>
+                                            <action selector="count:" destination="Q9z-fR-iZB" eventType="touchDown" id="xtS-gD-Qot"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XZg-df-JVN">

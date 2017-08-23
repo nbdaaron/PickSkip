@@ -111,8 +111,6 @@ class PreviewController: UIViewController {
     
     
     @IBAction func showButtons(_ sender: Any) {
-//        buttonsView.isHidden = false
-//        optionsView.isHidden = true
         UIView.animate(withDuration: 0.1,
                        animations: {
                         self.showCountersButton.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)

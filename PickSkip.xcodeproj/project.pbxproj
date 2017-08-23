@@ -16,6 +16,7 @@
 		1A6364301F3FF4A700B1D844 /* Raleway-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AABB3B11F301B700092B639 /* Raleway-SemiBold.ttf */; };
 		1AA23D811F3253ED006A630D /* UnopenedMediaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA23D801F3253ED006A630D /* UnopenedMediaCell.swift */; };
 		1AA4851F1F49FBB50045B70C /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA4851E1F49FBB50045B70C /* SettingsTableViewController.swift */; };
+		1AA485211F4D120E0045B70C /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA485201F4D120E0045B70C /* WebViewController.swift */; };
 		1AABB3B51F301B870092B639 /* Raleway-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AABB3AB1F301B700092B639 /* Raleway-ExtraLight.ttf */; };
 		1AC709091F28382100AEB3AB /* ContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC709081F28382100AEB3AB /* ContactCell.swift */; };
 		1AD0C2CA1F4509C0005BF092 /* SpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD0C2C91F4509C0005BF092 /* SpinnerView.swift */; };
@@ -64,6 +65,7 @@
 		1A5C7B081F33D27300615EDD /* OpenedMediaCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenedMediaCell.swift; sourceTree = "<group>"; };
 		1AA23D801F3253ED006A630D /* UnopenedMediaCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnopenedMediaCell.swift; sourceTree = "<group>"; };
 		1AA4851E1F49FBB50045B70C /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		1AA485201F4D120E0045B70C /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		1AABB3A51F301B700092B639 /* Raleway-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Black.ttf"; sourceTree = "<group>"; };
 		1AABB3A61F301B700092B639 /* Raleway-BlackItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-BlackItalic.ttf"; sourceTree = "<group>"; };
 		1AABB3A71F301B700092B639 /* Raleway-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Bold.ttf"; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 				278180751F19A14600E63CB3 /* LoginViewController.swift */,
 				278180771F19A1F500E63CB3 /* PhoneNumberVerificationViewController.swift */,
 				1AA4851E1F49FBB50045B70C /* SettingsTableViewController.swift */,
+				1AA485201F4D120E0045B70C /* WebViewController.swift */,
 				27C7D9B71F158CFE00A5737F /* MainPagesViewController.swift */,
 				278180791F1A971700E63CB3 /* HistoryTableViewController.swift */,
 				27C7D9AD1F14825A00A5737F /* CameraViewController.swift */,
@@ -461,6 +464,7 @@
 				27C7D9A11F14805800A5737F /* PickSkip.xcdatamodeld in Sources */,
 				27C7D9B81F158CFE00A5737F /* MainPagesViewController.swift in Sources */,
 				1AD0C2CA1F4509C0005BF092 /* SpinnerView.swift in Sources */,
+				1AA485211F4D120E0045B70C /* WebViewController.swift in Sources */,
 				1AA4851F1F49FBB50045B70C /* SettingsTableViewController.swift in Sources */,
 				2781807A1F1A971700E63CB3 /* HistoryTableViewController.swift in Sources */,
 				27C7D9AE1F14825A00A5737F /* CameraViewController.swift in Sources */,

@@ -24,7 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         //Firebase setup
         FirebaseApp.configure()
         
-        
+        UINavigationBar.appearance().tintColor = Constants.defaultBlueColor
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSFontAttributeName: UIFont(name: Constants.defaultFont, size: 15.0)!], for: .normal)
         
         
         return true

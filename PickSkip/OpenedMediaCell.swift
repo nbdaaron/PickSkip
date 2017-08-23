@@ -80,51 +80,16 @@ class OpenedMediaCell: UITableViewCell {
         ]
         NSLayoutConstraint.activate(constraints)
     }
-    
-//    func loadAnimation() {
-//        self.layer.borderWidth = 1.0
-//        let color = CABasicAnimation(keyPath: "borderColor")
-//        color.fromValue = UIColor.clear.cgColor
-//        color.toValue = UIColor.gray.cgColor
-//        color.duration = 1
-//        color.repeatCount = Float.infinity
-//        color.autoreverses = true
-//        self.layer.add(color, forKey: "color")
-//    }
-    
-//    func loadAnimation() {
-//        let borderDraw = CABasicAnimation(keyPath: "strokeEnd")
-//        borderDraw.fromValue = 0
-//        borderDraw.toValue = 1
-//        borderDraw.duration = 1
-//        borderDraw.beginTime = 1
-//        borderDraw.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-//        
-//        let borderErase = CABasicAnimation(keyPath: "strokeEnd")
-//        
-//        borderErase.fromValue = 1
-//        borderErase.toValue = 0
-//        borderErase.duration = 1
-//        borderErase.beginTime = 0
-//        borderErase.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-//        
-//        
-//        let animationGroup = CAAnimationGroup()
-//        animationGroup.repeatCount = Float.infinity
-//        animationGroup.duration = 2
-//        
-//        animationGroup.animations = [borderErase, borderDraw]
-//        thumbnail.circleLayer.add(animationGroup, forKey: "borderAnimations")
-//    }
+
     
     func loadAnimation() {
         thumbnailSpinner.animate()
+        thumbnailSpinner.layer.strokeColor = UIColor.black.cgColor
     }
     
     func cancelAnimation() {
-        self.dateLabel.textColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
-
-        self.nameLabel.textColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
+        self.dateLabel.textColor = .black
+        self.nameLabel.textColor = .black
 
         thumbnailSpinner.layer.removeAllAnimations()
     }
@@ -132,7 +97,6 @@ class OpenedMediaCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     
     
 }

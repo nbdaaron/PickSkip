@@ -13,6 +13,7 @@ class SettingsTableViewController: UITableViewController {
     
     let more = ["Logout"]
     let moreInfo = ["Terms of Use", "Privacy Policy", "Support"]
+    var webAddress: String!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,10 +105,29 @@ class SettingsTableViewController: UITableViewController {
             alert.addAction(cancelAction)
             alert.addAction(logoutAction)
             self.present(alert, animated: true, completion: nil)
+        } else if indexPath.section == 0 {
+            if indexPath.row == 0 {
+                webAddress = "https://sites.google.com/site/pickskiplegal/terms-o"
+            } else if indexPath.row == 1 {
+                webAddress = "https://sites.google.com/site/pickskiplegal/privacy-policy"
+            } else if indexPath.row == 2 {
+                webAddress = "https://sites.google.com/site/pickskiplegal/contact"
+            }
+            if (webAddress) != nil {
+               performSegue(withIdentifier: "showWebView", sender: self) 
+            }
+            
         }
         // todo: implement webview for support/privacy policy/terms of use
         
         tableView.deselectRow(at: indexPath, animated: false)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showWebView" {
+            let vc = segue.destination as! WebViewController
+            vc.webAddress = webAddress
+        }
     }
     
  

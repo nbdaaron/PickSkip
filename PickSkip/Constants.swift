@@ -30,7 +30,7 @@ class Constants {
     static let maxDownloadSize: Int64 = 1073741824 //2^30 bytes = 1GB
 
     ///Maximum allowed recorded video duration in seconds
-    static let maxVideoDuration: CGFloat = 5
+    static let maxVideoDuration: CGFloat = 15.0
     
     ///Seconds per frame for recording button animation
     static let updateInterval: Double = 0.05

@@ -57,16 +57,10 @@ class Util {
             do {
                 let containerResults = try store.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as [CNKeyDescriptor])
                 for contact in containerResults {
-                    if !contact.phoneNumbers.isEmpty && !Constants.contacts.contains(contact) {
+                    if !contact.phoneNumbers.isEmpty {
                         for number in contact.phoneNumbers {
-                            //Only store the number if it has a mobile value
-                            if number.label == "_$!<Mobile>!$_" {
-                                Constants.contacts.append(contact)
-                            } else if number.label == CNLabelPhoneNumberiPhone {
-                                Constants.contacts.append(contact)
-                            } else {
-                                continue
-                            }
+                            let tempContact = Contact(first: contact.givenName, last: contact.familyName, number: number.value.stringValue)
+                            Constants.contacts.append(tempContact)
                         }
                         
                     }

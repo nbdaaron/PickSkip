@@ -11,5 +11,5 @@ import UIKit
 import Contacts
 
 class ContactCell: UITableViewCell {
-    var contact: CNContact!
+    var contact: Contact!
 }

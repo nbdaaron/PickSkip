@@ -311,10 +311,10 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
         } else {
             for contact in Constants.contacts {
                 do {
-                    let phoneNumber = try phoneNumberKit.parse(Util.getMobileNumber(contact: contact)!)
+                    let phoneNumber = try phoneNumberKit.parse(contact.phoneNumber!)
                     let parsedNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
                     if number == parsedNumber {
-                        return Util.getNameFromContact(contact)
+                        return contact.firstName! + " " + contact.lastName!
                     }
                 } catch {
                     print("error trying to parse phone number")

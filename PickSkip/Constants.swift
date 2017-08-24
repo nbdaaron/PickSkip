@@ -17,7 +17,7 @@ class Constants {
     
     //TODO: lower this...
     
-    static var contacts: [CNContact] = []
+    static var contacts: [Contact] = []
     
     static let defaultBlueColor: UIColor = UIColor(colorLiteralRed: 33.0/255.0, green: 150.0/255.0, blue: 243.0/255.0, alpha: 1.0)
     

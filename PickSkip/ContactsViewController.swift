@@ -38,8 +38,8 @@ class ContactsViewController: UIViewController {
         return button
     }()
     
-    var selectedContacts: [CNContact] = []
-    var filtered : [CNContact] = []
+    var selectedContacts: [Contact] = []
+    var filtered : [Contact] = []
     var searchActive = false
     var keyboardIsActive = false
     var buttonBottomConstraint: NSLayoutConstraint!
@@ -184,7 +184,7 @@ class ContactsViewController: UIViewController {
         var recipients: [String] = []
         for selectedContact in selectedContacts {
             do {
-                let phoneNumber = try phoneNumberKit.parse(Util.getMobileNumber(contact: selectedContact)!)
+                let phoneNumber = try phoneNumberKit.parse(selectedContact.phoneNumber!)
                 let parsedNumber = phoneNumberKit.format(phoneNumber, toType: .e164)
                 recipients.append(parsedNumber)
             } catch {
@@ -244,15 +244,15 @@ extension ContactsViewController: UITableViewDataSource {
             infoLabel.isHidden = true
             timeLabel.isHidden = true
             
-            if selectedContacts.contains(filtered[indexPath.row]) {
+            if selectedContacts.contains(where: {$0 == filtered[indexPath.row]}) {
                 cell.backgroundColor = Constants.defaultBlueColor
             } else {
                 cell.backgroundColor = .white
             }
             //cell data 
             cell.contact = filtered[indexPath.row]
-            cell.textLabel?.text = Util.getNameFromContact(filtered[indexPath.row])
-            cell.detailTextLabel?.text = Util.getMobileNumber(contact: cell.contact)
+            cell.textLabel?.text = filtered[indexPath.row].firstName! + " " + filtered[indexPath.row].lastName!
+            cell.detailTextLabel?.text = cell.contact.phoneNumber!
         } else {
             contactTableView.isHidden = true
             infoLabel.isHidden = false
@@ -323,7 +323,7 @@ extension ContactsViewController: UITableViewDelegate {
 extension ContactsViewController: TokenFieldDataSource {
     func tokenField(_ tokenField: TokenField, titleForTokenAtIndex index: Int) -> String {
         //implement
-        return Util.getNameFromContact(selectedContacts[index]) + ","
+        return selectedContacts[index].firstName! + " " + selectedContacts[index].lastName! + ","
     }
     
     func numberOfTokensInTokenField(_ tokenField: TokenField) -> Int {
@@ -385,7 +385,7 @@ extension ContactsViewController: TokenFieldDelegate {
             filtered.removeAll()
             searchActive = true
             for contact in Constants.contacts {
-                let nameRange: NSRange = (Util.getNameFromContact(contact) as NSString).range(of: text, options: ([.caseInsensitive, .diacriticInsensitive]))
+                let nameRange: NSRange = (contact.firstName! + " " + contact.lastName! as NSString).range(of: text, options: ([.caseInsensitive, .diacriticInsensitive]))
                 if nameRange.location != NSNotFound {
                     filtered.append(contact)
                 }

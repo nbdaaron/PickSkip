@@ -13,6 +13,7 @@ import AVFoundation
 protocol CameraViewDelegate {
     func submit(image: UIImage)
     func submit(videoURL: URL)
+    func showSettings()
 }
 
 class CameraView: UIView {
@@ -145,59 +146,74 @@ class CameraView: UIView {
     
     ///This method is called when the record button is held down and released. The capture layer will start recording and the button will animate. When released, the recording will stop and the video will be sent to the Camera View Delegate
     public func didHoldRecordButton(gesture: UITapGestureRecognizer) {
-        if gesture.state == .began {
-            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let filePath = documentsURL.appendingPathComponent(Constants.videoFileName)
-            
-            //Fix mirrored videos for front camera.
-            if getCameraType() == frontCameraInput {
-                videoOutput.connection(withMediaType: AVMediaTypeVideo).isVideoMirrored = true
+        if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) ==  AVAuthorizationStatus.authorized {
+            if gesture.state == .began {
+                let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                let filePath = documentsURL.appendingPathComponent(Constants.videoFileName)
+                
+                //Fix mirrored videos for front camera.
+                if getCameraType() == frontCameraInput {
+                    videoOutput.connection(withMediaType: AVMediaTypeVideo).isVideoMirrored = true
+                }
+                
+                videoOutput.startRecording(toOutputFileURL: filePath, recordingDelegate: self)
+                recordButton.didTouchDown()
+            } else if gesture.state == .ended {
+                recordButton.didTouchUp()
+                videoOutput.stopRecording()
             }
-            
-            videoOutput.startRecording(toOutputFileURL: filePath, recordingDelegate: self)
-            recordButton.didTouchDown()
-        } else if gesture.state == .ended {
-            recordButton.didTouchUp()
-            videoOutput.stopRecording()
+        } else {
+            delegate.showSettings()
         }
+        
     }
     
     ///This method is called when the record button is briefly tapped. The capture layer will take a photo and send it to the Camera View Delegate
     public func didTapRecordButton(gesture: UITapGestureRecognizer) {
-        let settings = AVCapturePhotoSettings()
-        photoOutput.capturePhoto(with: settings, delegate: self)
+        if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) ==  AVAuthorizationStatus.authorized {
+            let settings = AVCapturePhotoSettings()
+            photoOutput.capturePhoto(with: settings, delegate: self)
+        } else {
+            delegate.showSettings()
+        }
+        
     }
     
     ///Automatically focuses camera at point where tapped.
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let screenSize = bounds.size
-        if let touchPoint = touches.first {
-            let x = touchPoint.location(in: self).y / screenSize.height
-            let y = 1.0 - touchPoint.location(in: self).x / screenSize.width
-            let focusPoint = CGPoint(x: x, y: y)
-            
-            if let device = getCameraType()?.device {
-                do {
-                    try device.lockForConfiguration()
-                    if device.isFocusModeSupported(Constants.focusMode){
-                        device.focusMode = Constants.focusMode
+        if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) ==  AVAuthorizationStatus.authorized {
+            let screenSize = bounds.size
+            if let touchPoint = touches.first {
+                let x = touchPoint.location(in: self).y / screenSize.height
+                let y = 1.0 - touchPoint.location(in: self).x / screenSize.width
+                let focusPoint = CGPoint(x: x, y: y)
+                
+                if let device = getCameraType()?.device {
+                    do {
+                        try device.lockForConfiguration()
+                        if device.isFocusModeSupported(Constants.focusMode){
+                            device.focusMode = Constants.focusMode
+                        }
+                        if device.isExposureModeSupported(Constants.exposureMode) {
+                            device.exposureMode = Constants.exposureMode
+                        }
+                        if device.isFocusPointOfInterestSupported {
+                            device.focusPointOfInterest = focusPoint
+                        }
+                        if device.isExposurePointOfInterestSupported {
+                            device.exposurePointOfInterest = focusPoint
+                        }
+                        device.unlockForConfiguration()
                     }
-                    if device.isExposureModeSupported(Constants.exposureMode) {
-                        device.exposureMode = Constants.exposureMode
+                    catch {
+                        print("Error focusing camera on CameraView#touchesBegan: \(error)")
                     }
-                    if device.isFocusPointOfInterestSupported {
-                        device.focusPointOfInterest = focusPoint
-                    }
-                    if device.isExposurePointOfInterestSupported {
-                        device.exposurePointOfInterest = focusPoint
-                    }
-                    device.unlockForConfiguration()
-                }
-                catch {
-                    print("Error focusing camera on CameraView#touchesBegan: \(error)")
                 }
             }
+        } else {
+            delegate.showSettings()
         }
+        
     }
 
 }

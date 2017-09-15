@@ -41,6 +41,7 @@ class Util {
     
     static func loadContacts() {
         //load Contacts
+        Constants.contacts.removeAll()
         let store = CNContactStore()
         let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactOrganizationNameKey]
         

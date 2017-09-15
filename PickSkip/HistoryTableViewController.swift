@@ -130,7 +130,6 @@ class HistoryTableViewController: UIViewController, UITableViewDelegate, UITable
             //New media that should be in the list already are sorted in
             for i in 0..<self.unopenedMediaArray.count {
                 if mediaInstance.releaseDate < self.unopenedMediaArray[i].releaseDate {
-                    
                     self.unopenedMediaArray.insert(mediaInstance, at: i)
                     break
                 }

@@ -72,4 +72,23 @@ extension CameraViewController: CameraViewDelegate {
         self.video = videoURL
         self.performSegue(withIdentifier: "showPreview", sender: self)
     }
+    
+    func showSettings(){
+        let alertController = UIAlertController (title: "Permission Request", message: "This is a camera app that requires access to your phone's camera. Please go to the settings page and allow PickSkip to your phone's camera.", preferredStyle: .alert)
+        
+        let settingsAction = UIAlertAction(title: "Settings", style: .default) { (_) -> Void in
+            guard let settingsUrl = URL(string: UIApplicationOpenSettingsURLString) else {
+                return
+            }
+            
+            if UIApplication.shared.canOpenURL(settingsUrl) {
+                UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                    print("Settings opened: \(success)") // Prints true
+                })
+            }
+        }
+        alertController.addAction(settingsAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
 }

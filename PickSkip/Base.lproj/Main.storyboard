@@ -480,7 +480,6 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="4xV-Sk-QNJ" secondAttribute="height" multiplier="9:16" id="NR7-RN-mLL"/>
                                     <constraint firstItem="HNy-8s-vj3" firstAttribute="leading" secondItem="4xV-Sk-QNJ" secondAttribute="leading" constant="25" id="O7T-GT-qbH"/>
                                     <constraint firstItem="HNy-8s-vj3" firstAttribute="top" secondItem="4xV-Sk-QNJ" secondAttribute="top" constant="30" id="SNw-Cm-yet"/>
                                     <constraint firstItem="4Je-05-mJV" firstAttribute="centerX" secondItem="4xV-Sk-QNJ" secondAttribute="centerX" id="feX-Pn-2K7"/>
@@ -494,8 +493,8 @@
                         <constraints>
                             <constraint firstItem="4xV-Sk-QNJ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="3PV-hs-5qj"/>
                             <constraint firstItem="4xV-Sk-QNJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="AtZ-fn-em7"/>
-                            <constraint firstItem="4xV-Sk-QNJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="bNW-0s-5xA"/>
-                            <constraint firstAttribute="trailing" secondItem="4xV-Sk-QNJ" secondAttribute="trailing" id="wOy-VC-TFO"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="4xV-Sk-QNJ" secondAttribute="bottom" id="Lb3-b1-ev3"/>
+                            <constraint firstAttribute="trailing" secondItem="4xV-Sk-QNJ" secondAttribute="trailing" id="ffG-t2-D1L"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>

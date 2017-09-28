@@ -28,6 +28,12 @@ class PhoneNumberVerificationViewController: UIViewController {
         activityIndicatorSpinner.hidesWhenStopped = true
         // Do any additional setup after loading the view.
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if Auth.auth().currentUser != nil {
+            dismiss(animated: true, completion: nil)
+        }
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -49,19 +55,22 @@ class PhoneNumberVerificationViewController: UIViewController {
         Auth.auth().signIn(with: credential) {
             user, error in
             //When response received, stop spinner and re-enable user input
-            self.activityIndicatorSpinner.stopAnimating()
-            self.view.isUserInteractionEnabled = true
             //If response is an error, display error message.
             if let error = error {
                 self.errorMessage.text = "Verification Error: \(error)"
                 self.errorMessage.isHidden = false
                 return
+            } else {
+                DataService.instance.mainRef.child("users").child((user?.providerData[0].phoneNumber!)!).child("profile").observeSingleEvent(of: .value, with: {(snapshot) in
+                        self.activityIndicatorSpinner.stopAnimating()
+                        self.view.isUserInteractionEnabled = true
+                        if snapshot.hasChild("firstname"){
+                            self.dismiss(animated: true, completion: nil)
+                        }else{
+                            self.performSegue(withIdentifier: "contactFormSegue", sender: self)
+                        }
+                    })
             }
-            self.checkGhost()
-            
-            
-            //Otherwise, return to login screen (where login listener will dismiss to Main View.)
-            self.dismiss(animated: true, completion: nil)
 
         }
     }

@@ -37,10 +37,14 @@ class DataService {
     }
     
     func saveUser() {
-        let profile: Dictionary<String, AnyObject> = ["firstname": "" as AnyObject, "lastname": "" as AnyObject, "NotificationToken": Messaging.messaging().fcmToken as AnyObject]
+        mainRef.child("users").child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("profile").child("NotificationToken").setValue(Messaging.messaging().fcmToken)
         
-        mainRef.child("users").child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("profile").setValue(profile)
-        
+    }
+    
+    func saveName(firstname: String, lastname: String) {
+        mainRef.child("users").child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("profile").child("firstname").setValue(firstname)
+        mainRef.child("users").child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("profile").child("lastname").setValue(lastname)
+        //mainRef.child("users").child(Auth.auth().currentUser!.providerData[0].phoneNumber!).child("profile").updateChildValues(["firstname": firstname as AnyObject,"lastname": lastname as AnyObject])
     }
     
     func createKey() -> String {
@@ -61,13 +65,13 @@ class DataService {
         
         for recipient in recipients {
             //Add to recipient's history
+            usersRef.child(recipient).child("profile").child("invitedBy").setValue(senderNumber)
             usersRef.child(recipient).child("unopened").child(key).updateChildValues(pr) {
                 error, databaseReference in
                 if let error = error  {
                     print("error sending message from DataService#sendMedia - History: \(error.localizedDescription)")
                 }
             }
-            
             //Add to recipient's story with sender.
             mainRef.child("stories").child(recipient).child(senderNumber).child(key).setValue(pr) {
                 error, databaseReference in
